@@ -29,7 +29,7 @@ func main() {
 
 	err = validateConfiguration(conf)
 	if err != nil {
-		fmt.Println("Error: ", err)
+		fmt.Println("Error:", err)
 	}
 }
 
@@ -73,5 +73,11 @@ func showUsage() {
 }
 
 func validateConfiguration(conf config) error {
-	return nil
+	var err error
+
+	if !conf.showHelp {
+		_, err = os.Stat(conf.filePath)
+	}
+
+	return err
 }
