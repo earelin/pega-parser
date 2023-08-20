@@ -28,6 +28,9 @@ func main() {
 	}
 
 	err = validateConfiguration(conf)
+	if err != nil {
+		fmt.Println("Error: ", err)
+	}
 }
 
 func parseArgs(arguments []string) (config, error) {
