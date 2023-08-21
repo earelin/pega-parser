@@ -19,6 +19,14 @@ build-tools:
 test:
 	go test -v ./...
 
+.PHONY: test-coverage
+test-coverage:
+	go test -coverprofile=coverage.out ./...
+
+.PHONY: test-coverage-report
+test-coverage-report: test-coverage
+	go tool cover -html=coverage.out
+
 .PHONY: clean
 clean:
 	rm -Rf $(BIN_DIR)
