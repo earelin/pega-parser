@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"io/fs"
 	"log"
 	"os"
 	"reflect"
@@ -19,7 +20,7 @@ type Column struct {
 }
 
 type FileReader[T any] struct {
-	file     *os.File
+	file     fs.File
 	lineSize int
 	columns  []Column
 }

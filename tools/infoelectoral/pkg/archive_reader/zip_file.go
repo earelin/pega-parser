@@ -2,6 +2,7 @@ package archive_reader
 
 import (
 	"archive/zip"
+	"io/fs"
 )
 
 type ZipFile struct {
@@ -14,6 +15,10 @@ func (z *ZipFile) FileList() []string {
 		filenames = append(filenames, f.Name)
 	}
 	return filenames
+}
+
+func (z *ZipFile) Open(filename string) (fs.File, error) {
+	return z.file.Open(filename)
 }
 
 func (z *ZipFile) Close() error {
