@@ -2,12 +2,9 @@ package archive_reader
 
 import (
 	"github.com/stretchr/testify/assert"
+	"io/fs"
 	"testing"
 )
-
-var zipFileContent = []string{"FICHEROS.rtf", "FICHEROS.doc", "10021911.DAT", "09021911.DAT",
-	"08021911.DAT", "07021911.DAT", "06021911.DAT", "05021911.DAT", "04021911.DAT",
-	"03021911.DAT", "02021911.DAT", "01021911.DAT"}
 
 func TestNewZipFile(t *testing.T) {
 	var zipFile *ZipFile
@@ -23,11 +20,19 @@ func TestNewZipFile(t *testing.T) {
 	}
 }
 
-func TestZipFile_FileList(t *testing.T) {
-	var zipFile *ZipFile
+func TestZipFile_FindFileWithPrefixAndExtension(t *testing.T) {
+	zipFile, err := NewZipFile("../../testdata/02201911_MESA.zip")
+	if err != nil {
+		t.Error(err)
+	}
 
-	zipFile, _ = NewZipFile("../../testdata/02201911_MESA.zip")
-	fileList := zipFile.FileList()
+	var file fs.File
+	var fileInfo fs.FileInfo
+	file, err = zipFile.FindFileWithPrefixAndExtension("01", "DAT")
+	assert.Nil(t, err)
+	fileInfo, _ = file.Stat()
+	assert.Equal(t, "01021911.DAT", fileInfo.Name())
 
-	assert.ElementsMatch(t, fileList, zipFileContent, "Should return list of files in ZIP archive")
+	_, err = zipFile.FindFileWithPrefixAndExtension("KK", "ZIP")
+	assert.Equal(t, FileNotFound, err)
 }

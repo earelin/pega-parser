@@ -3,7 +3,9 @@ package main
 import (
 	"errors"
 	"fmt"
-	"github.com/earelin/pega/tools/infoelectoral/pkg/processor"
+	"github.com/earelin/pega/tools/infoelectoral/pkg/archive_reader"
+	"github.com/earelin/pega/tools/infoelectoral/pkg/election"
+	"log"
 	"os"
 )
 
@@ -33,7 +35,14 @@ func main() {
 		fmt.Println("Error:", err)
 	}
 
-	processor.ProcessDataFile(conf.filePath)
+	var zipFile *archive_reader.ZipFile
+	zipFile, err = archive_reader.NewZipFile(conf.filePath)
+	if err != nil {
+		log.Panic("Cannot open archive: ", err)
+	}
+
+	var e = election.NewElection(zipFile)
+	fmt.Print(e.String())
 }
 
 func parseArgs(arguments []string) (config, error) {
