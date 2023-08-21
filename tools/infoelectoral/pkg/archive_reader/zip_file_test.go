@@ -7,7 +7,7 @@ import (
 
 var zipFileContent = []string{"FICHEROS.rtf", "FICHEROS.doc", "10021911.DAT", "09021911.DAT",
 	"08021911.DAT", "07021911.DAT", "06021911.DAT", "05021911.DAT", "04021911.DAT",
-	"03021911.DAT", "02021911.DAT", "columns_test.txt"}
+	"03021911.DAT", "02021911.DAT", "01021911.DAT"}
 
 func TestNewZipFile(t *testing.T) {
 	var zipFile *ZipFile

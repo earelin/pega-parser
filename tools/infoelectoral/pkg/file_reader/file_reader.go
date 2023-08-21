@@ -72,7 +72,7 @@ func unMarshaling[T any](data []byte, columns []Column) (T, error) {
 		case "bool":
 			field.SetBool(rawValue == "1")
 		case "string":
-			field.SetString(strings.Trim(rawValue))
+			field.SetString(strings.TrimSpace(rawValue))
 		default:
 			errorMessage := fmt.Sprintf("could not parse type %s", column.columnType)
 			return structuredData, errors.New(errorMessage)
