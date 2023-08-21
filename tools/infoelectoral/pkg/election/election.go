@@ -6,6 +6,7 @@ import (
 	"github.com/earelin/pega/tools/infoelectoral/pkg/file_reader"
 	"io/fs"
 	"log"
+	"strconv"
 	"time"
 )
 
@@ -92,8 +93,9 @@ func loadControlData(e *Election, archive *archive_reader.ZipFile) {
 func buildFilenameGenerator(electionType int, month int, year int) func(bool, string) string {
 	return func(exists bool, fileType string) string {
 		var s string
+		var yearString = strconv.Itoa(year)[2:]
 		if exists {
-			s = fmt.Sprintf("%s.DAT", fileType)
+			s = fmt.Sprintf("%s%02d%s%02d.DAT", fileType, electionType, yearString, month)
 		}
 		return s
 	}
