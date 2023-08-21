@@ -15,6 +15,10 @@ lint:
 build-tools:
 	go build -o $(TOOLS_BIN_DIR)/infoelectoral $(TOOLS_SRC_DIR)/infoelectoral/main.go
 
+.PHONY: test
+test:
+	go test -v ./...
+
 .PHONY: clean
 clean:
 	rm -Rf $(BIN_DIR)

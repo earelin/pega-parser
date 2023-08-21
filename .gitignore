@@ -25,5 +25,5 @@ go.work
 .idea/
 .vscode/
 
-# Examples
-tools/infoelectoral/examples/
+# Operationg system
+.DS_Store

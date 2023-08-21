@@ -31,6 +31,7 @@ func main() {
 	if err != nil {
 		fmt.Println("Error:", err)
 	}
+
 }
 
 func parseArgs(arguments []string) (config, error) {
