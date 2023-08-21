@@ -21,9 +21,9 @@ func (z *ZipFile) FileList() []string {
 	return filenames
 }
 
-func (z *ZipFile) FindFileWithPrefixAndExtension(prefix string, extension string) (fs.File, error) {
+func (z *ZipFile) FindFileWithPrefix(prefix string) (fs.File, error) {
 	for _, f := range z.file.File {
-		if strings.HasPrefix(f.Name, prefix) && strings.HasSuffix(f.Name, extension) {
+		if strings.HasPrefix(f.Name, prefix) && strings.HasSuffix(f.Name, ".DAT") {
 			return z.Open(f.Name)
 		}
 	}

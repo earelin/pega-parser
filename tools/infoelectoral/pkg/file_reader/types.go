@@ -1,35 +1,5 @@
 package file_reader
 
-const (
-	Referendum        = 1
-	Congreso          = 2
-	Senado            = 3
-	Municipales       = 4
-	Autonomicas       = 5
-	Cabildos          = 6
-	ParlamentoEuropeo = 7
-	JuntasGenerales   = 15
-)
-
-const (
-	ControlFilePrefix                                      = "01"
-	IdentificationFilePrefix                               = "02"
-	CandidaturesFilePrefix                                 = "03"
-	CandidatesListFilePrefix                               = "04"
-	MunicipalitiesCommonDataFilePrefix                     = "05"
-	MunicipalitiesCandidaturesDataFilePrefix               = "06"
-	MunicipalitiesSuperiorScopeCommonDataFilePrefix        = "07"
-	MunicipalitiesSuperiorScopeCandidaturesDataFile        = "08"
-	TablesAndCeraCommonDataFilePrefix                      = "09"
-	TablesAndCeraCandidaturesDataFilePrefix                = "10"
-	MunicipalitiesSmallerThan250CommonDataFilePrefix       = "1104"
-	MunicipalitiesSmallerThan250CandidaturesDataFilePrefix = "1204"
-	JudicialDistrictCommonDataFilePrefix                   = "0510"
-	JudicialDistrictCandidaturesDataFilePrefix             = "0610"
-	ProvincialCouncilCommonDataFilePrefix                  = "0710"
-	ProvincialCouncilCandidaturesDataFilePrefix            = "0810"
-)
-
 type Control struct {
 	ElectionType                                     int  `position:"0" length:"2"`
 	Year                                             int  `position:"2" length:"4"`
@@ -51,4 +21,23 @@ type Control struct {
 	JudicialDistrictCandidaturesDataFile             bool `position:"22" length:"1"`
 	ProvincialCouncilCommonDataFile                  bool `position:"23" length:"1"`
 	ProvincialCouncilCandidaturesDataFile            bool `position:"24" length:"1"`
+}
+
+type Identification struct {
+	Type                           int    `position:"0" length:"2"`
+	Year                           int    `position:"2" length:"4"`
+	Month                          int    `position:"6" length:"2"`
+	Round                          int    `position:"8" length:"1"`
+	ScopeType                      string `position:"9" length:"1"`
+	TerritorialScope               int    `position:"10" length:"2"`
+	CelebrationDay                 int    `position:"12" length:"2"`
+	CelebrationMonth               int    `position:"14" length:"2"`
+	CelebrationYear                int    `position:"16" length:"4"`
+	PollStationOpeningTime         string `position:"20" length:"5"`
+	PollStationClosingTime         string `position:"25" length:"5"`
+	FirstParticipationAdvanceTime  string `position:"30" length:"5"`
+	SecondParticipationAdvanceTime string `position:"35" length:"5"`
+}
+
+type Candidacy struct {
 }

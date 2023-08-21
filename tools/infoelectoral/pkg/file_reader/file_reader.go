@@ -6,7 +6,6 @@ import (
 	"io"
 	"io/fs"
 	"log"
-	"os"
 	"reflect"
 	"strconv"
 	"strings"
@@ -42,7 +41,7 @@ func (fr FileReader[T]) Read() (T, error) {
 	return structuredData, nil
 }
 
-func NewFileReader[T any](file *os.File) (FileReader[T], error) {
+func NewFileReader[T any](file fs.File) (FileReader[T], error) {
 	var structType T
 
 	columns, err := extractColumns[T](structType)

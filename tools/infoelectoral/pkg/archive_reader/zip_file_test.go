@@ -28,11 +28,11 @@ func TestZipFile_FindFileWithPrefixAndExtension(t *testing.T) {
 
 	var file fs.File
 	var fileInfo fs.FileInfo
-	file, err = zipFile.FindFileWithPrefixAndExtension("01", "DAT")
+	file, err = zipFile.FindFileWithPrefix("01")
 	assert.Nil(t, err)
 	fileInfo, _ = file.Stat()
 	assert.Equal(t, "01021911.DAT", fileInfo.Name())
 
-	_, err = zipFile.FindFileWithPrefixAndExtension("KK", "ZIP")
+	_, err = zipFile.FindFileWithPrefix("KK")
 	assert.Equal(t, FileNotFound, err)
 }
