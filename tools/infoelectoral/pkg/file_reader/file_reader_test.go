@@ -2,15 +2,48 @@ package file_reader
 
 import (
 	"github.com/stretchr/testify/assert"
+	"os"
 	"testing"
 )
 
 func TestReadFile(t *testing.T) {
+	f, err := os.Open("testdata/columns_test.txt")
+	if err != nil {
+		t.Error(err)
+	}
 
+	fileReader, err := NewFileReader[TestStruct](f)
+	assert.Nil(t, err, "Should not have error on open file")
+	firstEntry, err := fileReader.Read()
+	assert.Nil(t, err, "Should not have error on reading line")
+	assert.Equal(t, TestStruct{
+		Year:    2023,
+		Month:   8,
+		Day:     21,
+		WeekDay: "Monday",
+		Happy:   true,
+	}, firstEntry)
+
+	err = f.Close()
+	if err != nil {
+		t.Error(err)
+	}
+}
+
+func Test_unMarshaling(t *testing.T) {
+	tStruct, err := unMarshaling[TestStruct](firstLine, columnsContent)
+	assert.Nil(t, err)
+	assert.Equal(t, TestStruct{
+		Year:    2023,
+		Month:   8,
+		Day:     21,
+		WeekDay: "Monday",
+		Happy:   true,
+	}, tStruct)
 }
 
 func Test_extractColumns(t *testing.T) {
-	var tStruct testStruct
+	var tStruct TestStruct
 
 	columns, err := extractColumns(tStruct)
 	assert.Nil(t, err, "Should not return error on valid columns")
@@ -36,41 +69,43 @@ func Test_calculateColumnsTotalLength(t *testing.T) {
 	assert.Equal(t, 8, calculateColumnsTotalLength(columns))
 }
 
-type testStruct struct {
-	year    int    `position:"0" length:"4"`
-	month   int    `position:"4" length:"2"`
-	day     int    `position:"6" length:"2"`
-	weekDay string `position:"8" length:"8"`
-	happy   bool   `position:"16" length:"1"`
+var firstLine = []byte("20230821Monday  1")
+
+type TestStruct struct {
+	Year    int    `position:"0" length:"4"`
+	Month   int    `position:"4" length:"2"`
+	Day     int    `position:"6" length:"2"`
+	WeekDay string `position:"8" length:"8"`
+	Happy   bool   `position:"16" length:"1"`
 }
 
 var columnsContent = []Column{
 	{
-		name:       "year",
+		name:       "Year",
 		position:   0,
 		length:     4,
 		columnType: "int",
 	},
 	{
-		name:       "month",
+		name:       "Month",
 		position:   4,
 		length:     2,
 		columnType: "int",
 	},
 	{
-		name:       "day",
+		name:       "Day",
 		position:   6,
 		length:     2,
 		columnType: "int",
 	},
 	{
-		name:       "weekDay",
+		name:       "WeekDay",
 		position:   8,
 		length:     8,
 		columnType: "string",
 	},
 	{
-		name:       "happy",
+		name:       "Happy",
 		position:   16,
 		length:     1,
 		columnType: "bool",

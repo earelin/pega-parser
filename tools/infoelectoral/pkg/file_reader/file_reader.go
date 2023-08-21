@@ -3,9 +3,12 @@ package file_reader
 import (
 	"errors"
 	"fmt"
+	"io"
+	"log"
 	"os"
 	"reflect"
 	"strconv"
+	"strings"
 )
 
 type Column struct {
@@ -21,9 +24,21 @@ type FileReader[T any] struct {
 	columns  []Column
 }
 
-func (fr FileReader[T]) Read() T {
-	var line T
-	return line
+func (fr FileReader[T]) Read() (T, error) {
+	var structuredData T
+	var data = make([]byte, fr.lineSize)
+
+	_, err := fr.file.Read(data)
+	if err != nil && err != io.EOF {
+		return structuredData, err
+	}
+
+	structuredData, err = unMarshaling[T](data, fr.columns)
+	if err != nil {
+		log.Printf("Error reading data: %s", err)
+	}
+
+	return structuredData, nil
 }
 
 func NewFileReader[T any](file *os.File) (FileReader[T], error) {
@@ -35,9 +50,36 @@ func NewFileReader[T any](file *os.File) (FileReader[T], error) {
 	}
 
 	return FileReader[T]{
-		file:    file,
-		columns: columns,
+		file:     file,
+		columns:  columns,
+		lineSize: calculateColumnsTotalLength(columns),
 	}, nil
+}
+
+func unMarshaling[T any](data []byte, columns []Column) (T, error) {
+	var structuredData T
+
+	for _, column := range columns {
+		field := reflect.ValueOf(&structuredData).Elem().FieldByName(column.name)
+		rawValue := string(data[column.position : column.position+column.length])
+		switch column.columnType {
+		case "int":
+			number, err := strconv.Atoi(rawValue)
+			if err != nil {
+				return structuredData, err
+			}
+			field.SetInt(int64(number))
+		case "bool":
+			field.SetBool(rawValue == "1")
+		case "string":
+			field.SetString(strings.Trim(rawValue))
+		default:
+			errorMessage := fmt.Sprintf("could not parse type %s", column.columnType)
+			return structuredData, errors.New(errorMessage)
+		}
+	}
+
+	return structuredData, nil
 }
 
 func extractColumns[T any](structType T) ([]Column, error) {
