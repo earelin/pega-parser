@@ -1,5 +1,5 @@
 package processor
 
-func Process(filePath string) {
-	
+func ProcessDataFile(filePath string) {
+
 }

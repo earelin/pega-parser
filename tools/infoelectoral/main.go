@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	"github.com/earelin/pega/tools/infoelectoral/pkg/processor"
 	"os"
 )
 
@@ -32,6 +33,7 @@ func main() {
 		fmt.Println("Error:", err)
 	}
 
+	processor.ProcessDataFile(conf.filePath)
 }
 
 func parseArgs(arguments []string) (config, error) {

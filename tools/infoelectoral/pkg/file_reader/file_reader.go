@@ -62,6 +62,7 @@ func unMarshaling[T any](data []byte, columns []Column) (T, error) {
 	for _, column := range columns {
 		field := reflect.ValueOf(&structuredData).Elem().FieldByName(column.name)
 		rawValue := string(data[column.position : column.position+column.length])
+
 		switch column.columnType {
 		case "int":
 			number, err := strconv.Atoi(rawValue)
