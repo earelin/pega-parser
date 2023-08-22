@@ -2,11 +2,14 @@ package main
 
 import (
 	"errors"
+	"flag"
 	"fmt"
 	"github.com/earelin/pega/tools/infoelectoral/pkg/archive_reader"
 	"github.com/earelin/pega/tools/infoelectoral/pkg/election"
+	"io"
 	"log"
 	"os"
+	"strings"
 )
 
 type config struct {
@@ -18,7 +21,10 @@ func main() {
 	var conf config
 	var err error
 
-	conf, err = parseArgs(os.Args)
+	conf, err = parseArgs(os.Stdout, os.Args)
+	if errors.Is(err, flag.ErrHelp) {
+		os.Exit(0)
+	}
 	if err != nil {
 		fmt.Println("Error executing command: ", err)
 		showUsage()
@@ -47,28 +53,27 @@ func main() {
 	os.Exit(0)
 }
 
-func parseArgs(arguments []string) (config, error) {
-	if len(arguments) < 2 {
-		return config{}, errors.New("missing argument")
-	}
-	if len(arguments) > 2 {
-		return config{}, errors.New("too many arguments")
-	}
-	argument := arguments[1]
+func parseArgs(w io.Writer, args []string) (config, error) {
+	var c config
 
-	if argument == "" {
-		return config{}, errors.New("empty filepath")
+	fs := flag.NewFlagSet("infoelectoral", flag.ContinueOnError)
+	fs.SetOutput(w)
+	err := fs.Parse(args[1:])
+	if err != nil {
+		return c, err
 	}
 
-	if argument == "-h" || argument == "--help" {
-		return config{
-			showHelp: true,
-		}, nil
+	if fs.NArg() != 1 {
+		return c, errors.New("one positional argument required")
 	}
 
-	return config{
-		filePath: argument,
-	}, nil
+	var filePath = strings.TrimSpace(fs.Arg(0))
+	if filePath == "" {
+		return c, errors.New("invalid file name")
+	}
+	c.filePath = filePath
+
+	return c, nil
 }
 
 func showHelp() {
