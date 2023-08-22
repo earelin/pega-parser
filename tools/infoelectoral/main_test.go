@@ -23,17 +23,8 @@ func Test_parseArgs(t *testing.T) {
 	byteBuf.Reset()
 
 	var conf config
-	conf, _ = parseArgs(byteBuf, []string{"infoelectoral", "-h"})
-	assert.True(t, conf.showHelp, "Should set showHelp")
-	byteBuf.Reset()
-
-	conf, _ = parseArgs(byteBuf, []string{"infoelectoral", "--help"})
-	assert.True(t, conf.showHelp, "Should set showHelp")
-	byteBuf.Reset()
-
 	conf, _ = parseArgs(byteBuf, []string{"infoelectoral", "file"})
-	assert.False(t, conf.showHelp, "Should not set showHelp")
-	assert.Equal(t, conf.filePath, "file")
+	assert.Equal(t, "file", conf.filePath)
 }
 
 func Test_validateConfiguration(t *testing.T) {

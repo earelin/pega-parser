@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"flag"
 	"fmt"
 	"github.com/earelin/pega/tools/infoelectoral/pkg/archive_reader"
@@ -8,6 +9,7 @@ import (
 	"io"
 	"log"
 	"os"
+	"strings"
 )
 
 type config struct {
@@ -20,6 +22,9 @@ func main() {
 	var err error
 
 	conf, err = parseArgs(os.Stdout, os.Args)
+	if errors.Is(err, flag.ErrHelp) {
+		os.Exit(0)
+	}
 	if err != nil {
 		fmt.Println("Error executing command: ", err)
 		showUsage()
@@ -53,10 +58,20 @@ func parseArgs(w io.Writer, args []string) (config, error) {
 
 	fs := flag.NewFlagSet("infoelectoral", flag.ContinueOnError)
 	fs.SetOutput(w)
-	err := fs.Parse(args)
+	err := fs.Parse(args[1:])
 	if err != nil {
 		return c, err
 	}
+
+	if fs.NArg() != 1 {
+		return c, errors.New("one positional argument required")
+	}
+
+	var filePath = strings.TrimSpace(fs.Arg(0))
+	if filePath == "" {
+		return c, errors.New("invalid file name")
+	}
+	c.filePath = filePath
 
 	return c, nil
 }
