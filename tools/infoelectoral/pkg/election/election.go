@@ -38,7 +38,8 @@ type Election struct {
 
 func (e Election) String() string {
 	var date = e.Date.Format("02-01-2006")
-	return fmt.Sprintf("Election file for: %s\n", date)
+	var electionType = ElectionTypeLabel[e.Type]
+	return fmt.Sprintf("Election file for: %s %s\n", electionType, date)
 }
 
 func getFileReader[T any](archive *archive_reader.ZipFile, filename string) file_reader.FileReader[T] {

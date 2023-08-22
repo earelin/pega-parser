@@ -23,7 +23,7 @@ func NewElection(zipFile *archive_reader.ZipFile) Election {
 func loadControlData(e *Election, archive *archive_reader.ZipFile) {
 	var err error
 	var controlFile fs.File
-	controlFile, err = archive.FindFileWithPrefix("01")
+	controlFile, err = archive.FindFileWithPrefix(ControlFilePrefix)
 	if err != nil {
 		log.Panic("Could not find control file", err)
 	}

@@ -25,12 +25,23 @@ const (
 )
 
 const (
-	Referendum        = 1
-	Congreso          = 2
-	Senado            = 3
-	Municipales       = 4
-	Autonomicas       = 5
-	Cabildos          = 6
-	ParlamentoEuropeo = 7
-	JuntasGenerales   = 15
+	Referendum            = 1
+	Congress              = 2
+	Senate                = 3
+	Municipals            = 4
+	AutonomousCommunities = 5
+	Cabildos              = 6
+	EuropeanParliament    = 7
+	JuntasGenerales       = 15
 )
+
+var ElectionTypeLabel = map[int]string{
+	Referendum:            "Referéndum",
+	Congress:              "Congreso",
+	Senate:                "Senado",
+	Municipals:            "Municipais",
+	AutonomousCommunities: "Comunidades Autónomas",
+	Cabildos:              "Cabildos",
+	EuropeanParliament:    "Parlamento Europeo",
+	JuntasGenerales:       "Xuntas Xeráis",
+}
