@@ -1,30 +1,37 @@
 package main
 
 import (
+	"bytes"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
 func Test_parseArgs(t *testing.T) {
 	var err error
+	byteBuf := new(bytes.Buffer)
 
-	_, err = parseArgs(make([]string, 1))
+	_, err = parseArgs(byteBuf, make([]string, 1))
 	assert.Error(t, err, "Should return error for too few args")
+	byteBuf.Reset()
 
-	_, err = parseArgs(make([]string, 3))
+	_, err = parseArgs(byteBuf, make([]string, 3))
 	assert.Error(t, err, "Should return error for too many args")
+	byteBuf.Reset()
 
-	_, err = parseArgs([]string{"infoelectoral", ""})
+	_, err = parseArgs(byteBuf, []string{"infoelectoral", ""})
 	assert.Error(t, err, "Should return error for empty filepath")
+	byteBuf.Reset()
 
 	var conf config
-	conf, _ = parseArgs([]string{"infoelectoral", "-h"})
+	conf, _ = parseArgs(byteBuf, []string{"infoelectoral", "-h"})
 	assert.True(t, conf.showHelp, "Should set showHelp")
+	byteBuf.Reset()
 
-	conf, _ = parseArgs([]string{"infoelectoral", "--help"})
+	conf, _ = parseArgs(byteBuf, []string{"infoelectoral", "--help"})
 	assert.True(t, conf.showHelp, "Should set showHelp")
+	byteBuf.Reset()
 
-	conf, _ = parseArgs([]string{"infoelectoral", "file"})
+	conf, _ = parseArgs(byteBuf, []string{"infoelectoral", "file"})
 	assert.False(t, conf.showHelp, "Should not set showHelp")
 	assert.Equal(t, conf.filePath, "file")
 }

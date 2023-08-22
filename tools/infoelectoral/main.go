@@ -1,10 +1,11 @@
 package main
 
 import (
-	"errors"
+	"flag"
 	"fmt"
 	"github.com/earelin/pega/tools/infoelectoral/pkg/archive_reader"
 	"github.com/earelin/pega/tools/infoelectoral/pkg/election"
+	"io"
 	"log"
 	"os"
 )
@@ -18,7 +19,7 @@ func main() {
 	var conf config
 	var err error
 
-	conf, err = parseArgs(os.Args)
+	conf, err = parseArgs(os.Stdout, os.Args)
 	if err != nil {
 		fmt.Println("Error executing command: ", err)
 		showUsage()
@@ -47,28 +48,17 @@ func main() {
 	os.Exit(0)
 }
 
-func parseArgs(arguments []string) (config, error) {
-	if len(arguments) < 2 {
-		return config{}, errors.New("missing argument")
-	}
-	if len(arguments) > 2 {
-		return config{}, errors.New("too many arguments")
-	}
-	argument := arguments[1]
+func parseArgs(w io.Writer, args []string) (config, error) {
+	var c config
 
-	if argument == "" {
-		return config{}, errors.New("empty filepath")
+	fs := flag.NewFlagSet("infoelectoral", flag.ContinueOnError)
+	fs.SetOutput(w)
+	err := fs.Parse(args)
+	if err != nil {
+		return c, err
 	}
 
-	if argument == "-h" || argument == "--help" {
-		return config{
-			showHelp: true,
-		}, nil
-	}
-
-	return config{
-		filePath: argument,
-	}, nil
+	return c, nil
 }
 
 func showHelp() {
