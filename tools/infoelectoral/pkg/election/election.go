@@ -11,6 +11,7 @@ import (
 )
 
 type dataFiles struct {
+	IdentificationFile                               string
 	CandidaturesFile                                 string
 	CandidatesListFile                               string
 	MunicipalitiesCommonDataFile                     string
@@ -36,58 +37,25 @@ type Election struct {
 }
 
 func (e Election) String() string {
-	return "Election file for: "
+	var date = e.Date.Format("02-01-2006")
+	return fmt.Sprintf("Election file for: %s\n", date)
 }
 
-func NewElection(zipFile *archive_reader.ZipFile) Election {
-	var e = Election{
-		zipFile: zipFile,
-	}
-
-	loadControlData(&e, zipFile)
-
-	return e
-}
-
-func loadControlData(e *Election, archive *archive_reader.ZipFile) {
+func getFileReader[T any](archive *archive_reader.ZipFile, filename string) file_reader.FileReader[T] {
 	var err error
-	var controlFile fs.File
-	controlFile, err = archive.FindFileWithPrefix("01")
+	var file fs.File
+	file, err = archive.Open(filename)
 	if err != nil {
-		log.Panic("Could not find control file", err)
+		log.Panic("Could not open file", filename, err)
 	}
 
-	var controlFileReader file_reader.FileReader[file_reader.Control]
-	controlFileReader, err = file_reader.NewFileReader[file_reader.Control](controlFile)
+	var fileReader file_reader.FileReader[T]
+	fileReader, err = file_reader.NewFileReader[T](file)
 	if err != nil {
-		log.Panic("Could not open reader for control file", err)
+		log.Panic("Could not open reader for file", filename, err)
 	}
 
-	var control file_reader.Control
-	control, err = controlFileReader.Read()
-	if err != nil {
-		log.Panic("Could not read control file information", err)
-	}
-
-	e.Type = control.ElectionType
-	var generateFileName = buildFilenameGenerator(control.ElectionType, control.Month, control.Year)
-
-	e.files = dataFiles{
-		CandidaturesFile:                          generateFileName(control.CandidaturesFile, CandidaturesFilePrefix),
-		CandidatesListFile:                        generateFileName(control.CandidatesListFile, CandidatesListFilePrefix),
-		MunicipalitiesCommonDataFile:              generateFileName(control.MunicipalitiesCommonDataFile, MunicipalitiesCommonDataFilePrefix),
-		MunicipalitiesCandidaturesDataFile:        generateFileName(control.MunicipalitiesCandidaturesDataFile, MunicipalitiesCandidaturesDataFilePrefix),
-		MunicipalitiesSuperiorScopeCommonDataFile: generateFileName(control.MunicipalitiesSuperiorScopeCommonDataFile, MunicipalitiesSuperiorScopeCommonDataFilePrefix),
-		//MunicipalitiesSuperiorScopeCandidaturesDataFile
-		//TablesAndCeraCommonDataFile
-		//TablesAndCeraCandidaturesDataFile
-		//MunicipalitiesSmallerThan250CommonDataFile
-		//MunicipalitiesSmallerThan250CandidaturesDataFile
-		//JudicialDistrictCommonDataFile
-		//JudicialDistrictCandidaturesDataFile
-		//ProvincialCouncilCommonDataFile
-		//ProvincialCouncilCandidaturesDataFile
-	}
+	return fileReader
 }
 
 func buildFilenameGenerator(electionType int, month int, year int) func(bool, string) string {
@@ -96,6 +64,17 @@ func buildFilenameGenerator(electionType int, month int, year int) func(bool, st
 		var yearString = strconv.Itoa(year)[2:]
 		if exists {
 			s = fmt.Sprintf("%s%02d%s%02d.DAT", fileType, electionType, yearString, month)
+		}
+		return s
+	}
+}
+
+func buildCustomPrefixFilenameGenerator(month int, year int) func(bool, string) string {
+	return func(exists bool, prefix string) string {
+		var s string
+		var yearString = strconv.Itoa(year)[2:]
+		if exists {
+			s = fmt.Sprintf("%s%s%02d.DAT", prefix, yearString, month)
 		}
 		return s
 	}
