@@ -3,6 +3,7 @@ package file_reader
 import (
 	"errors"
 	"fmt"
+	"io"
 	"io/fs"
 	"log"
 	"reflect"
@@ -27,17 +28,19 @@ func (fr FileReader[T]) Read() (T, error) {
 	var structuredData T
 	var data = make([]byte, fr.lineSize)
 
-	_, err := fr.file.Read(data)
-	if err != nil {
+	var err error
+	_, err = fr.file.Read(data)
+	if err != nil || err != io.EOF {
 		return structuredData, err
 	}
 
-	structuredData, err = unMarshaling[T](data, fr.columns)
-	if err != nil {
+	var merr error
+	structuredData, merr = unMarshaling[T](data, fr.columns)
+	if merr != nil {
 		log.Printf("Error reading data: %s", err)
 	}
 
-	return structuredData, nil
+	return structuredData, err
 }
 
 func NewFileReader[T any](file fs.File) (FileReader[T], error) {
