@@ -1,5 +1,7 @@
 package election
 
+import "time"
+
 const (
 	EstateScope              = 0
 	AutonomousCommunityScope = 1
@@ -55,4 +57,18 @@ type Candidature struct {
 	Code    int    `json:"id"`
 	Acronym string `json:"acronym"`
 	Name    string `json:"name"`
+}
+
+type Candidate struct {
+	ProvinceCode          int
+	ElectoralDistrictCode int
+	MunicipalCode         int
+	CandidatureCode       int
+	Position              int
+	Type                  int
+	Name                  string
+	Surname               string
+	Birthdate             time.Time
+	NationalIdentityCard  string
+	Elected               bool
 }

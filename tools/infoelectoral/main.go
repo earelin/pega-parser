@@ -1,12 +1,12 @@
 package main
 
 import (
-	json2 "encoding/json"
 	"errors"
 	"flag"
 	"fmt"
 	"github.com/earelin/pega/tools/infoelectoral/pkg/archive_reader"
 	"github.com/earelin/pega/tools/infoelectoral/pkg/election"
+	"github.com/earelin/pega/tools/infoelectoral/pkg/writers"
 	"io"
 	"log"
 	"os"
@@ -51,12 +51,9 @@ func main() {
 	var e = election.NewElection(zipFile)
 	fmt.Print(e.String())
 
-	var c = e.Candidatures()
-
-	var json = json2.NewEncoder(os.Stdout)
-	err = json.Encode(c)
+	err = e.ExportToFiles(writers.CreateJsonFile)
 	if err != nil {
-		log.Panic("Cannot convert candidatures to json")
+		log.Panic("Error exporting files to JSON", err)
 	}
 }
 

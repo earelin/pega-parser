@@ -43,6 +43,10 @@ func (fr FileReader[T]) Read() (T, error) {
 	return structuredData, err
 }
 
+func (fr FileReader[T]) Close() {
+	fr.file.Close()
+}
+
 func NewFileReader[T any](file fs.File) (FileReader[T], error) {
 	var structType T
 
