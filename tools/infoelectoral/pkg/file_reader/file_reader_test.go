@@ -50,10 +50,10 @@ func Test_extractColumns(t *testing.T) {
 	assert.ElementsMatch(t, columnsContent, columns)
 }
 
-func Test_calculateColumnsTotalLength(t *testing.T) {
+func Test_calculateLineLength(t *testing.T) {
 	var columns []Column
 
-	assert.Equal(t, 0, calculateColumnsTotalLength(columns))
+	assert.Equal(t, 0, calculateLineLength(columns))
 
 	columns = []Column{
 		{
@@ -66,7 +66,7 @@ func Test_calculateColumnsTotalLength(t *testing.T) {
 			length: 4,
 		},
 	}
-	assert.Equal(t, 8, calculateColumnsTotalLength(columns))
+	assert.Equal(t, 9, calculateLineLength(columns))
 }
 
 var firstLine = []byte("20230821Monday  1")

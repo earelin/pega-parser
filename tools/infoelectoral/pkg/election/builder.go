@@ -28,13 +28,13 @@ func loadControlData(e *Election, archive *archive_reader.ZipFile) {
 		log.Panic("Could not find control file", err)
 	}
 
-	var controlFileReader file_reader.FileReader[file_reader.Control]
-	controlFileReader, err = file_reader.NewFileReader[file_reader.Control](controlFile)
+	var controlFileReader file_reader.FileReader[file_reader.ControlLine]
+	controlFileReader, err = file_reader.NewFileReader[file_reader.ControlLine](controlFile)
 	if err != nil {
 		log.Panic("Could not open reader for control file", err)
 	}
 
-	var control file_reader.Control
+	var control file_reader.ControlLine
 	control, err = controlFileReader.Read()
 	if err != nil {
 		log.Panic("Could not read control file information", err)
@@ -64,9 +64,9 @@ func loadControlData(e *Election, archive *archive_reader.ZipFile) {
 }
 
 func loadIdentificationData(e *Election, archive *archive_reader.ZipFile) {
-	var identificationFileReader = getFileReader[file_reader.Identification](archive, e.files.IdentificationFile)
+	var identificationFileReader = getFileReader[file_reader.IdentificationLine](archive, e.files.IdentificationFile)
 
-	var identification file_reader.Identification
+	var identification file_reader.IdentificationLine
 	var err error
 	identification, err = identificationFileReader.Read()
 	if err != nil {

@@ -52,7 +52,7 @@ func NewFileReader[T any](file fs.File) (FileReader[T], error) {
 	return FileReader[T]{
 		file:     file,
 		columns:  columns,
-		lineSize: calculateColumnsTotalLength(columns),
+		lineSize: calculateLineLength(columns),
 	}, nil
 }
 
@@ -118,12 +118,12 @@ func extractColumns[T any](structType T) ([]Column, error) {
 	return columns, nil
 }
 
-func calculateColumnsTotalLength(columns []Column) int {
+func calculateLineLength(columns []Column) int {
 	var totalLength int
 
 	for _, column := range columns {
 		totalLength += column.length
 	}
 
-	return totalLength
+	return totalLength + 1
 }
