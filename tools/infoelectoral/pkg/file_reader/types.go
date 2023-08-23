@@ -39,8 +39,8 @@ type IdentificationLine struct {
 	SecondParticipationAdvanceTime string `position:"35" length:"5"`
 }
 
-type CandidacyLine struct {
-	Type           int    `position:"0" length:"2"`
+type CandidatureLine struct {
+	ElectionType   int    `position:"0" length:"2"`
 	Year           int    `position:"2" length:"4"`
 	Month          int    `position:"6" length:"2"`
 	Code           int    `position:"8" length:"6"`
@@ -49,4 +49,26 @@ type CandidacyLine struct {
 	ProvincialCode int    `position:"214" length:"6"`
 	AutonomicCode  int    `position:"220" length:"6"`
 	StateCode      int    `position:"226" length:"6"`
+}
+
+type CandidatesListLine struct {
+	ElectionType         int    `position:"0" length:"2"`
+	Year                 int    `position:"2" length:"4"`
+	Month                int    `position:"6" length:"2"`
+	Round                int    `position:"8" length:"1"`
+	ProvinceCode         int    `position:"9" length:"2"`
+	ElectoralDistrict    int    `position:"11" length:"1"`
+	MunicipalCode        int    `position:"12" length:"3"`
+	CandidatureCode      int    `position:"15" length:"6"`
+	Position             int    `position:"21" length:"3"`
+	Type                 string `position:"24" length:"1"` // T/S
+	Name                 string `position:"25" length:"25"`
+	FirstSurname         string `position:"50" length:"25"`
+	SecondSurname        string `position:"75" length:"25"`
+	Genre                string `position:"100" length:"1"` // M/F
+	BirthdayDay          int    `position:"101" length:"2"`
+	BirthdayMonth        int    `position:"103" length:"2"`
+	BirthdayYear         int    `position:"105" length:"4"`
+	NationalIdentityCard string `position:"109" length:"10"`
+	Elected              string `position:"109" length:"1"` // S/N
 }

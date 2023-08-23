@@ -71,7 +71,7 @@ func loadIdentificationData(e *Election, archive *archive_reader.ZipFile) {
 	var identification file_reader.IdentificationLine
 	var err error
 	identification, err = identificationFileReader.Read()
-	if err != nil {
+	if err != nil && err != io.EOF {
 		log.Panic("Could not read control file information", err)
 	}
 

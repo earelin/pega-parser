@@ -10,9 +10,9 @@ import (
 func TestCandidacyRead(t *testing.T) {
 	var f fs.File
 	f, _ = os.Open("testdata/candidatures.DAT")
-	fr, _ := NewFileReader[CandidacyLine](f)
+	fr, _ := NewFileReader[CandidatureLine](f)
 
-	candidatures := []CandidacyLine{
+	candidatures := []CandidatureLine{
 		{
 			Type:           2,
 			Year:           2019,

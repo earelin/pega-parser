@@ -26,11 +26,11 @@ type FileReader[T any] struct {
 
 func (fr FileReader[T]) Read() (T, error) {
 	var structuredData T
-	var data = make([]byte, fr.lineSize)
+	var data = make([]byte, fr.lineSize+1)
 
 	var err error
 	_, err = fr.file.Read(data)
-	if err != nil || err != io.EOF {
+	if err != nil && err != io.EOF {
 		return structuredData, err
 	}
 
@@ -63,19 +63,19 @@ func unMarshaling[T any](data []byte, columns []Column) (T, error) {
 
 	for _, column := range columns {
 		field := reflect.ValueOf(&structuredData).Elem().FieldByName(column.name)
-		rawValue := string(data[column.position : column.position+column.length])
+		rawValue := data[column.position : column.position+column.length]
 
 		switch column.columnType {
 		case "int":
-			number, err := strconv.Atoi(rawValue)
+			number, err := strconv.Atoi(string(rawValue))
 			if err != nil {
 				return structuredData, err
 			}
 			field.SetInt(int64(number))
 		case "bool":
-			field.SetBool(rawValue == "1")
+			field.SetBool(string(rawValue) == "1")
 		case "string":
-			field.SetString(strings.TrimSpace(rawValue))
+			field.SetString(strings.TrimSpace(isoToUtf8(rawValue)))
 		default:
 			errorMessage := fmt.Sprintf("could not parse type %s", column.columnType)
 			return structuredData, errors.New(errorMessage)
@@ -83,6 +83,14 @@ func unMarshaling[T any](data []byte, columns []Column) (T, error) {
 	}
 
 	return structuredData, nil
+}
+
+func isoToUtf8(bytes []byte) string {
+	buf := make([]rune, len(bytes))
+	for i, b := range bytes {
+		buf[i] = rune(b)
+	}
+	return string(buf)
 }
 
 func extractColumns[T any](structType T) ([]Column, error) {
@@ -122,9 +130,6 @@ func extractColumns[T any](structType T) ([]Column, error) {
 
 func calculateLineLength(columns []Column) int {
 	var totalLength int
-	if len(columns) >= 1 {
-		totalLength++
-	}
 
 	for _, column := range columns {
 		totalLength += column.length

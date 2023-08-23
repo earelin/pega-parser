@@ -43,7 +43,7 @@ func (e Election) String() string {
 }
 
 func (e Election) Candidatures() []Candidature {
-	fr := getFileReader[file_reader.CandidacyLine](e.zipFile, e.files.CandidaturesFile)
+	fr := getFileReader[file_reader.CandidatureLine](e.zipFile, e.files.CandidaturesFile)
 
 	var candiatures []Candidature
 	for {
