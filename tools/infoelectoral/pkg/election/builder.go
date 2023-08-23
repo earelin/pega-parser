@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/earelin/pega/tools/infoelectoral/pkg/archive_reader"
 	"github.com/earelin/pega/tools/infoelectoral/pkg/file_reader"
+	"io"
 	"io/fs"
 	"log"
 	"strconv"
@@ -37,7 +38,7 @@ func loadControlData(e *Election, archive *archive_reader.ZipFile) {
 
 	var control file_reader.ControlLine
 	control, err = controlFileReader.Read()
-	if err != nil {
+	if err != nil && err != io.EOF {
 		log.Panic("Could not read control file information", err)
 	}
 

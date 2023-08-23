@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/earelin/pega/tools/infoelectoral/pkg/archive_reader"
 	"github.com/earelin/pega/tools/infoelectoral/pkg/file_reader"
+	"io"
 	"io/fs"
 	"log"
 	"time"
@@ -39,6 +40,29 @@ func (e Election) String() string {
 	var date = e.Date.Format("02-01-2006")
 	var electionType = ElectionTypeLabel[e.Type]
 	return fmt.Sprintf("Election file for: %s %s\n", electionType, date)
+}
+
+func (e Election) Candidatures() []Candidature {
+	fr := getFileReader[file_reader.CandidacyLine](e.zipFile, e.files.CandidaturesFile)
+
+	var candiatures []Candidature
+	for {
+		c, err := fr.Read()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			log.Panic("Error reading candidatures files", err)
+		}
+
+		candiatures = append(candiatures, Candidature{
+			Code:    c.Code,
+			Acronym: c.Acronym,
+			Name:    c.Name,
+		})
+	}
+
+	return candiatures
 }
 
 func getFileReader[T any](archive *archive_reader.ZipFile, filename string) file_reader.FileReader[T] {

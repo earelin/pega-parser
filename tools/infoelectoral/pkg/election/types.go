@@ -45,3 +45,9 @@ var ElectionTypeLabel = map[int]string{
 	EuropeanParliament:    "Parlamento Europeo",
 	JuntasGenerales:       "Xuntas Xeráis",
 }
+
+type Candidature struct {
+	Code    int
+	Acronym string
+	Name    string
+}

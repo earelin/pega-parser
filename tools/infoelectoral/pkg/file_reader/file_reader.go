@@ -3,7 +3,6 @@ package file_reader
 import (
 	"errors"
 	"fmt"
-	"io"
 	"io/fs"
 	"log"
 	"reflect"
@@ -29,7 +28,7 @@ func (fr FileReader[T]) Read() (T, error) {
 	var data = make([]byte, fr.lineSize)
 
 	_, err := fr.file.Read(data)
-	if err != nil && err != io.EOF {
+	if err != nil {
 		return structuredData, err
 	}
 
