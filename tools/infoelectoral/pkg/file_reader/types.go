@@ -1,6 +1,6 @@
 package file_reader
 
-type Control struct {
+type ControlLine struct {
 	ElectionType                                     int  `position:"0" length:"2"`
 	Year                                             int  `position:"2" length:"4"`
 	Month                                            int  `position:"6" length:"2"`
@@ -23,7 +23,7 @@ type Control struct {
 	ProvincialCouncilCandidaturesDataFile            bool `position:"24" length:"1"`
 }
 
-type Identification struct {
+type IdentificationLine struct {
 	Type                           int    `position:"0" length:"2"`
 	Year                           int    `position:"2" length:"4"`
 	Month                          int    `position:"6" length:"2"`
@@ -39,5 +39,14 @@ type Identification struct {
 	SecondParticipationAdvanceTime string `position:"35" length:"5"`
 }
 
-type Candidacy struct {
+type CandidatureLine struct {
+	Type           int    `position:"0" length:"2"`
+	Year           int    `position:"2" length:"4"`
+	Month          int    `position:"6" length:"2"`
+	Code           int    `position:"8" length:"6"`
+	Acronym        string `position:"14" length:"50"`
+	Name           string `position:"64" length:"150"`
+	ProvincialCode int    `position:"214" length:"6"`
+	AutonomicCode  int    `position:"220" length:"6"`
+	StateCode      int    `position:"226" length:"6"`
 }

@@ -125,5 +125,5 @@ func calculateColumnsTotalLength(columns []Column) int {
 		totalLength += column.length
 	}
 
-	return totalLength
+	return totalLength + 1
 }
