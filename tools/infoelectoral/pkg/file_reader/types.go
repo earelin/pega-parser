@@ -70,5 +70,5 @@ type CandidatesListLine struct {
 	BirthdayMonth        int    `position:"103" length:"2"`
 	BirthdayYear         int    `position:"105" length:"4"`
 	NationalIdentityCard string `position:"109" length:"10"`
-	Elected              string `position:"109" length:"1"` // S/N
+	Elected              string `position:"119" length:"1"` // S/N
 }

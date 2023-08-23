@@ -14,7 +14,7 @@ func TestCandidacyRead(t *testing.T) {
 
 	candidatures := []CandidatureLine{
 		{
-			Type:           2,
+			ElectionType:   2,
 			Year:           2019,
 			Month:          11,
 			Code:           2,
@@ -25,7 +25,7 @@ func TestCandidacyRead(t *testing.T) {
 			StateCode:      2,
 		},
 		{
-			Type:           2,
+			ElectionType:   2,
 			Year:           2019,
 			Month:          11,
 			Code:           3,
@@ -36,7 +36,7 @@ func TestCandidacyRead(t *testing.T) {
 			StateCode:      3,
 		},
 		{
-			Type:           2,
+			ElectionType:   2,
 			Year:           2019,
 			Month:          11,
 			Code:           5,

@@ -54,7 +54,10 @@ func main() {
 	var c = e.Candidatures()
 
 	var json = json2.NewEncoder(os.Stdout)
-	json.Encode(c)
+	err = json.Encode(c)
+	if err != nil {
+		log.Panic("Cannot convert candidatures to json")
+	}
 }
 
 func parseArgs(w io.Writer, args []string) (config, error) {
