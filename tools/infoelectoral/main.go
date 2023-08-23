@@ -49,8 +49,6 @@ func main() {
 
 	var e = election.NewElection(zipFile)
 	fmt.Print(e.String())
-
-	os.Exit(0)
 }
 
 func parseArgs(w io.Writer, args []string) (config, error) {

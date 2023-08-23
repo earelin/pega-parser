@@ -120,10 +120,13 @@ func extractColumns[T any](structType T) ([]Column, error) {
 
 func calculateLineLength(columns []Column) int {
 	var totalLength int
+	if len(columns) >= 1 {
+		totalLength++
+	}
 
 	for _, column := range columns {
 		totalLength += column.length
 	}
 
-	return totalLength + 1
+	return totalLength
 }
