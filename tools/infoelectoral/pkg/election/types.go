@@ -35,6 +35,11 @@ const (
 	JuntasGenerales       = 15
 )
 
+const (
+	TitularCandidate   = 1
+	AlternateCandidate = 2
+)
+
 var ElectionTypeLabel = map[int]string{
 	Referendum:            "Referéndum",
 	Congress:              "Congreso",
@@ -47,10 +52,7 @@ var ElectionTypeLabel = map[int]string{
 }
 
 type Candidature struct {
-	Code           int
-	Acronym        string
-	Name           string
-	ProvincialCode int
-	AutonomicCode  int
-	StateCode      int
+	Code    int    `json:"id"`
+	Acronym string `json:"acronym"`
+	Name    string `json:"name"`
 }

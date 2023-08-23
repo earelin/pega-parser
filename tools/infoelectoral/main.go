@@ -1,6 +1,7 @@
 package main
 
 import (
+	json2 "encoding/json"
 	"errors"
 	"flag"
 	"fmt"
@@ -50,8 +51,13 @@ func main() {
 	var e = election.NewElection(zipFile)
 	fmt.Print(e.String())
 
-	//var candidatures = e.Candidatures()
-	//fmt.Print(candidatures)
+	var c = e.Candidatures()
+
+	var json = json2.NewEncoder(os.Stdout)
+	err = json.Encode(c)
+	if err != nil {
+		log.Panic("Cannot convert candidatures to json")
+	}
 }
 
 func parseArgs(w io.Writer, args []string) (config, error) {

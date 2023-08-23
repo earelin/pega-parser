@@ -43,26 +43,26 @@ func (e Election) String() string {
 }
 
 func (e Election) Candidatures() []Candidature {
-	var candidaturesFileReader = getFileReader[file_reader.CandidatureLine](e.zipFile, e.files.CandidaturesFile)
+	fr := getFileReader[file_reader.CandidatureLine](e.zipFile, e.files.CandidaturesFile)
 
-	var candidatures []Candidature
+	var candiatures []Candidature
 	for {
-		var c, err = candidaturesFileReader.Read()
+		c, err := fr.Read()
 		if err == io.EOF {
 			break
 		}
 		if err != nil {
-			log.Panic("Error reading candidatures file")
+			log.Panic("Error reading candidatures files", err)
 		}
 
-		var candidature = Candidature{
-			Code: c.Code,
-		}
-
-		candidatures = append(candidatures, candidature)
+		candiatures = append(candiatures, Candidature{
+			Code:    c.Code,
+			Acronym: c.Acronym,
+			Name:    c.Name,
+		})
 	}
 
-	return candidatures
+	return candiatures
 }
 
 func getFileReader[T any](archive *archive_reader.ZipFile, filename string) file_reader.FileReader[T] {

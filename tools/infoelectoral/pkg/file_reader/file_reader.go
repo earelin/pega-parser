@@ -26,19 +26,21 @@ type FileReader[T any] struct {
 
 func (fr FileReader[T]) Read() (T, error) {
 	var structuredData T
-	var data = make([]byte, fr.lineSize)
+	var data = make([]byte, fr.lineSize+1)
 
-	_, err := fr.file.Read(data)
+	var err error
+	_, err = fr.file.Read(data)
 	if err != nil && err != io.EOF {
 		return structuredData, err
 	}
 
-	structuredData, err = unMarshaling[T](data, fr.columns)
-	if err != nil {
+	var merr error
+	structuredData, merr = unMarshaling[T](data, fr.columns)
+	if merr != nil {
 		log.Printf("Error reading data: %s", err)
 	}
 
-	return structuredData, nil
+	return structuredData, err
 }
 
 func NewFileReader[T any](file fs.File) (FileReader[T], error) {
@@ -52,7 +54,7 @@ func NewFileReader[T any](file fs.File) (FileReader[T], error) {
 	return FileReader[T]{
 		file:     file,
 		columns:  columns,
-		lineSize: calculateColumnsTotalLength(columns),
+		lineSize: calculateLineLength(columns),
 	}, nil
 }
 
@@ -61,19 +63,19 @@ func unMarshaling[T any](data []byte, columns []Column) (T, error) {
 
 	for _, column := range columns {
 		field := reflect.ValueOf(&structuredData).Elem().FieldByName(column.name)
-		rawValue := string(data[column.position : column.position+column.length])
+		rawValue := data[column.position : column.position+column.length]
 
 		switch column.columnType {
 		case "int":
-			number, err := strconv.Atoi(rawValue)
+			number, err := strconv.Atoi(string(rawValue))
 			if err != nil {
 				return structuredData, err
 			}
 			field.SetInt(int64(number))
 		case "bool":
-			field.SetBool(rawValue == "1")
+			field.SetBool(string(rawValue) == "1")
 		case "string":
-			field.SetString(strings.TrimSpace(rawValue))
+			field.SetString(strings.TrimSpace(isoToUtf8(rawValue)))
 		default:
 			errorMessage := fmt.Sprintf("could not parse type %s", column.columnType)
 			return structuredData, errors.New(errorMessage)
@@ -81,6 +83,14 @@ func unMarshaling[T any](data []byte, columns []Column) (T, error) {
 	}
 
 	return structuredData, nil
+}
+
+func isoToUtf8(bytes []byte) string {
+	buf := make([]rune, len(bytes))
+	for i, b := range bytes {
+		buf[i] = rune(b)
+	}
+	return string(buf)
 }
 
 func extractColumns[T any](structType T) ([]Column, error) {
@@ -118,12 +128,12 @@ func extractColumns[T any](structType T) ([]Column, error) {
 	return columns, nil
 }
 
-func calculateColumnsTotalLength(columns []Column) int {
+func calculateLineLength(columns []Column) int {
 	var totalLength int
 
 	for _, column := range columns {
 		totalLength += column.length
 	}
 
-	return totalLength + 1
+	return totalLength
 }
