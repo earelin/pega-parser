@@ -47,6 +47,7 @@ func (e Election) ExportToFiles(fileExport func(interface{}, string) error) erro
 	var err error
 
 	if e.files.CandidaturesFile != "" {
+		fmt.Println("Exporting candidatures")
 		var c = e.Candidatures()
 		err = fileExport(c, "candidatures")
 		if err != nil {
@@ -55,6 +56,7 @@ func (e Election) ExportToFiles(fileExport func(interface{}, string) error) erro
 	}
 
 	if e.files.CandidatesListFile != "" {
+		fmt.Println("Exporting candidates")
 		var cl = e.CandidatesList()
 		err = fileExport(cl, "candidates")
 		if err != nil {

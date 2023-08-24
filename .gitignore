@@ -27,3 +27,6 @@ go.work
 
 # Operationg system
 .DS_Store
+
+# Working files
+tools/infoelectoral/*.json

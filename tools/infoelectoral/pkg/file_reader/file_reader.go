@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io"
 	"io/fs"
-	"log"
 	"reflect"
 	"strconv"
 	"strings"
@@ -37,7 +36,7 @@ func (fr FileReader[T]) Read() (T, error) {
 	var merr error
 	structuredData, merr = unMarshaling[T](data, fr.columns)
 	if merr != nil {
-		log.Printf("Error reading data: %s", err)
+		fmt.Printf("Error reading data: %s\n", err)
 	}
 
 	return structuredData, err
@@ -73,7 +72,7 @@ func unMarshaling[T any](data []byte, columns []Column) (T, error) {
 		case "int":
 			number, err := strconv.Atoi(string(rawValue))
 			if err != nil {
-				return structuredData, err
+				return structuredData, fmt.Errorf("error converting %s to int in column %s: %w", rawValue, column.name, err)
 			}
 			field.SetInt(int64(number))
 		case "bool":
@@ -81,8 +80,7 @@ func unMarshaling[T any](data []byte, columns []Column) (T, error) {
 		case "string":
 			field.SetString(strings.TrimSpace(isoToUtf8(rawValue)))
 		default:
-			errorMessage := fmt.Sprintf("could not parse type %s", column.columnType)
-			return structuredData, errors.New(errorMessage)
+			return structuredData, fmt.Errorf("could not parse type %s in column %s", rawValue, column.name)
 		}
 	}
 
