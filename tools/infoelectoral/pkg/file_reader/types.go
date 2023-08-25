@@ -72,3 +72,14 @@ type CandidatesListLine struct {
 	NationalIdentityCard string `position:"109" length:"10"`
 	Elected              string `position:"119" length:"1"` // S/N
 }
+
+type MunicipalitiesCandidaturesDataFile struct {
+	ElectionType      int `position:"0" length:"2"`
+	Year              int `position:"2" length:"4"`
+	Month             int `position:"6" length:"2"`
+	Round             int `position:"8" length:"1"`
+	Province          int `position:"9" length:"2"`
+	Municipality      int `position:"11" length:"3"`
+	MunicipalDistrict int `position:"14" length:"2"`
+	Candidature       int `position:"16" length:"6"`
+}
