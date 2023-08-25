@@ -6,6 +6,7 @@ import (
 	"io"
 	"io/fs"
 	"reflect"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -25,21 +26,28 @@ type FileReader[T any] struct {
 
 func (fr FileReader[T]) Read() (T, error) {
 	var structuredData T
-	var data = make([]byte, fr.lineSize+1)
+	var data []byte
+	var b = make([]byte, 1)
 
 	var err error
-	_, err = fr.file.Read(data)
-	if err != nil && err != io.EOF {
-		return structuredData, err
+	for {
+		_, err = fr.file.Read(b)
+		if err != nil && err != io.EOF {
+			return structuredData, err
+		}
+		if b[0] == 10 || err == io.EOF {
+			break
+		}
+		data = append(data, b[0])
 	}
 
 	var merr error
 	structuredData, merr = unMarshaling[T](data, fr.columns)
 	if merr != nil {
-		fmt.Printf("Error reading data: %s\n", err)
+		fmt.Printf("Error reading data: %s\n", merr)
 	}
 
-	return structuredData, err
+	return structuredData, nil
 }
 
 func (fr FileReader[T]) Close() {
@@ -127,7 +135,15 @@ func extractColumns[T any](structType T) ([]Column, error) {
 		})
 	}
 
+	sortColumns(columns)
+
 	return columns, nil
+}
+
+func sortColumns(columns []Column) {
+	sort.Slice(columns, func(i int, j int) bool {
+		return columns[i].position < columns[j].position
+	})
 }
 
 func calculateLineLength(columns []Column) int {

@@ -112,14 +112,6 @@ func (e Election) CandidatesList() []Candidate {
 			candidateType = AlternateCandidate
 		}
 
-		var birthdate time.Time
-		if c.BirthdayDay != 0 && c.BirthdayMonth != 0 && c.BirthdayYear != 0 {
-			birthdate, err = time.Parse("2006-01-02", fmt.Sprintf("%04d-%02d-%02d", c.BirthdayYear, c.BirthdayMonth, c.BirthdayDay))
-			if err != nil {
-				log.Panic("Error parsing date", err)
-			}
-		}
-
 		var elected bool
 		if c.Elected == "S" {
 			elected = true
@@ -136,8 +128,6 @@ func (e Election) CandidatesList() []Candidate {
 			Type:                  candidateType,
 			Name:                  c.Name,
 			Surname:               strings.TrimSpace(fmt.Sprintf("%s %s", c.FirstSurname, c.SecondSurname)),
-			Birthdate:             birthdate,
-			NationalIdentityCard:  c.NationalIdentityCard,
 			Elected:               elected,
 		})
 	}

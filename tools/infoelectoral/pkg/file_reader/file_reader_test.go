@@ -82,6 +82,34 @@ func Test_calculateLineLength(t *testing.T) {
 	assert.Equal(t, 8, calculateLineLength(columns))
 }
 
+func Test_sortColumns(t *testing.T) {
+	columns := []Column{
+		{
+			position: 4,
+		},
+		{
+			position: 0,
+		},
+		{
+			position: 2,
+		},
+	}
+
+	sortColumns(columns)
+
+	assert.Equal(t, []Column{
+		{
+			position: 0,
+		},
+		{
+			position: 2,
+		},
+		{
+			position: 4,
+		},
+	}, columns)
+}
+
 var firstLine = []byte("20230821Monday  1")
 
 type TestStruct struct {

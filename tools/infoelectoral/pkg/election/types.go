@@ -1,7 +1,5 @@
 package election
 
-import "time"
-
 const (
 	EstateScope              = 0
 	AutonomousCommunityScope = 1
@@ -68,7 +66,5 @@ type Candidate struct {
 	Type                  int
 	Name                  string
 	Surname               string
-	Birthdate             time.Time
-	NationalIdentityCard  string
 	Elected               bool
 }
