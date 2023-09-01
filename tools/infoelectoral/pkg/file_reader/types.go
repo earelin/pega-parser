@@ -28,7 +28,7 @@ type IdentificationLine struct {
 	Year                           int    `position:"2" length:"4"`
 	Month                          int    `position:"6" length:"2"`
 	Round                          int    `position:"8" length:"1"`
-	ScopeType                      string `position:"9" length:"1"`
+	ScopeType                      string `position:"9" length:"1"` // N/A
 	TerritorialScope               int    `position:"10" length:"2"`
 	CelebrationDay                 int    `position:"12" length:"2"`
 	CelebrationMonth               int    `position:"14" length:"2"`

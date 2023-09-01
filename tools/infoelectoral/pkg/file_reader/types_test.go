@@ -7,6 +7,63 @@ import (
 	"testing"
 )
 
+func TestControlRead(t *testing.T) {
+	var f fs.File
+	f, _ = os.Open("testdata/control.DAT")
+	fr, _ := NewFileReader[ControlLine](f)
+
+	control := ControlLine{
+		ElectionType:                       2,
+		Year:                               2019,
+		Month:                              11,
+		Round:                              1,
+		ControlFile:                        true,
+		IdentificationFile:                 true,
+		CandidaturesFile:                   true,
+		CandidatesListFile:                 true,
+		MunicipalitiesCommonDataFile:       true,
+		MunicipalitiesCandidaturesDataFile: true,
+		MunicipalitiesSuperiorScopeCommonDataFile:        true,
+		MunicipalitiesSuperiorScopeCandidaturesDataFile:  true,
+		TablesAndCeraCommonDataFile:                      true,
+		TablesAndCeraCandidaturesDataFile:                true,
+		MunicipalitiesSmallerThan250CommonDataFile:       false,
+		MunicipalitiesSmallerThan250CandidaturesDataFile: false,
+		JudicialDistrictCommonDataFile:                   false,
+		JudicialDistrictCandidaturesDataFile:             false,
+		ProvincialCouncilCommonDataFile:                  false,
+		ProvincialCouncilCandidaturesDataFile:            false,
+	}
+
+	c, _ := fr.Read()
+	assert.Equal(t, control, c)
+}
+
+func TestIdentificationRead(t *testing.T) {
+	var f fs.File
+	f, _ = os.Open("testdata/identification.DAT")
+	fr, _ := NewFileReader[IdentificationLine](f)
+
+	identification := IdentificationLine{
+		Type:                           2,
+		Year:                           2019,
+		Month:                          11,
+		Round:                          1,
+		ScopeType:                      "N",
+		TerritorialScope:               99,
+		CelebrationDay:                 10,
+		CelebrationMonth:               11,
+		CelebrationYear:                2019,
+		PollStationOpeningTime:         "09:00",
+		PollStationClosingTime:         "20:00",
+		FirstParticipationAdvanceTime:  "14:00",
+		SecondParticipationAdvanceTime: "18:00",
+	}
+
+	i, _ := fr.Read()
+	assert.Equal(t, identification, i)
+}
+
 func TestCandidatureRead(t *testing.T) {
 	var f fs.File
 	f, _ = os.Open("testdata/candidatures.DAT")
