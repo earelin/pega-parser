@@ -27,5 +27,9 @@ type PersoaCandidata struct {
 }
 
 type MesaDeVotacion struct {
-	Municipio int
+	Provincia         int
+	Municipio         int
+	DistritoMunicipal int
+	Seccion           string
+	Codigo            string
 }
