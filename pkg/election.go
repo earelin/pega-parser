@@ -21,6 +21,11 @@ type Candidatura struct {
 }
 
 type PersoaCandidata struct {
+	Id       int
 	Nome     string
 	Apelidos string
+}
+
+type MesaDeVotacion struct {
+	Municipio int
 }

@@ -1,2 +1,2 @@
-DROP TABLE proceso_electoral
-DROP TABLE organizacion
+DROP TABLE proceso_electoral;
+DROP TABLE organizacion;
