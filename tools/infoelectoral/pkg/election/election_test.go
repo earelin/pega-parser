@@ -17,7 +17,7 @@ func TestNewElection(t *testing.T) {
 		zipFile: zipFile,
 		Type:    2,
 		Date:    electionDate,
-		Scope:   EstateScope,
+		Scope:   99,
 		files: dataFiles{
 			IdentificationFile:                               "02021911.DAT",
 			CandidaturesFile:                                 "03021911.DAT",

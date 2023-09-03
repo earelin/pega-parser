@@ -3,11 +3,12 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"github.com/earelin/pega/tools/infoelectoral/pkg/election"
 	_ "github.com/go-sql-driver/mysql"
 	"time"
 )
 
-const insertProcesoElectoral = "INSERT INTO procesos_electorais(tipo, ambito_ine, data) VALUES (?, ?, ? )"
+const insertProcesoElectoral = "INSERT INTO procesos_electorais(tipo, ambito_ine, data) VALUES (?, ?, ?)"
 
 type Repository struct {
 	pool *sql.DB
@@ -29,7 +30,7 @@ func NewRepository(c Config, ctx context.Context) (Repository, error) {
 }
 
 func (r *Repository) CheckConnection() error {
-	var ctx, cancel = context.WithTimeout(r.ctx, 1*time.Second)
+	var ctx, cancel = context.WithTimeout(r.ctx, 5*time.Second)
 	defer cancel()
 	return r.pool.PingContext(ctx)
 }
@@ -38,7 +39,12 @@ func (r *Repository) CloseConnection() error {
 	return r.pool.Close()
 }
 
-func (r *Repository) CreateProcesoElectoral() error {
-
-	return nil
+func (r *Repository) CreateProcesoElectoral(e election.Election) error {
+	var err error
+	if e.Scope == 0 {
+		_, err = r.pool.ExecContext(r.ctx, insertProcesoElectoral, e.Type, nil, e.Date)
+	} else {
+		_, err = r.pool.ExecContext(r.ctx, insertProcesoElectoral, e.Type, e.Scope, e.Date)
+	}
+	return err
 }

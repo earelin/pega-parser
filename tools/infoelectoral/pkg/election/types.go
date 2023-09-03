@@ -1,11 +1,6 @@
 package election
 
 const (
-	EstateScope              = 0
-	AutonomousCommunityScope = 1
-)
-
-const (
 	ControlFilePrefix                                      = "01"
 	IdentificationFilePrefix                               = "02"
 	CandidaturesFilePrefix                                 = "03"

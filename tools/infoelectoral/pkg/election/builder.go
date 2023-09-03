@@ -81,6 +81,7 @@ func loadIdentificationData(e *Election, archive *archive_reader.ZipFile) {
 	if err != nil {
 		log.Panic("Could not read election date", err)
 	}
+	e.Scope = identification.TerritorialScope
 }
 
 func buildFilenameGenerator(electionType int, month int, year int) func(bool, string) string {
