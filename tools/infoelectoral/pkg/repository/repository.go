@@ -15,10 +15,14 @@ type Repository struct {
 	ctx  context.Context
 }
 
-func NewRepository(c Config, ctx context.Context) (Repository, error) {
+func NewRepository(c Config, ctx context.Context) (*Repository, error) {
 	var r Repository
 
 	var pool, err = sql.Open("mysql", c.toString())
+	if err != nil {
+		return nil, err
+	}
+
 	pool.SetConnMaxLifetime(0)
 	pool.SetMaxIdleConns(3)
 	pool.SetMaxOpenConns(3)
@@ -26,7 +30,7 @@ func NewRepository(c Config, ctx context.Context) (Repository, error) {
 	r.pool = pool
 	r.ctx = ctx
 
-	return r, err
+	return &r, nil
 }
 
 func (r *Repository) CheckConnection() error {

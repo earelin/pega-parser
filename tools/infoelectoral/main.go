@@ -1,12 +1,14 @@
 package main
 
 import (
+	"context"
 	"errors"
 	"flag"
 	"fmt"
 	"github.com/earelin/pega/tools/infoelectoral/pkg/archive_reader"
 	"github.com/earelin/pega/tools/infoelectoral/pkg/config"
 	"github.com/earelin/pega/tools/infoelectoral/pkg/election"
+	"github.com/earelin/pega/tools/infoelectoral/pkg/repository"
 	"io"
 	"log"
 	"os"
@@ -45,6 +47,17 @@ func start(w io.Writer, args []string) {
 	var e = election.NewElection(zipFile)
 	fmt.Print(e.String())
 
+	var ctx = context.Background()
+	var repo *repository.Repository
+	repo, err = repository.NewRepository(conf.RepositoryConfig, ctx)
+	if err != nil {
+		log.Panic("Non se pode configurar a conexión coa base de datos: ", err)
+	}
+
+	err = repo.CheckConnection()
+	if err != nil {
+		log.Panic("Non se pode conectar coa base de datos: ", err)
+	}
 }
 
 func parseArgs(w io.Writer, args []string) (config.Config, error) {
@@ -53,7 +66,7 @@ func parseArgs(w io.Writer, args []string) (config.Config, error) {
 	fs := flag.NewFlagSet("infoelectoral", flag.ContinueOnError)
 	fs.SetOutput(w)
 
-	fs.StringVar(&c.RepositoryConfig.Host, "host", "localhost", "Enderezo da base de datos")
+	fs.StringVar(&c.RepositoryConfig.Host, "host", "", "Enderezo da base de datos")
 	fs.StringVar(&c.RepositoryConfig.User, "user", "root", "Usuario da base de datos")
 	fs.StringVar(&c.RepositoryConfig.Password, "password", "", "Contrasinal da base de datos")
 	fs.StringVar(&c.RepositoryConfig.Database, "database", "pega", "Nome da base de datos")
