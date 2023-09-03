@@ -47,9 +47,9 @@ var ElectionTypeLabel = map[int]string{
 }
 
 type Candidature struct {
-	Code    int    `json:"id"`
-	Acronym string `json:"acronym"`
-	Name    string `json:"name"`
+	Code    int
+	Acronym string
+	Name    string
 }
 
 type Candidate struct {

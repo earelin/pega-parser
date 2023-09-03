@@ -6,21 +6,19 @@ CREATE TABLE procesos_electorais
     data       DATETIME         NOT NULL
 );
 
-CREATE TABLE organizacions
+CREATE TABLE candidaturas
 (
     id     INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     siglas VARCHAR(50) NOT NULL,
     nome   VARCHAR(150)
 );
 
-CREATE TABLE candidaturas
+CREATE TABLE listas
 (
-    id                   INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-    organizacion_id      INT UNSIGNED NOT NULL,
-    proceso_electoral_id INT UNSIGNED NOT NULL,
-    ambito_ine           SMALLINT UNSIGNED,
-    CONSTRAINT FOREIGN KEY (organizacion_id) REFERENCES organizacions (id),
-    CONSTRAINT FOREIGN KEY (proceso_electoral_id) REFERENCES procesos_electorais (id)
+    id             INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    candidatura_id INT UNSIGNED NOT NULL,
+    ambito_ine     SMALLINT UNSIGNED,
+    CONSTRAINT FOREIGN KEY (candidatura_id) REFERENCES candidaturas (id)
 );
 
 CREATE TABLE candidatos

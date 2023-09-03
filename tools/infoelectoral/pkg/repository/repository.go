@@ -3,12 +3,14 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"github.com/earelin/pega/tools/infoelectoral/pkg/election"
 	_ "github.com/go-sql-driver/mysql"
 	"time"
 )
 
 const insertProcesoElectoral = "INSERT INTO procesos_electorais(tipo, ambito_ine, data) VALUES (?, ?, ?)"
+const insertCandidatura = "INSERT INTO candidaturas()"
 
 type Repository struct {
 	pool *sql.DB
@@ -51,4 +53,25 @@ func (r *Repository) CreateProcesoElectoral(e election.Election) error {
 		_, err = r.pool.ExecContext(r.ctx, insertProcesoElectoral, e.Type, e.Scope, e.Date)
 	}
 	return err
+}
+
+func (r *Repository) CreateCandidaturas(candidatures []election.Candidature) (map[int]int64, error) {
+	var importedItems map[int]int64
+
+	for _, c := range candidatures {
+		var result, err = r.pool.ExecContext(r.ctx, insertCandidatura, c.Acronym, c.Name)
+		if err != nil {
+			return nil, fmt.Errorf("no ha sido posible guardar una candidatura: %w", err)
+		}
+
+		var id int64
+		id, err = result.LastInsertId()
+		if err != nil {
+			return nil, fmt.Errorf("no ha sido posible obtener el id de una candidatura guardada: %w", err)
+		}
+
+		importedItems[c.Code] = id
+	}
+
+	return importedItems, nil
 }

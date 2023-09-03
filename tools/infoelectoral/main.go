@@ -59,6 +59,12 @@ func start(w io.Writer, args []string) {
 	if err != nil {
 		log.Panic("Non se pode conectar coa base de datos: ", err)
 	}
+	defer func(repo *repository.Repository) {
+		err := repo.CloseConnection()
+		if err != nil {
+			log.Panic("Non se puido pechar a conexión coa base de datos")
+		}
+	}(repo)
 
 	err = importer.ImportElectionData(repo, e)
 	if err != nil {
