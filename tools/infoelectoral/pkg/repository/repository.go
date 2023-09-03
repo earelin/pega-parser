@@ -1,26 +1,44 @@
 package repository
 
 import (
+	"context"
 	"database/sql"
-	"github.com/earelin/pega/tools/infoelectoral/pkg/config"
 	_ "github.com/go-sql-driver/mysql"
+	"time"
 )
 
+const insertProcesoElectoral = "INSERT INTO procesos_electorais(tipo, ambito_ine, data) VALUES (?, ?, ? )"
+
 type Repository struct {
-	db *sql.DB
+	pool *sql.DB
+	ctx  context.Context
 }
 
-func NewRepository(c Config) (Repository, error) {
+func NewRepository(c Config, ctx context.Context) (Repository, error) {
 	var r Repository
-	var err error
-	r.db, err = sql.Open("mysql", c.toString())
+
+	var pool, err = sql.Open("mysql", c.toString())
+	pool.SetConnMaxLifetime(0)
+	pool.SetMaxIdleConns(3)
+	pool.SetMaxOpenConns(3)
+
+	r.pool = pool
+	r.ctx = ctx
+
 	return r, err
 }
 
-func (r *Repository) CheckConnection(conf config.Config) {
-
+func (r *Repository) CheckConnection() error {
+	var ctx, cancel = context.WithTimeout(r.ctx, 1*time.Second)
+	defer cancel()
+	return r.pool.PingContext(ctx)
 }
 
 func (r *Repository) CloseConnection() error {
-	return r.db.Close()
+	return r.pool.Close()
+}
+
+func (r *Repository) CreateProcesoElectoral() error {
+
+	return nil
 }
