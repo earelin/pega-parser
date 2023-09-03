@@ -41,7 +41,7 @@ func (r *Repository) CloseConnection() error {
 
 func (r *Repository) CreateProcesoElectoral(e election.Election) error {
 	var err error
-	if e.Scope == 0 {
+	if e.Scope == 99 {
 		_, err = r.pool.ExecContext(r.ctx, insertProcesoElectoral, e.Type, nil, e.Date)
 	} else {
 		_, err = r.pool.ExecContext(r.ctx, insertProcesoElectoral, e.Type, e.Scope, e.Date)
