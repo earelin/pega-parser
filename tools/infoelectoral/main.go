@@ -5,36 +5,30 @@ import (
 	"flag"
 	"fmt"
 	"github.com/earelin/pega/tools/infoelectoral/pkg/archive_reader"
+	"github.com/earelin/pega/tools/infoelectoral/pkg/config"
 	"github.com/earelin/pega/tools/infoelectoral/pkg/election"
-	"github.com/earelin/pega/tools/infoelectoral/pkg/writers"
 	"io"
 	"log"
 	"os"
 	"strings"
 )
 
-type config struct {
-	showHelp bool
-	filePath string
+func main() {
+	start(os.Stdout, os.Args)
 }
 
-func main() {
-	var conf config
+func start(w io.Writer, args []string) {
+	var conf config.Config
 	var err error
 
-	conf, err = parseArgs(os.Stdout, os.Args)
+	conf, err = parseArgs(w, args)
 	if errors.Is(err, flag.ErrHelp) {
 		os.Exit(0)
 	}
 	if err != nil {
-		fmt.Println("Error executing command: ", err)
+		fmt.Println("Error arrancando o programa: ", err)
 		showUsage()
 		os.Exit(1)
-	}
-
-	if conf.showHelp {
-		showHelp()
-		os.Exit(0)
 	}
 
 	err = validateConfiguration(conf)
@@ -43,22 +37,18 @@ func main() {
 	}
 
 	var zipFile *archive_reader.ZipFile
-	zipFile, err = archive_reader.NewZipFile(conf.filePath)
+	zipFile, err = archive_reader.NewZipFile(conf.FilePath)
 	if err != nil {
-		log.Panic("Cannot open archive: ", err)
+		log.Panic("Non se pode abrir o ficheiro: ", err)
 	}
 
 	var e = election.NewElection(zipFile)
 	fmt.Print(e.String())
 
-	err = e.ExportToFiles(writers.CreateJsonFile)
-	if err != nil {
-		log.Panic("Error exporting files to JSON", err)
-	}
 }
 
-func parseArgs(w io.Writer, args []string) (config, error) {
-	var c config
+func parseArgs(w io.Writer, args []string) (config.Config, error) {
+	var c config.Config
 
 	fs := flag.NewFlagSet("infoelectoral", flag.ContinueOnError)
 	fs.SetOutput(w)
@@ -75,32 +65,23 @@ func parseArgs(w io.Writer, args []string) (config, error) {
 	if filePath == "" {
 		return c, errors.New("invalid file name")
 	}
-	c.filePath = filePath
+	c.FilePath = filePath
 
 	return c, nil
 }
 
-func showHelp() {
-	fmt.Println("Extracts polling information from infoelectoral.interior.gob.es ZIP files")
-	showUsage()
-}
-
 func showUsage() {
-	fmt.Println(`	Usage:
-		infoelectoral [options] filepath
+	fmt.Println(`	Uso:
+		infoelectoral [opcions] ficheiro
 
-		filepath: Path to the infoelectoral ZIP file
+		ficheiro: Ruta ao ficheiro ZIP
 
-	Options:
+	Opcións:
 		-h/--help Show this help info`)
 }
 
-func validateConfiguration(conf config) error {
-	var err error
-
-	if !conf.showHelp {
-		_, err = os.Stat(conf.filePath)
-	}
+func validateConfiguration(conf config.Config) error {
+	_, err := os.Stat(conf.FilePath)
 
 	return err
 }
