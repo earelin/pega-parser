@@ -52,18 +52,24 @@ func parseArgs(w io.Writer, args []string) (config.Config, error) {
 
 	fs := flag.NewFlagSet("infoelectoral", flag.ContinueOnError)
 	fs.SetOutput(w)
+
+	fs.StringVar(&c.RepositoryConfig.Host, "host", "localhost", "Enderezo da base de datos")
+	fs.StringVar(&c.RepositoryConfig.User, "user", "root", "Usuario da base de datos")
+	fs.StringVar(&c.RepositoryConfig.Password, "password", "", "Contrasinal da base de datos")
+	fs.StringVar(&c.RepositoryConfig.Database, "database", "pega", "Nome da base de datos")
+
 	err := fs.Parse(args[1:])
 	if err != nil {
 		return c, err
 	}
 
 	if fs.NArg() != 1 {
-		return c, errors.New("one positional argument required")
+		return c, errors.New("nome de ficheiro non expecificado")
 	}
 
 	var filePath = strings.TrimSpace(fs.Arg(0))
 	if filePath == "" {
-		return c, errors.New("invalid file name")
+		return c, errors.New("nome de ficherio non expecificado")
 	}
 	c.FilePath = filePath
 
