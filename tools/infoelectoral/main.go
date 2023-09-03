@@ -8,6 +8,7 @@ import (
 	"github.com/earelin/pega/tools/infoelectoral/pkg/archive_reader"
 	"github.com/earelin/pega/tools/infoelectoral/pkg/config"
 	"github.com/earelin/pega/tools/infoelectoral/pkg/election"
+	"github.com/earelin/pega/tools/infoelectoral/pkg/importer"
 	"github.com/earelin/pega/tools/infoelectoral/pkg/repository"
 	"io"
 	"log"
@@ -57,6 +58,11 @@ func start(w io.Writer, args []string) {
 	err = repo.CheckConnection()
 	if err != nil {
 		log.Panic("Non se pode conectar coa base de datos: ", err)
+	}
+
+	err = importer.ImportElectionData(repo, e)
+	if err != nil {
+		log.Panic("Non se puido gardar a informacion na base de datos: ", err)
 	}
 }
 
