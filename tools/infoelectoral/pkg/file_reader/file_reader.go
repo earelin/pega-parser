@@ -41,6 +41,10 @@ func (fr FileReader[T]) Read() (T, error) {
 		data = append(data, b[0])
 	}
 
+	if len(data) == 0 {
+		return structuredData, io.EOF
+	}
+
 	var merr error
 	structuredData, merr = unMarshaling[T](data, fr.columns)
 	if merr != nil {
