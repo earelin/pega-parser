@@ -12,7 +12,7 @@ func ImportElectionData(r *repository.Repository, e election.Election) error {
 
 	procesoElectoralId, err = r.CreateProcesoElectoral(e)
 	if err != nil {
-		return fmt.Errorf("no se puido gardar o proceso electora na base de datos: %w", err)
+		return fmt.Errorf("no se puido gardar o proceso electoral: %w", err)
 	}
 
 	candidatures := e.Candidatures()

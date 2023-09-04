@@ -8,10 +8,10 @@ CREATE TABLE procesos_electorais
 
 CREATE TABLE candidaturas
 (
-    id     INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    id                   INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     proceso_electoral_id INT UNSIGNED NOT NULL,
-    siglas VARCHAR(50) NOT NULL,
-    nome   VARCHAR(150)
+    siglas               VARCHAR(50)  NOT NULL,
+    nome                 VARCHAR(150)
 );
 
 CREATE TABLE listas
@@ -24,13 +24,13 @@ CREATE TABLE listas
 
 CREATE TABLE candidatos
 (
-    candidatura_id INT UNSIGNED     NOT NULL,
-    orden          TINYINT UNSIGNED NOT NULL,
-    titular        BOOLEAN          NOT NULL,
-    nombre         VARCHAR(25)      NOT NULL,
-    apelidos       VARCHAR(50)      NOT NULL,
-    CONSTRAINT PRIMARY KEY (candidatura_id, orden),
-    CONSTRAINT FOREIGN KEY (candidatura_id) REFERENCES candidaturas (id)
+    lista_id INT UNSIGNED     NOT NULL,
+    posicion TINYINT UNSIGNED NOT NULL,
+    titular  BOOLEAN          NOT NULL,
+    nombre   VARCHAR(25)      NOT NULL,
+    apelidos VARCHAR(50)      NOT NULL,
+    CONSTRAINT PRIMARY KEY (lista_id, posicion),
+    CONSTRAINT FOREIGN KEY (lista_id) REFERENCES listas (id)
 );
 
 CREATE TABLE mesas_electorais

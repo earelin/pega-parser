@@ -30,11 +30,6 @@ const (
 	XuntasXerais         = 15
 )
 
-const (
-	CandidatoTitular  = 1
-	CandidatoSuplente = 2
-)
-
 var ElectionTypeLabel = map[int]string{
 	Referendum:           "Referéndum",
 	Congreso:             "Congreso",
@@ -56,7 +51,7 @@ type Candidate struct {
 	AmbitoTerritorial int
 	CandidatureCode   int
 	Position          int
-	Type              int
+	Titular           bool
 	Name              string
 	Surname           string
 }

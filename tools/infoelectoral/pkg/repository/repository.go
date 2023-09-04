@@ -3,7 +3,6 @@ package repository
 import (
 	"context"
 	"database/sql"
-	"errors"
 	"fmt"
 	"github.com/earelin/pega/tools/infoelectoral/pkg/election"
 	_ "github.com/go-sql-driver/mysql"
@@ -13,7 +12,7 @@ import (
 const insertarProcesoElectoral = "INSERT INTO procesos_electorais(tipo, ambito_ine, data) VALUES (?, ?, ?)"
 const insertarCandidatura = "INSERT INTO candidaturas(proceso_electoral_id, siglas, nome) VALUES (?, ?, ?)"
 const insertarLista = "INSERT INTO listas(candidatura_id, ambito_ine) VALUES (? , ?)"
-const insertarCandidato = "INSERT INTO candidatos(candidatura_id, orden, titular, nombre, apelidos) VALUES (?, ?, ?, ?, ?)"
+const insertarCandidato = "INSERT INTO candidatos(lista_id, posicion, titular, nombre, apelidos) VALUES (?, ?, ?, ?, ?)"
 
 type Repository struct {
 	pool *sql.DB
@@ -92,13 +91,29 @@ func (r *Repository) CreateCandidaturas(procesoElectoral int64, candidatures []e
 }
 
 func (r *Repository) CrearListasECandidatos(listaCandidatos []election.Candidate, candidaturasImportadas map[int]int64) error {
-	var listasImportadas = make(map[string]int)
+	var listasImportadas = make(map[string]int64)
+
 	for _, c := range listaCandidatos {
-		listCodeAndPosition := fmt.Sprintf("%d_%d", c.CandidatureCode, c.Position)
-		var listaId, listaImportada = listasImportadas[listCodeAndPosition]
-		if !listaImportada {
-			var result, err = r.pool.ExecContext(r.ctx, insertarLista)
+		var candidaturaId = candidaturasImportadas[c.CandidatureCode]
+		codigoCandidaturaEAmbitoTerritorial := fmt.Sprintf("%d_%d", c.CandidatureCode, c.AmbitoTerritorial)
+		var listaId, importada = listasImportadas[codigoCandidaturaEAmbitoTerritorial]
+		if !importada {
+			var result, err = r.pool.ExecContext(r.ctx, insertarLista, candidaturaId, c.AmbitoTerritorial)
+			if err != nil {
+				return fmt.Errorf("no foi posible gardar unha lista: %w", err)
+			}
+			listaId, err = result.LastInsertId()
+			if err != nil {
+				return fmt.Errorf("non foi posible obter o id dunha lista gardada: %w", err)
+			}
+			listasImportadas[codigoCandidaturaEAmbitoTerritorial] = listaId
+		}
+
+		var _, err = r.pool.ExecContext(r.ctx, insertarCandidato, listaId, c.Position, c.Titular, c.Name, c.Surname)
+		if err != nil {
+			return fmt.Errorf("non foi posible gardar un candidato: %w", err)
 		}
 	}
-	return errors.New("not implemented yet")
+
+	return nil
 }

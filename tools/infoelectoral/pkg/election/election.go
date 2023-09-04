@@ -105,13 +105,6 @@ func (e Election) CandidatesList() []Candidate {
 			log.Panic("Error reading candidatures files", err)
 		}
 
-		var candidateType int
-		if c.Type == "T" {
-			candidateType = CandidatoTitular
-		} else {
-			candidateType = CandidatoSuplente
-		}
-
 		var ambitoTerritorial int
 		if e.Type == Municipais {
 			ambitoTerritorial = c.MunicipalCode
@@ -123,7 +116,7 @@ func (e Election) CandidatesList() []Candidate {
 			AmbitoTerritorial: ambitoTerritorial,
 			CandidatureCode:   c.CandidatureCode,
 			Position:          c.Position,
-			Type:              candidateType,
+			Titular:           c.Type == "T",
 			Name:              c.Name,
 			Surname:           strings.TrimSpace(fmt.Sprintf("%s %s", c.FirstSurname, c.SecondSurname)),
 		})
