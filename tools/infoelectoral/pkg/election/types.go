@@ -20,30 +20,30 @@ const (
 )
 
 const (
-	Referendum            = 1
-	Congress              = 2
-	Senate                = 3
-	Municipals            = 4
-	AutonomousCommunities = 5
-	Cabildos              = 6
-	EuropeanParliament    = 7
-	JuntasGenerales       = 15
+	Referendum           = 1
+	Congreso             = 2
+	Senado               = 3
+	Municipais           = 4
+	ComunidadesAutonomas = 5
+	Cabildos             = 6
+	ParlamentoEuropeo    = 7
+	XuntasXerais         = 15
 )
 
 const (
-	TitularCandidate   = 1
-	AlternateCandidate = 2
+	CandidatoTitular  = 1
+	CandidatoSuplente = 2
 )
 
 var ElectionTypeLabel = map[int]string{
-	Referendum:            "Referéndum",
-	Congress:              "Congreso",
-	Senate:                "Senado",
-	Municipals:            "Municipais",
-	AutonomousCommunities: "Comunidades Autónomas",
-	Cabildos:              "Cabildos",
-	EuropeanParliament:    "Parlamento Europeo",
-	JuntasGenerales:       "Xuntas Xeráis",
+	Referendum:           "Referéndum",
+	Congreso:             "Congreso",
+	Senado:               "Senado",
+	Municipais:           "Municipais",
+	ComunidadesAutonomas: "Comunidades Autónomas",
+	Cabildos:             "Cabildos",
+	ParlamentoEuropeo:    "Parlamento Europeo",
+	XuntasXerais:         "Xuntas Xeráis",
 }
 
 type Candidature struct {
@@ -53,13 +53,10 @@ type Candidature struct {
 }
 
 type Candidate struct {
-	ProvinceCode          int
-	ElectoralDistrictCode int
-	MunicipalCode         int
-	CandidatureCode       int
-	Position              int
-	Type                  int
-	Name                  string
-	Surname               string
-	Elected               bool
+	AmbitoTerritorial int
+	CandidatureCode   int
+	Position          int
+	Type              int
+	Name              string
+	Surname           string
 }

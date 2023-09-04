@@ -3,14 +3,17 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"fmt"
 	"github.com/earelin/pega/tools/infoelectoral/pkg/election"
 	_ "github.com/go-sql-driver/mysql"
 	"time"
 )
 
-const insertProcesoElectoral = "INSERT INTO procesos_electorais(tipo, ambito_ine, data) VALUES (?, ?, ?)"
-const insertCandidatura = "INSERT INTO candidaturas(siglas, nome) VALUES (?, ?)"
+const insertarProcesoElectoral = "INSERT INTO procesos_electorais(tipo, ambito_ine, data) VALUES (?, ?, ?)"
+const insertarCandidatura = "INSERT INTO candidaturas(proceso_electoral_id, siglas, nome) VALUES (?, ?, ?)"
+const insertarLista = "INSERT INTO listas(candidatura_id, ambito_ine) VALUES (? , ?)"
+const insertarCandidato = "INSERT INTO candidatos(candidatura_id, orden, titular, nombre, apelidos) VALUES (?, ?, ?, ?, ?)"
 
 type Repository struct {
 	pool *sql.DB
@@ -49,9 +52,9 @@ func (r *Repository) CreateProcesoElectoral(e election.Election) (int64, error) 
 	var result sql.Result
 	var err error
 	if e.Scope == 99 {
-		result, err = r.pool.ExecContext(r.ctx, insertProcesoElectoral, e.Type, nil, e.Date)
+		result, err = r.pool.ExecContext(r.ctx, insertarProcesoElectoral, e.Type, nil, e.Date)
 	} else {
-		result, err = r.pool.ExecContext(r.ctx, insertProcesoElectoral, e.Type, e.Scope, e.Date)
+		result, err = r.pool.ExecContext(r.ctx, insertarProcesoElectoral, e.Type, e.Scope, e.Date)
 	}
 
 	if err != nil {
@@ -71,19 +74,31 @@ func (r *Repository) CreateCandidaturas(procesoElectoral int64, candidatures []e
 	var importedItems = make(map[int]int64)
 
 	for _, c := range candidatures {
-		var result, err = r.pool.ExecContext(r.ctx, insertCandidatura, c.Acronym, c.Name)
+		var result, err = r.pool.ExecContext(r.ctx, insertarCandidatura, procesoElectoral, c.Acronym, c.Name)
 		if err != nil {
-			return nil, fmt.Errorf("no ha sido posible guardar una candidatura: %w", err)
+			return nil, fmt.Errorf("non foi posible gardar unha candidatura: %w", err)
 		}
 
 		var id int64
 		id, err = result.LastInsertId()
 		if err != nil {
-			return nil, fmt.Errorf("no foi posible obter o id de una candidatura guardada: %w", err)
+			return nil, fmt.Errorf("no foi posible obter o id dunha candidatura gardada: %w", err)
 		}
 
 		importedItems[c.Code] = id
 	}
 
 	return importedItems, nil
+}
+
+func (r *Repository) CrearListasECandidatos(listaCandidatos []election.Candidate, candidaturasImportadas map[int]int64) error {
+	var listasImportadas = make(map[string]int)
+	for _, c := range listaCandidatos {
+		listCodeAndPosition := fmt.Sprintf("%d_%d", c.CandidatureCode, c.Position)
+		var listaId, listaImportada = listasImportadas[listCodeAndPosition]
+		if !listaImportada {
+			var result, err = r.pool.ExecContext(r.ctx, insertarLista)
+		}
+	}
+	return errors.New("not implemented yet")
 }

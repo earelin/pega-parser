@@ -107,28 +107,25 @@ func (e Election) CandidatesList() []Candidate {
 
 		var candidateType int
 		if c.Type == "T" {
-			candidateType = TitularCandidate
+			candidateType = CandidatoTitular
 		} else {
-			candidateType = AlternateCandidate
+			candidateType = CandidatoSuplente
 		}
 
-		var elected bool
-		if c.Elected == "S" {
-			elected = true
+		var ambitoTerritorial int
+		if e.Type == Municipais {
+			ambitoTerritorial = c.MunicipalCode
 		} else {
-			elected = false
+			ambitoTerritorial = c.ProvinceCode
 		}
 
 		candidates = append(candidates, Candidate{
-			ProvinceCode:          c.ProvinceCode,
-			ElectoralDistrictCode: c.ElectoralDistrict,
-			MunicipalCode:         c.MunicipalCode,
-			CandidatureCode:       c.CandidatureCode,
-			Position:              c.Position,
-			Type:                  candidateType,
-			Name:                  c.Name,
-			Surname:               strings.TrimSpace(fmt.Sprintf("%s %s", c.FirstSurname, c.SecondSurname)),
-			Elected:               elected,
+			AmbitoTerritorial: ambitoTerritorial,
+			CandidatureCode:   c.CandidatureCode,
+			Position:          c.Position,
+			Type:              candidateType,
+			Name:              c.Name,
+			Surname:           strings.TrimSpace(fmt.Sprintf("%s %s", c.FirstSurname, c.SecondSurname)),
 		})
 	}
 
