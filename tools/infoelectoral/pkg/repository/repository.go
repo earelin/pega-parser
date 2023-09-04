@@ -10,7 +10,7 @@ import (
 )
 
 const insertProcesoElectoral = "INSERT INTO procesos_electorais(tipo, ambito_ine, data) VALUES (?, ?, ?)"
-const insertCandidatura = "INSERT INTO candidaturas()"
+const insertCandidatura = "INSERT INTO candidaturas(siglas, nome) VALUES (?, ?)"
 
 type Repository struct {
 	pool *sql.DB
@@ -45,18 +45,30 @@ func (r *Repository) CloseConnection() error {
 	return r.pool.Close()
 }
 
-func (r *Repository) CreateProcesoElectoral(e election.Election) error {
+func (r *Repository) CreateProcesoElectoral(e election.Election) (int64, error) {
+	var result sql.Result
 	var err error
 	if e.Scope == 99 {
-		_, err = r.pool.ExecContext(r.ctx, insertProcesoElectoral, e.Type, nil, e.Date)
+		result, err = r.pool.ExecContext(r.ctx, insertProcesoElectoral, e.Type, nil, e.Date)
 	} else {
-		_, err = r.pool.ExecContext(r.ctx, insertProcesoElectoral, e.Type, e.Scope, e.Date)
+		result, err = r.pool.ExecContext(r.ctx, insertProcesoElectoral, e.Type, e.Scope, e.Date)
 	}
-	return err
+
+	if err != nil {
+		return 0, fmt.Errorf("no ha sido posible obtener el id de una candidatura guardada: %w", err)
+	}
+
+	var id int64
+	id, err = result.LastInsertId()
+	if err != nil {
+		return 0, fmt.Errorf("no ha sido posible obtener el id de una candidatura guardada: %w", err)
+	}
+
+	return id, err
 }
 
-func (r *Repository) CreateCandidaturas(candidatures []election.Candidature) (map[int]int64, error) {
-	var importedItems map[int]int64
+func (r *Repository) CreateCandidaturas(procesoElectoral int64, candidatures []election.Candidature) (map[int]int64, error) {
+	var importedItems = make(map[int]int64)
 
 	for _, c := range candidatures {
 		var result, err = r.pool.ExecContext(r.ctx, insertCandidatura, c.Acronym, c.Name)
@@ -67,7 +79,7 @@ func (r *Repository) CreateCandidaturas(candidatures []election.Candidature) (ma
 		var id int64
 		id, err = result.LastInsertId()
 		if err != nil {
-			return nil, fmt.Errorf("no ha sido posible obtener el id de una candidatura guardada: %w", err)
+			return nil, fmt.Errorf("no foi posible obter o id de una candidatura guardada: %w", err)
 		}
 
 		importedItems[c.Code] = id

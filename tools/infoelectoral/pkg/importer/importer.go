@@ -8,15 +8,16 @@ import (
 
 func ImportElectionData(r *repository.Repository, e election.Election) error {
 	var err error
+	var procesoElectoralId int64
 
-	err = r.CreateProcesoElectoral(e)
+	procesoElectoralId, err = r.CreateProcesoElectoral(e)
 	if err != nil {
 		return fmt.Errorf("no se puido gardar o proceso electora na base de datos: %w", err)
 	}
 
 	candidatures := e.Candidatures()
 	//var importedCandidatures map[int]int64
-	_, err = r.CreateCandidaturas(candidatures)
+	_, err = r.CreateCandidaturas(procesoElectoralId, candidatures)
 	if err != nil {
 		return fmt.Errorf("non se puideron gardar as candidaturas: %w", err)
 	}

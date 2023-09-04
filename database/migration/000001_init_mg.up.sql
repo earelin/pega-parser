@@ -9,6 +9,7 @@ CREATE TABLE procesos_electorais
 CREATE TABLE candidaturas
 (
     id     INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    proceso_electoral_id INT UNSIGNED NOT NULL,
     siglas VARCHAR(50) NOT NULL,
     nome   VARCHAR(150)
 );
@@ -47,7 +48,7 @@ CREATE TABLE mesas_electorais
     CONSTRAINT FOREIGN KEY (proceso_electoral_id) REFERENCES procesos_electorais (id)
 );
 
-CREATE TABLE votos_candidatura_mesa_electoral
+CREATE TABLE mesa_electoral_votos_candidaturas
 (
     id                INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     mesa_electoral_id INT UNSIGNED      NOT NULL,

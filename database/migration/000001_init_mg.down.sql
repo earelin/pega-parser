@@ -1,4 +1,4 @@
-DROP TABLE votos_candidatura_mesa_electoral;
+DROP TABLE mesa_electoral_votos_candidaturas;
 DROP TABLE mesas_electorais;
 DROP TABLE candidatos;
 DROP TABLE listas;
