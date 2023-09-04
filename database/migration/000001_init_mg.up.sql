@@ -58,3 +58,25 @@ CREATE TABLE mesa_electoral_votos_candidaturas
     CONSTRAINT FOREIGN KEY (mesa_electoral_id) REFERENCES mesas_electorais (id),
     CONSTRAINT FOREIGN KEY (candidatura_id) REFERENCES candidaturas (id)
 );
+
+CREATE TABLE circuscripcions_cera
+(
+    id                   INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    proceso_electoral_id INT UNSIGNED     NOT NULL,
+    provincia_ine        TINYINT UNSIGNED NOT NULL,
+    censo                INT UNSIGNED     NOT NULL,
+    votos_blanco         INT UNSIGNED     NOT NULL,
+    votos_nulos          INT UNSIGNED     NOT NULL,
+    CONSTRAINT FOREIGN KEY (proceso_electoral_id) REFERENCES procesos_electorais (id)
+);
+
+CREATE TABLE cera_votos_candidaturas
+(
+    id                     INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    circuscripcion_cera_id INT UNSIGNED      NOT NULL,
+    candidatura_id         INT UNSIGNED      NOT NULL,
+    orden                  TINYINT UNSIGNED,
+    votos                  SMALLINT UNSIGNED NOT NULL,
+    CONSTRAINT FOREIGN KEY (circuscripcion_cera_id) REFERENCES circuscripcions_cera (id),
+    CONSTRAINT FOREIGN KEY (candidatura_id) REFERENCES candidaturas (id)
+);
