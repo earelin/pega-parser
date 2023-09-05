@@ -189,3 +189,90 @@ func TestCandidatesListRead(t *testing.T) {
 		assert.Equal(t, candidate, c)
 	}
 }
+
+func TestDatosComunsMesaCera(t *testing.T) {
+	var f fs.File
+	f, _ = os.Open("testdata/datos_comuns_mesa_cera.DAT")
+	fr, _ := NewFileReader[DatosComunsDeMesasECera](f)
+
+	datosEsperados := []DatosComunsDeMesasECera{
+		{
+			TipoEleccion:                       2,
+			Ano:                                2019,
+			Mes:                                11,
+			NumeroDeVolta:                      1,
+			CodigoComunidadeAutonoma:           1,
+			CodigoProvincia:                    4,
+			CodigoMunicipio:                    13,
+			NumeroDistritoMunicipal:            6,
+			Seccion:                            15,
+			Mesa:                               "U",
+			CensoIne:                           567,
+			CensoEscrutinioOCera:               567,
+			CensoCereEnEscrutinio:              0,
+			TotalVotantesCere:                  0,
+			VotantesPrimerAvanceParticipacion:  216,
+			VotantesSecundoAvanceParticipacion: 296,
+			VotosBlanco:                        3,
+			VotosNulos:                         5,
+			VotosACandidaturas:                 336,
+			VotosAfirmativosReferendum:         0,
+			VotosNegativosReferendum:           0,
+			DatosOficiales:                     "S",
+		},
+		{
+			TipoEleccion:                       2,
+			Ano:                                2019,
+			Mes:                                11,
+			NumeroDeVolta:                      1,
+			CodigoComunidadeAutonoma:           1,
+			CodigoProvincia:                    11,
+			CodigoMunicipio:                    999,
+			NumeroDistritoMunicipal:            9,
+			Seccion:                            0,
+			Mesa:                               "U",
+			CensoIne:                           29057,
+			CensoEscrutinioOCera:               29057,
+			CensoCereEnEscrutinio:              0,
+			TotalVotantesCere:                  0,
+			VotantesPrimerAvanceParticipacion:  0,
+			VotantesSecundoAvanceParticipacion: 0,
+			VotosBlanco:                        13,
+			VotosNulos:                         12,
+			VotosACandidaturas:                 2205,
+			VotosAfirmativosReferendum:         0,
+			VotosNegativosReferendum:           0,
+			DatosOficiales:                     "S",
+		},
+		{
+			TipoEleccion:                       2,
+			Ano:                                2019,
+			Mes:                                11,
+			NumeroDeVolta:                      1,
+			CodigoComunidadeAutonoma:           9,
+			CodigoProvincia:                    8,
+			CodigoMunicipio:                    279,
+			NumeroDistritoMunicipal:            6,
+			Seccion:                            25,
+			Mesa:                               "A",
+			CensoIne:                           645,
+			CensoEscrutinioOCera:               645,
+			CensoCereEnEscrutinio:              0,
+			TotalVotantesCere:                  0,
+			VotantesPrimerAvanceParticipacion:  230,
+			VotantesSecundoAvanceParticipacion: 354,
+			VotosBlanco:                        3,
+			VotosNulos:                         3,
+			VotosACandidaturas:                 422,
+			VotosAfirmativosReferendum:         0,
+			VotosNegativosReferendum:           0,
+			DatosOficiales:                     "S",
+		},
+	}
+
+	for _, datoEsperado := range datosEsperados {
+		d, err := fr.Read()
+		assert.Nil(t, err)
+		assert.Equal(t, datoEsperado, d)
+	}
+}

@@ -82,7 +82,7 @@ type DatosComunsDeMesasECera struct {
 	CodigoProvincia                    int    `position:"11" length:"2"`
 	CodigoMunicipio                    int    `position:"13" length:"3"`
 	NumeroDistritoMunicipal            int    `position:"16" length:"2"`
-	Seccion                            string `position:"18" length:"4"`
+	Seccion                            int    `position:"18" length:"4"`
 	Mesa                               string `position:"22" length:"1"`
 	CensoIne                           int    `position:"23" length:"7"`
 	CensoEscrutinioOCera               int    `position:"30" length:"7"`

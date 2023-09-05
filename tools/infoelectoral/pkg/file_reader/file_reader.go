@@ -82,7 +82,8 @@ func unMarshaling[T any](data []byte, columns []Column) (T, error) {
 
 		switch column.columnType {
 		case "int":
-			number, err := strconv.Atoi(string(rawValue))
+			rawValueString := strings.TrimSpace(string(rawValue))
+			number, err := strconv.Atoi(rawValueString)
 			if err != nil {
 				return structuredData, fmt.Errorf("error converting %s to int in column %s: %w", rawValue, column.name, err)
 			}
