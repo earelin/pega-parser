@@ -97,3 +97,18 @@ type DatosComunsDeMesasECera struct {
 	VotosNegativosReferendum           int    `position:"93" length:"7"`
 	DatosOficiales                     string `position:"100" length:"1"`
 }
+
+type DatoCandidaturasDeMesasECera struct {
+	TipoEleccion             int    `position:"0" length:"2"`
+	Ano                      int    `position:"2" length:"4"`
+	Mes                      int    `position:"6" length:"2"`
+	NumeroDeVolta            int    `position:"8" length:"1"`
+	CodigoComunidadeAutonoma int    `position:"9" length:"2"`
+	CodigoProvincia          int    `position:"11" length:"2"`
+	CodigoMunicipio          int    `position:"13" length:"3"`
+	NumeroDistritoMunicipal  int    `position:"16" length:"2"`
+	Seccion                  int    `position:"18" length:"4"`
+	Mesa                     string `position:"22" length:"1"`
+	CodigoCandidatura        int    `position:"23" length:"6"`
+	Votos                    int    `position:"29" length:"7"`
+}
