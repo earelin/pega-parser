@@ -73,41 +73,27 @@ type CandidatesListLine struct {
 	Elected              string `position:"119" length:"1"` // S/N
 }
 
-type MunicipalitiesCommonDataLine struct {
-	ElectionType                     int    `position:"0" length:"2"`
-	Year                             int    `position:"2" length:"4"`
-	Month                            int    `position:"6" length:"2"`
-	Round                            int    `position:"8" length:"1"`
-	AutonomousCommunity              int    `position:"9" length:"2"`
-	Province                         int    `position:"11" length:"2"`
-	Municipality                     int    `position:"13" length:"3"`
-	MunicipalDistrict                int    `position:"16" length:"2"`
-	Name                             string `position:"18" length:"100"`
-	ElectoralDistrict                int    `position:"118" length:"1"`
-	JudicialDistrict                 int    `position:"119" length:"3"`
-	ProvincialCouncil                int    `position:"122" length:"3"`
-	Comarca                          int    `position:"125" length:"3"`
-	PoblacionDeDerecho               int    `position:"128" length:"8"`
-	NumberOfTables                   int    `position:"136" length:"5"`
-	CensoIne                         int    `position:"141" length:"8"`
-	CensoDeEscrutinio                int    `position:"149" length:"8"`
-	CenseCereEscrutinio              int    `position:"157" length:"8"`
-	TotalVotantesCere                int    `position:"165" length:"8"`
-	FirstParticipationAdvanceVoters  int    `position:"173" length:"8"`
-	SecondParticipationAdvanceVoters int    `position:"181" length:"8"`
-	BlankVotes                       int    `position:"189" length:"8"`
-	NullVotes                        int    `position:"197" length:"8"`
-	ValidVotes                       int    `position:"205" length:"8"`
-	NumberOfSeats                    int    `position:"213" length:"3"`
-}
-
-type MunicipalitiesCandidaturesDataLine struct {
-	ElectionType      int `position:"0" length:"2"`
-	Year              int `position:"2" length:"4"`
-	Month             int `position:"6" length:"2"`
-	Round             int `position:"8" length:"1"`
-	Province          int `position:"9" length:"2"`
-	Municipality      int `position:"11" length:"3"`
-	MunicipalDistrict int `position:"14" length:"2"`
-	Candidature       int `position:"16" length:"6"`
+type DatosComunsDeMesasECera struct {
+	TipoEleccion                       int    `position:"0" length:"2"`
+	Ano                                int    `position:"2" length:"4"`
+	Mes                                int    `position:"6" length:"2"`
+	NumeroDeVolta                      int    `position:"8" length:"1"`
+	CodigoComunidadeAutonoma           int    `position:"9" length:"2"`
+	CodigoProvincia                    int    `position:"11" length:"2"`
+	CodigoMunicipio                    int    `position:"13" length:"3"`
+	NumeroDistritoMunicipal            int    `position:"16" length:"2"`
+	Seccion                            string `position:"18" length:"4"`
+	Mesa                               string `position:"22" length:"1"`
+	CensoIne                           int    `position:"23" length:"7"`
+	CensoEscrutinioOCera               int    `position:"30" length:"7"`
+	CensoCereEnEscrutinio              int    `position:"37" length:"7"`
+	TotalVotantesCere                  int    `position:"44" length:"7"`
+	VotantesPrimerAvanceParticipacion  int    `position:"51" length:"7"`
+	VotantesSecundoAvanceParticipacion int    `position:"58" length:"7"`
+	VotosBlanco                        int    `position:"65" length:"7"`
+	VotosNulos                         int    `position:"72" length:"7"`
+	VotosACandidaturas                 int    `position:"79" length:"7"`
+	VotosAfirmativosReferendum         int    `position:"86" length:"7"`
+	VotosNegativosReferendum           int    `position:"93" length:"7"`
+	DatosOficiales                     string `position:"100" length:"1"`
 }

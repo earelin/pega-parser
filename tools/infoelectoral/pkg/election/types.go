@@ -55,3 +55,9 @@ type Candidate struct {
 	Name              string
 	Surname           string
 }
+
+type MesaElectoral struct {
+}
+
+type CircunscripcionCera struct {
+}
