@@ -70,7 +70,7 @@ CREATE TABLE circuscripcions_cera
     CONSTRAINT FOREIGN KEY (proceso_electoral_id) REFERENCES procesos_electorais (id)
 );
 
-CREATE TABLE cera_votos_candidaturas
+CREATE TABLE circuscripcions_cera_votos_candidaturas
 (
     id                     INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     circuscripcion_cera_id INT UNSIGNED      NOT NULL,
