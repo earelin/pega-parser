@@ -6,3 +6,6 @@ DROP TABLE candidatos;
 DROP TABLE listas;
 DROP TABLE candidaturas;
 DROP TABLE procesos_electorais;
+DROP TABLE municipios;
+DROP TABLE provincias;
+DROP TABLE comunidades_autonomas;

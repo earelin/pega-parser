@@ -1,3 +1,26 @@
+CREATE TABLE comunidades_autonomas
+(
+    id TINYINT UNSIGNED PRIMARY KEY,
+    nome VARCHAR(32) NOT NULL
+);
+
+CREATE TABLE provincias
+(
+    id TINYINT UNSIGNED PRIMARY KEY,
+    nome VARCHAR(32) NOT NULL ,
+    comunidad_autonoma_id TINYINT UNSIGNED NOT NULL,
+    CONSTRAINT FOREIGN KEY (comunidad_autonoma_id) REFERENCES comunidades_autonomas(id)
+);
+
+CREATE TABLE municipios
+(
+    provincia_id TINYINT UNSIGNED NOT NULL,
+    municipio_id SMALLINT NOT NULL,
+    nome VARCHAR(128) NOT NULL ,
+    CONSTRAINT PRIMARY KEY (provincia_id, municipio_id),
+    CONSTRAINT FOREIGN KEY (provincia_id) REFERENCES provincias(id)
+);
+
 CREATE TABLE procesos_electorais
 (
     id         INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
