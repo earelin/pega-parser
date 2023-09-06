@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-const inserirConcello = "INSERT INTO concellos(provincia_id, concello_ine, nome) VALUES (?, ?, ?)"
+const inserirConcello = "INSERT INTO concellos(id, provincia_id, nome) VALUES (?, ?, ?)"
 
 type Repository struct {
 	pool *sql.DB
@@ -46,7 +46,8 @@ func (r *Repository) CloseConnection() error {
 
 func (r *Repository) GardarConcellos(concellos []model.Concello) error {
 	for _, c := range concellos {
-		_, err := r.pool.ExecContext(r.ctx, inserirConcello, c.CodigoProvincia, c.CodigoConcello, c.Nome)
+		concelloId := c.CodigoProvincia*1000 + c.CodigoConcello
+		_, err := r.pool.ExecContext(r.ctx, inserirConcello, concelloId, c.CodigoProvincia, c.Nome)
 		if err != nil {
 			return fmt.Errorf("error gardando concello: %+v, %w", c, err)
 		}

@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"github.com/earelin/pega/tools/infoelectoral/pkg/election"
 	_ "github.com/go-sql-driver/mysql"
-	"log"
 	"time"
 )
 
@@ -18,12 +17,10 @@ const inserirMesaElectoral = "INSERT INTO mesas_electorais(proceso_electoral_id,
 const inserirVotosMesaElectoral = "INSERT INTO mesa_electoral_votos_candidaturas(mesa_electoral_id, candidatura_id, posicion, votos) VALUES (?, ?, ?, ?)"
 const inserirVotosCircunscripcionCera = "INSERT INTO circunscripcions_cera_votos_candidaturas(circuscripcion_cera_id, candidatura_id, posicion, votos) VALUES (?, ?, ?, ?)"
 const inserirCircunscripcionCera = "INSERT INTO circunscripcions_cera(proceso_electoral_id, provincia_id, censo, votos_blanco, votos_nulos, votos_candidaturas) VALUES (?, ?, ?, ?, ?, ?)"
-const cargarReferenciasConcellos = "SELECT id, provincia_id, concello_ine FROM concellos"
 
 type Repository struct {
-	pool                 *sql.DB
-	ctx                  context.Context
-	referenciasConcellos map[string]int
+	pool *sql.DB
+	ctx  context.Context
 }
 
 func NewRepository(c Config, ctx context.Context) (*Repository, error) {
@@ -126,11 +123,7 @@ func (r *Repository) CrearListasECandidatos(listaCandidatos []election.Candidate
 }
 
 func (r *Repository) CrearMesasElectorais(procesoElectoral int64, mesas []election.MesaElectoral) (map[string]int64, error) {
-	referenciasConcellos, err := r.cargarReferenciasConcellos()
-	if err != nil {
-		return nil, fmt.Errorf("non se puideron gardar as mesas electorais: %w", err)
-	}
-
+	var err error
 	var mesasImportadas = make(map[string]int64)
 	for _, m := range mesas {
 		var sqlResult sql.Result
@@ -141,7 +134,7 @@ func (r *Repository) CrearMesasElectorais(procesoElectoral int64, mesas []electi
 			sqlResult, err = r.pool.ExecContext(r.ctx, inserirCircunscripcionCera, procesoElectoral, m.CodigoProvincia,
 				m.CensoIne, m.VotosBlanco, m.VotosNulos, m.VotosCandidaturas)
 		} else {
-			concelloId := referenciasConcellos[fmt.Sprintf("%d_%d", m.CodigoProvincia, m.CodigoConcello)]
+			concelloId := m.CodigoProvincia*1000 + m.CodigoConcello
 			sqlResult, err = r.pool.ExecContext(r.ctx, inserirMesaElectoral, procesoElectoral, concelloId, m.Distrito,
 				m.Seccion, m.CodigoMesa, m.CensoIne, m.VotosBlanco, m.VotosNulos, m.VotosCandidaturas)
 		}
@@ -184,36 +177,4 @@ func (r *Repository) CrearVotosEnMesasElectorais(candidaturasImportadas map[int]
 	}
 
 	return nil
-}
-
-func (r *Repository) cargarReferenciasConcellos() (map[string]int, error) {
-	if r.referenciasConcellos != nil {
-		return r.referenciasConcellos, nil
-	}
-
-	rows, err := r.pool.QueryContext(r.ctx, cargarReferenciasConcellos)
-	if err != nil {
-		return nil, fmt.Errorf("non se puido obter o listado de concellos: %w", err)
-	}
-	defer func(rows *sql.Rows) {
-		err := rows.Close()
-		if err != nil {
-			log.Panic("Non se puido pechar un cursor", err)
-		}
-	}(rows)
-
-	var referenciasConcellos = make(map[string]int)
-
-	for rows.Next() {
-		var id, provinciaId, concelloIne int
-		err = rows.Scan(&id, &provinciaId, &concelloIne)
-		if err != nil {
-			return nil, fmt.Errorf("non se puido ler o listado de concellos: %w", err)
-		}
-		referenciasConcellos[fmt.Sprintf("%d_%d", provinciaId, concelloIne)] = id
-	}
-
-	r.referenciasConcellos = referenciasConcellos
-
-	return r.referenciasConcellos, nil
 }

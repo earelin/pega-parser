@@ -14,9 +14,8 @@ CREATE TABLE provincias
 
 CREATE TABLE concellos
 (
-    id           INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    id           SMALLINT UNSIGNED PRIMARY KEY,
     provincia_id TINYINT UNSIGNED NOT NULL,
-    concello_ine SMALLINT         NOT NULL,
     nome         VARCHAR(128)     NOT NULL,
     CONSTRAINT FOREIGN KEY (provincia_id) REFERENCES provincias (id)
 );
@@ -60,15 +59,15 @@ CREATE TABLE candidatos
 CREATE TABLE mesas_electorais
 (
     id                   INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-    proceso_electoral_id INT UNSIGNED     NOT NULL,
-    concello_id          INT UNSIGNED     NOT NULL,
-    distrito             TINYINT UNSIGNED NOT NULL,
-    seccion              CHAR(4)          NOT NULL,
-    codigo               CHAR(1)          NOT NULL,
-    censo                INT UNSIGNED     NOT NULL,
-    votos_blanco         INT UNSIGNED     NOT NULL,
-    votos_nulos          INT UNSIGNED     NOT NULL,
-    votos_candidaturas   INT UNSIGNED     NOT NULL,
+    proceso_electoral_id INT UNSIGNED      NOT NULL,
+    concello_id          SMALLINT UNSIGNED NOT NULL,
+    distrito             TINYINT UNSIGNED  NOT NULL,
+    seccion              CHAR(4)           NOT NULL,
+    codigo               CHAR(1)           NOT NULL,
+    censo                INT UNSIGNED      NOT NULL,
+    votos_blanco         INT UNSIGNED      NOT NULL,
+    votos_nulos          INT UNSIGNED      NOT NULL,
+    votos_candidaturas   INT UNSIGNED      NOT NULL,
     CONSTRAINT FOREIGN KEY (proceso_electoral_id) REFERENCES procesos_electorais (id) ON DELETE CASCADE,
     CONSTRAINT FOREIGN KEY (concello_id) REFERENCES concellos (id)
 );
