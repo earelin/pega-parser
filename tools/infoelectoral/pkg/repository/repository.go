@@ -194,11 +194,17 @@ func (r *Repository) CrearVotosEnMesasElectorais(candidaturasImportadas map[int]
 	for i := 0; i < len(cInserts); i++ {
 		sqlInsert := inserirVotosCircunscripcionCera + strings.Join(cInserts[i], ",")
 		_, err = r.pool.ExecContext(r.ctx, sqlInsert, cValues[i]...)
+		if err != nil {
+			return fmt.Errorf("non se puideron gardar os votos de circunscripcion CERA: %w", err)
+		}
 	}
 
 	for i := 0; i < len(mInserts); i++ {
 		sqlInsert := inserirVotosMesaElectoral + strings.Join(mInserts[i], ",")
 		_, err = r.pool.ExecContext(r.ctx, sqlInsert, mValues[i]...)
+		if err != nil {
+			return fmt.Errorf("non se puideron gardar os votos de mesa electoral: %w", err)
+		}
 	}
 
 	return nil
