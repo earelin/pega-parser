@@ -6,17 +6,18 @@ import (
 	"fmt"
 	"github.com/earelin/pega/tools/infoelectoral/pkg/election"
 	_ "github.com/go-sql-driver/mysql"
+	"strings"
 	"time"
 )
 
-const inserirProcesoElectoral = "INSERT INTO procesos_electorais(tipo, ambito, data) VALUES (?, ?, ?)"
-const inserirCandidatura = "INSERT INTO candidaturas(proceso_electoral_id, siglas, nome) VALUES (?, ?, ?)"
-const inserirLista = "INSERT INTO listas(candidatura_id, ambito) VALUES (? , ?)"
 const inserirCandidato = "INSERT INTO candidatos(lista_id, posicion, titular, nombre, apelidos) VALUES (?, ?, ?, ?, ?)"
-const inserirMesaElectoral = "INSERT INTO mesas_electorais(proceso_electoral_id, concello_id, distrito, seccion, codigo, censo, votos_blanco, votos_nulos, votos_candidaturas) VALUES (?, ?, ?, ?, ?, ?, ?, ? ,?)"
-const inserirVotosMesaElectoral = "INSERT INTO mesa_electoral_votos_candidaturas(mesa_electoral_id, candidatura_id, posicion, votos) VALUES (?, ?, ?, ?)"
-const inserirVotosCircunscripcionCera = "INSERT INTO circunscripcions_cera_votos_candidaturas(circuscripcion_cera_id, candidatura_id, posicion, votos) VALUES (?, ?, ?, ?)"
+const inserirCandidatura = "INSERT INTO candidaturas(proceso_electoral_id, siglas, nome) VALUES (?, ?, ?)"
 const inserirCircunscripcionCera = "INSERT INTO circunscripcions_cera(proceso_electoral_id, provincia_id, censo, votos_blanco, votos_nulos, votos_candidaturas) VALUES (?, ?, ?, ?, ?, ?)"
+const inserirLista = "INSERT INTO listas(candidatura_id, ambito) VALUES (? , ?)"
+const inserirMesaElectoral = "INSERT INTO mesas_electorais(proceso_electoral_id, concello_id, distrito, seccion, codigo, censo, votos_blanco, votos_nulos, votos_candidaturas) VALUES (?, ?, ?, ?, ?, ?, ?, ? ,?)"
+const inserirProcesoElectoral = "INSERT INTO procesos_electorais(tipo, ambito, data) VALUES (?, ?, ?)"
+const inserirVotosCircunscripcionCera = "INSERT INTO circunscripcions_cera_votos_candidaturas(circuscripcion_cera_id, candidatura_id, posicion, votos) VALUES "
+const inserirVotosMesaElectoral = "INSERT INTO mesa_electoral_votos_candidaturas(mesa_electoral_id, candidatura_id, posicion, votos) VALUES "
 
 type Repository struct {
 	pool *sql.DB
@@ -158,7 +159,19 @@ func (r *Repository) CrearMesasElectorais(procesoElectoral int64, mesas []electi
 func (r *Repository) CrearVotosEnMesasElectorais(candidaturasImportadas map[int]int64, mesasImportadas map[string]int64, votos []election.VotosMesaElectoral) error {
 	var err error
 
-	for _, v := range votos {
+	var cInserts, mInserts [][]string
+	var cValues, mValues [][]interface{}
+	var j = -1
+
+	for i, v := range votos {
+		if i%1000 == 0 {
+			j++
+			cInserts = append(cInserts, []string{})
+			cValues = append(cValues, []interface{}{})
+			mInserts = append(mInserts, []string{})
+			mValues = append(mValues, []interface{}{})
+		}
+
 		hashCircunscripcionOuMesa := fmt.Sprintf("%d_%d_%d_%d_%s", v.CodigoProvincia, v.CodigoConcello, v.Distrito, v.Seccion, v.CodigoMesa)
 		circunscripcionOuMesa := mesasImportadas[hashCircunscripcionOuMesa]
 		candidatura := candidaturasImportadas[v.CandidaturaOuSenador]
@@ -166,14 +179,26 @@ func (r *Repository) CrearVotosEnMesasElectorais(candidaturasImportadas map[int]
 		if v.CodigoProvincia == 99 || v.Votos == 0 {
 			continue
 		} else if v.CodigoConcello == 999 {
-			_, err = r.pool.ExecContext(r.ctx, inserirVotosCircunscripcionCera, circunscripcionOuMesa, candidatura, nil, v.Votos)
+			cInserts[j] = append(cInserts[j], "(?, ?, ?, ?)")
+			cValues[j] = append(cValues[j], circunscripcionOuMesa, candidatura, nil, v.Votos)
 		} else {
-			_, err = r.pool.ExecContext(r.ctx, inserirVotosMesaElectoral, circunscripcionOuMesa, candidatura, nil, v.Votos)
+			mInserts[j] = append(mInserts[j], "(?, ?, ?, ?)")
+			mValues[j] = append(mValues[j], circunscripcionOuMesa, candidatura, nil, v.Votos)
 		}
 
 		if err != nil {
 			return fmt.Errorf("non se puideron insertar os votos dunha candidatura: %w", err)
 		}
+	}
+
+	for i := 0; i < len(cInserts); i++ {
+		sqlInsert := inserirVotosCircunscripcionCera + strings.Join(cInserts[i], ",")
+		_, err = r.pool.ExecContext(r.ctx, sqlInsert, cValues[i]...)
+	}
+
+	for i := 0; i < len(mInserts); i++ {
+		sqlInsert := inserirVotosMesaElectoral + strings.Join(mInserts[i], ",")
+		_, err = r.pool.ExecContext(r.ctx, sqlInsert, mValues[i]...)
 	}
 
 	return nil
