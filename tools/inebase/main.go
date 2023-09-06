@@ -96,7 +96,7 @@ func showUsage() {
 	fmt.Println(`	Uso:
 		inebase [opcions] dataset ficheiro
 
-		dataset: Tipo de conxunto de datos (municipios)
+		dataset: Tipo de conxunto de datos (concellos)
 		ficheiro: Ruta ao ficheiro
 
 	Opcións:
@@ -111,7 +111,7 @@ func validateConfiguration(conf config.Config) error {
 		return err
 	}
 
-	if conf.DataSet != "municipios" {
+	if conf.DataSet != "concellos" {
 		return errors.New(fmt.Sprintf("Dataset descoñecido: %s", conf.DataSet))
 	}
 
