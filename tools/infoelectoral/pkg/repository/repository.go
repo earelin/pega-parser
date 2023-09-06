@@ -15,6 +15,8 @@ const inserirCandidatura = "INSERT INTO candidaturas(proceso_electoral_id, sigla
 const inserirLista = "INSERT INTO listas(candidatura_id, ambito) VALUES (? , ?)"
 const inserirCandidato = "INSERT INTO candidatos(lista_id, posicion, titular, nombre, apelidos) VALUES (?, ?, ?, ?, ?)"
 const inserirMesaElectoral = "INSERT INTO mesas_electorais(proceso_electoral_id, concello_id, distrito, seccion, codigo, censo, votos_blanco, votos_nulos, votos_candidaturas) VALUES (?, ?, ?, ?, ?, ?, ?, ? ,?)"
+const inserirVotosMesaElectoral = "INSERT INTO mesa_electoral_votos_candidaturas(mesa_electoral_id, candidatura_id, posicion, votos) VALUES (?, ?, ?, ?)"
+const inserirVotosCircunscripcionCera = "INSERT INTO circunscripcions_cera_votos_candidaturas(circuscripcion_cera_id, candidatura_id, posicion, votos) VALUES (?, ?, ?, ?)"
 const inserirCircunscripcionCera = "INSERT INTO circunscripcions_cera(proceso_electoral_id, provincia_id, censo, votos_blanco, votos_nulos, votos_candidaturas) VALUES (?, ?, ?, ?, ?, ?)"
 const cargarReferenciasConcellos = "SELECT id, provincia_id, concello_ine FROM concellos"
 
@@ -123,26 +125,61 @@ func (r *Repository) CrearListasECandidatos(listaCandidatos []election.Candidate
 	return nil
 }
 
-func (r *Repository) CrearMesasElectorais(procesoElectoral int64, mesas []election.MesaElectoral) error {
+func (r *Repository) CrearMesasElectorais(procesoElectoral int64, mesas []election.MesaElectoral) (map[string]int64, error) {
 	referenciasConcellos, err := r.cargarReferenciasConcellos()
 	if err != nil {
-		return fmt.Errorf("non se puideron gardar as mesas electorais: %w", err)
+		return nil, fmt.Errorf("non se puideron gardar as mesas electorais: %w", err)
 	}
 
+	var mesasImportadas = make(map[string]int64)
 	for _, m := range mesas {
+		var sqlResult sql.Result
+
 		if m.CodigoProvincia == 99 {
 			continue
 		} else if m.CodigoConcello == 999 {
-			_, err = r.pool.ExecContext(r.ctx, inserirCircunscripcionCera, procesoElectoral, m.CodigoProvincia,
+			sqlResult, err = r.pool.ExecContext(r.ctx, inserirCircunscripcionCera, procesoElectoral, m.CodigoProvincia,
 				m.CensoIne, m.VotosBlanco, m.VotosNulos, m.VotosCandidaturas)
 		} else {
 			concelloId := referenciasConcellos[fmt.Sprintf("%d_%d", m.CodigoProvincia, m.CodigoConcello)]
-			_, err = r.pool.ExecContext(r.ctx, inserirMesaElectoral, procesoElectoral, concelloId, m.Distrito,
+			sqlResult, err = r.pool.ExecContext(r.ctx, inserirMesaElectoral, procesoElectoral, concelloId, m.Distrito,
 				m.Seccion, m.CodigoMesa, m.CensoIne, m.VotosBlanco, m.VotosNulos, m.VotosCandidaturas)
 		}
 
 		if err != nil {
-			return fmt.Errorf("non se puido gardar a mesa ou circunscripcion CERA %+v: %w", m, err)
+			return nil, fmt.Errorf("non se puido gardar a mesa ou circunscripcion CERA %+v: %w", m, err)
+		}
+
+		var insertedId int64
+		insertedId, err = sqlResult.LastInsertId()
+		if err != nil {
+			return nil, fmt.Errorf("non se puido obter o id da ultima mesa insertada: %w", err)
+		}
+		datosMesaHash := fmt.Sprintf("%d_%d_%d_%d_%s", m.CodigoProvincia, m.CodigoConcello, m.Distrito, m.Seccion, m.CodigoMesa)
+		mesasImportadas[datosMesaHash] = insertedId
+	}
+
+	return mesasImportadas, nil
+}
+
+func (r *Repository) CrearVotosEnMesasElectorais(candidaturasImportadas map[int]int64, mesasImportadas map[string]int64, votos []election.VotosMesaElectoral) error {
+	var err error
+
+	for _, v := range votos {
+		hashCircunscripcionOuMesa := fmt.Sprintf("%d_%d_%d_%d_%s", v.CodigoProvincia, v.CodigoConcello, v.Distrito, v.Seccion, v.CodigoMesa)
+		circunscripcionOuMesa := mesasImportadas[hashCircunscripcionOuMesa]
+		candidatura := candidaturasImportadas[v.CandidaturaOuSenador]
+
+		if v.CodigoProvincia == 99 {
+			continue
+		} else if v.CodigoConcello == 999 {
+			_, err = r.pool.ExecContext(r.ctx, inserirVotosCircunscripcionCera, circunscripcionOuMesa, candidatura, nil, v.Votos)
+		} else {
+			_, err = r.pool.ExecContext(r.ctx, inserirVotosMesaElectoral, circunscripcionOuMesa, candidatura, nil, v.Votos)
+		}
+
+		if err != nil {
+			return fmt.Errorf("non se puideron insertar os votos dunha candidatura: %w", err)
 		}
 	}
 

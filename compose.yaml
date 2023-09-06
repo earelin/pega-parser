@@ -8,6 +8,7 @@ services:
       - 3306:3306
     volumes:
       - db-data:/var/lib/mysql
+      - ./database/docker-mariadb.cnf:/etc/mysql/conf.d./docker-mariadb.cnf
 
 volumes:
   db-data:
