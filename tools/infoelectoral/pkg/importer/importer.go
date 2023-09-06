@@ -28,5 +28,11 @@ func ImportElectionData(r *repository.Repository, e election.Election) error {
 		return fmt.Errorf("non se puideron gardar as listas e candidatos: %w", err)
 	}
 
+	mesas := e.MesasElectorais()
+	err = r.CrearMesasElectorais(procesoElectoralId, mesas)
+	if err != nil {
+		return fmt.Errorf("non se puideron crear as mesas electorais: %w", err)
+	}
+
 	return nil
 }

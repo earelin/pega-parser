@@ -67,11 +67,11 @@ func (e Election) ExportToFiles(fileExport func(interface{}, string) error) erro
 	return nil
 }
 
-func (e Election) Candidatures() []Candidature {
+func (e Election) Candidatures() []Candidatura {
 	fr := getFileReader[file_reader.CandidatureLine](e.zipFile, e.files.CandidaturesFile)
 	defer fr.Close()
 
-	var candidatures []Candidature
+	var candidatures []Candidatura
 	for {
 		c, err := fr.Read()
 		if err == io.EOF {
@@ -81,10 +81,10 @@ func (e Election) Candidatures() []Candidature {
 			log.Panic("Error reading candidatures files", err)
 		}
 
-		candidatures = append(candidatures, Candidature{
-			Code:    c.Code,
-			Acronym: c.Acronym,
-			Name:    c.Name,
+		candidatures = append(candidatures, Candidatura{
+			Codigo: c.Code,
+			Siglas: c.Acronym,
+			Nome:   c.Name,
 		})
 	}
 
@@ -114,15 +114,45 @@ func (e Election) CandidatesList() []Candidate {
 
 		candidates = append(candidates, Candidate{
 			AmbitoTerritorial: ambitoTerritorial,
-			CandidatureCode:   c.CandidatureCode,
-			Position:          c.Position,
+			CodigoCandidatura: c.CandidatureCode,
+			Posicion:          c.Position,
 			Titular:           c.Type == "T",
-			Name:              c.Name,
-			Surname:           strings.TrimSpace(fmt.Sprintf("%s %s", c.FirstSurname, c.SecondSurname)),
+			Nome:              c.Name,
+			Apelidos:          strings.TrimSpace(fmt.Sprintf("%s %s", c.FirstSurname, c.SecondSurname)),
 		})
 	}
 
 	return candidates
+}
+
+func (e Election) MesasElectorais() []MesaElectoral {
+	fr := getFileReader[file_reader.DatosComunsDeMesasECera](e.zipFile, e.files.TablesAndCeraCommonDataFile)
+	defer fr.Close()
+
+	var mesas []MesaElectoral
+	for {
+		m, err := fr.Read()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			log.Panic("Erro lendo as mesas electorais", err)
+		}
+
+		mesas = append(mesas, MesaElectoral{
+			CodigoProvincia:   m.CodigoProvincia,
+			CodigoConcello:    m.CodigoMunicipio,
+			Distrito:          m.NumeroDistritoMunicipal,
+			Seccion:           m.Seccion,
+			CodigoMesa:        m.Mesa,
+			CensoIne:          m.CensoIne,
+			VotosBlanco:       m.VotosBlanco,
+			VotosNulos:        m.VotosNulos,
+			VotosCandidaturas: m.VotosACandidaturas,
+		})
+	}
+
+	return mesas
 }
 
 func getFileReader[T any](archive *archive_reader.ZipFile, filename string) file_reader.FileReader[T] {

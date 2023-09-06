@@ -1,11 +1,11 @@
 package election
 
 const (
-	ControlFilePrefix                                      = "01"
-	IdentificationFilePrefix                               = "02"
-	CandidaturesFilePrefix                                 = "03"
-	CandidatesListFilePrefix                               = "04"
-	MunicipalitiesCommonDataFilePrefix                     = "05"
+	FicheiroControlPrefixo                                 = "01"
+	FicheiroIdentificacionPrefixo                          = "02"
+	FicheiroCandidaturasPrefixo                            = "03"
+	FicheiroListaCandidatosPrefix                          = "04"
+	FicheiroDatosComunsConcellosPrefixo                    = "05"
 	MunicipalitiesCandidaturesDataFilePrefix               = "06"
 	MunicipalitiesSuperiorScopeCommonDataFilePrefix        = "07"
 	MunicipalitiesSuperiorScopeCandidaturesDataFile        = "08"
@@ -41,23 +41,37 @@ var ElectionTypeLabel = map[int]string{
 	XuntasXerais:         "Xuntas Xeráis",
 }
 
-type Candidature struct {
-	Code    int
-	Acronym string
-	Name    string
+type Candidatura struct {
+	Codigo int
+	Siglas string
+	Nome   string
 }
 
 type Candidate struct {
 	AmbitoTerritorial int
-	CandidatureCode   int
-	Position          int
+	CodigoCandidatura int
+	Posicion          int
 	Titular           bool
-	Name              string
-	Surname           string
+	Nome              string
+	Apelidos          string
 }
 
 type MesaElectoral struct {
+	CodigoProvincia   int
+	CodigoConcello    int
+	Distrito          int
+	Seccion           int
+	CodigoMesa        string
+	CensoIne          int
+	VotosBlanco       int
+	VotosNulos        int
+	VotosCandidaturas int
 }
 
 type CircunscripcionCera struct {
+	CodigoProvincia   int
+	CensoCera         int
+	VotosBlanco       int
+	VotosNulos        int
+	VotosCandidaturas int
 }

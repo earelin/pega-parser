@@ -25,7 +25,7 @@ func NewElection(zipFile *archive_reader.ZipFile) Election {
 func loadControlData(e *Election, archive *archive_reader.ZipFile) {
 	var err error
 	var controlFile fs.File
-	controlFile, err = archive.FindFileWithPrefix(ControlFilePrefix)
+	controlFile, err = archive.FindFileWithPrefix(FicheiroControlPrefixo)
 	if err != nil {
 		log.Panic("Could not find control file", err)
 	}
@@ -47,10 +47,10 @@ func loadControlData(e *Election, archive *archive_reader.ZipFile) {
 	var generateCustomPrefixFileName = buildCustomPrefixFilenameGenerator(control.Month, control.Year)
 
 	e.files = dataFiles{
-		IdentificationFile:                               generateFileName(true, IdentificationFilePrefix),
-		CandidaturesFile:                                 generateFileName(control.CandidaturesFile, CandidaturesFilePrefix),
-		CandidatesListFile:                               generateFileName(control.CandidatesListFile, CandidatesListFilePrefix),
-		MunicipalitiesCommonDataFile:                     generateFileName(control.MunicipalitiesCommonDataFile, MunicipalitiesCommonDataFilePrefix),
+		IdentificationFile:                               generateFileName(true, FicheiroIdentificacionPrefixo),
+		CandidaturesFile:                                 generateFileName(control.CandidaturesFile, FicheiroCandidaturasPrefixo),
+		CandidatesListFile:                               generateFileName(control.CandidatesListFile, FicheiroListaCandidatosPrefix),
+		MunicipalitiesCommonDataFile:                     generateFileName(control.MunicipalitiesCommonDataFile, FicheiroDatosComunsConcellosPrefixo),
 		MunicipalitiesCandidaturesDataFile:               generateFileName(control.MunicipalitiesCandidaturesDataFile, MunicipalitiesCandidaturesDataFilePrefix),
 		MunicipalitiesSuperiorScopeCommonDataFile:        generateFileName(control.MunicipalitiesSuperiorScopeCommonDataFile, MunicipalitiesSuperiorScopeCommonDataFilePrefix),
 		MunicipalitiesSuperiorScopeCandidaturesDataFile:  generateFileName(control.MunicipalitiesSuperiorScopeCandidaturesDataFile, MunicipalitiesSuperiorScopeCandidaturesDataFile),
