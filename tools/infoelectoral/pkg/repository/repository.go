@@ -170,7 +170,7 @@ func (r *Repository) CrearVotosEnMesasElectorais(candidaturasImportadas map[int]
 		circunscripcionOuMesa := mesasImportadas[hashCircunscripcionOuMesa]
 		candidatura := candidaturasImportadas[v.CandidaturaOuSenador]
 
-		if v.CodigoProvincia == 99 {
+		if v.CodigoProvincia == 99 || v.Votos == 0 {
 			continue
 		} else if v.CodigoConcello == 999 {
 			_, err = r.pool.ExecContext(r.ctx, inserirVotosCircunscripcionCera, circunscripcionOuMesa, candidatura, nil, v.Votos)
