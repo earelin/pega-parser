@@ -1,6 +1,6 @@
 package config
 
-import "github.com/earelin/pega/tools/infoelectoral/pkg/repository"
+import "github.com/earelin/pega/tools/inebase/pkg/repository"
 
 type Config struct {
 	FilePath         string
