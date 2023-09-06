@@ -108,11 +108,11 @@ func validateConfiguration(conf config.Config) error {
 
 	_, err = os.Stat(conf.FilePath)
 	if err != nil {
-		return err
+		return fmt.Errorf("non se pode abrir o ficheiro: %w", err)
 	}
 
 	if conf.DataSet != "concellos" {
-		return errors.New(fmt.Sprintf("Dataset descoñecido: %s", conf.DataSet))
+		return fmt.Errorf("dataset descoñecido: %s", conf.DataSet)
 	}
 
 	return err
