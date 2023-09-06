@@ -105,5 +105,5 @@ CREATE TABLE circunscripcions_cera_votos_candidaturas
     orden                  TINYINT UNSIGNED,
     votos                  SMALLINT UNSIGNED NOT NULL,
     CONSTRAINT FOREIGN KEY (circuscripcion_cera_id) REFERENCES circunscripcions_cera (id) ON DELETE CASCADE ,
-    CONSTRAINT FOREIGN KEY (candidatura_id) REFERENCES candidaturas (id) ON DELETE CASCADE 
+    CONSTRAINT FOREIGN KEY (candidatura_id) REFERENCES candidaturas (id) ON DELETE CASCADE
 );
