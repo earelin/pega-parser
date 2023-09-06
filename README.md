@@ -13,6 +13,7 @@ inebase [OPCIONS] CONSUNTO_DATOS FICHEIRO
 ```
 
 `CONXUNTO_DATOS`: Conxunto de datos a importar. Valores soportados: concellos.
+
 `FICHEIRO`: Ruta ao ficheiro cos datos INE.
 
 #### Conxuntos de datos soportados
