@@ -35,7 +35,7 @@ CREATE TABLE candidaturas
     proceso_electoral_id INT UNSIGNED NOT NULL,
     siglas               VARCHAR(50)  NOT NULL,
     nome                 VARCHAR(150),
-    CONSTRAINT FOREIGN KEY (proceso_electoral_id) REFERENCES procesos_electorais(id) ON DELETE CASCADE
+    CONSTRAINT FOREIGN KEY (proceso_electoral_id) REFERENCES procesos_electorais (id) ON DELETE CASCADE
 );
 
 CREATE TABLE listas
@@ -68,8 +68,8 @@ CREATE TABLE mesas_electorais
     censo                INT UNSIGNED     NOT NULL,
     votos_blanco         INT UNSIGNED     NOT NULL,
     votos_nulos          INT UNSIGNED     NOT NULL,
-    votos_candidaturas   INT UNSIGNED NOT NULL,
-    CONSTRAINT FOREIGN KEY (proceso_electoral_id) REFERENCES procesos_electorais (id) ON DELETE CASCADE ,
+    votos_candidaturas   INT UNSIGNED     NOT NULL,
+    CONSTRAINT FOREIGN KEY (proceso_electoral_id) REFERENCES procesos_electorais (id) ON DELETE CASCADE,
     CONSTRAINT FOREIGN KEY (concello_id) REFERENCES concellos (id)
 );
 
@@ -78,7 +78,7 @@ CREATE TABLE mesa_electoral_votos_candidaturas
     id                INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     mesa_electoral_id INT UNSIGNED      NOT NULL,
     candidatura_id    INT UNSIGNED      NOT NULL,
-    orden             TINYINT UNSIGNED,
+    posicion          TINYINT UNSIGNED,
     votos             SMALLINT UNSIGNED NOT NULL,
     CONSTRAINT FOREIGN KEY (mesa_electoral_id) REFERENCES mesas_electorais (id) ON DELETE CASCADE,
     CONSTRAINT FOREIGN KEY (candidatura_id) REFERENCES candidaturas (id) ON DELETE CASCADE
@@ -92,8 +92,8 @@ CREATE TABLE circunscripcions_cera
     censo                INT UNSIGNED     NOT NULL,
     votos_blanco         INT UNSIGNED     NOT NULL,
     votos_nulos          INT UNSIGNED     NOT NULL,
-    votos_candidaturas   INT UNSIGNED NOT NULL,
-    CONSTRAINT FOREIGN KEY (proceso_electoral_id) REFERENCES procesos_electorais (id) ON DELETE CASCADE ,
+    votos_candidaturas   INT UNSIGNED     NOT NULL,
+    CONSTRAINT FOREIGN KEY (proceso_electoral_id) REFERENCES procesos_electorais (id) ON DELETE CASCADE,
     CONSTRAINT FOREIGN KEY (provincia_id) REFERENCES provincias (id)
 );
 
@@ -102,8 +102,8 @@ CREATE TABLE circunscripcions_cera_votos_candidaturas
     id                     INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     circuscripcion_cera_id INT UNSIGNED      NOT NULL,
     candidatura_id         INT UNSIGNED      NOT NULL,
-    orden                  TINYINT UNSIGNED,
+    posicion               TINYINT UNSIGNED,
     votos                  SMALLINT UNSIGNED NOT NULL,
-    CONSTRAINT FOREIGN KEY (circuscripcion_cera_id) REFERENCES circunscripcions_cera (id) ON DELETE CASCADE ,
+    CONSTRAINT FOREIGN KEY (circuscripcion_cera_id) REFERENCES circunscripcions_cera (id) ON DELETE CASCADE,
     CONSTRAINT FOREIGN KEY (candidatura_id) REFERENCES candidaturas (id) ON DELETE CASCADE
 );
