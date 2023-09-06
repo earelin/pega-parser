@@ -155,6 +155,34 @@ func (e Election) MesasElectorais() []MesaElectoral {
 	return mesas
 }
 
+func (e Election) VotosMesasElectorais() []VotosMesaElectoral {
+	fr := getFileReader[file_reader.DatoCandidaturasDeMesasECera](e.zipFile, e.files.TablesAndCeraCandidaturesDataFile)
+	defer fr.Close()
+
+	var votosMesas []VotosMesaElectoral
+	for {
+		v, err := fr.Read()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			log.Panic("Erro lendo os votos en mesas electorais", err)
+		}
+
+		votosMesas = append(votosMesas, VotosMesaElectoral{
+			CodigoProvincia:      v.CodigoProvincia,
+			CodigoConcello:       v.CodigoMunicipio,
+			Distrito:             v.NumeroDistritoMunicipal,
+			Seccion:              v.Seccion,
+			CodigoMesa:           v.Mesa,
+			CandidaturaOuSenador: v.CodigoCandidatura,
+			Votos:                v.Votos,
+		})
+	}
+
+	return votosMesas
+}
+
 func getFileReader[T any](archive *archive_reader.ZipFile, filename string) file_reader.FileReader[T] {
 	var err error
 	var file fs.File

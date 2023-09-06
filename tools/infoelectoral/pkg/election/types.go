@@ -68,10 +68,12 @@ type MesaElectoral struct {
 	VotosCandidaturas int
 }
 
-type CircunscripcionCera struct {
-	CodigoProvincia   int
-	CensoCera         int
-	VotosBlanco       int
-	VotosNulos        int
-	VotosCandidaturas int
+type VotosMesaElectoral struct {
+	CodigoProvincia      int
+	CodigoConcello       int
+	Distrito             int
+	Seccion              int
+	CodigoMesa           string
+	CandidaturaOuSenador int
+	Votos                int
 }
