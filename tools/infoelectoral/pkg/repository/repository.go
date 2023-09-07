@@ -12,9 +12,9 @@ import (
 
 const inserirCandidato = "INSERT INTO candidatos(lista_id, posicion, titular, nombre, apelidos) VALUES (?, ?, ?, ?, ?)"
 const inserirCandidatura = "INSERT INTO candidaturas(proceso_electoral_id, siglas, nome) VALUES (?, ?, ?)"
-const inserirCircunscripcionCera = "INSERT INTO circunscripcions_cera(proceso_electoral_id, provincia_id, censo, votos_blanco, votos_nulos, votos_candidaturas) VALUES (?, ?, ?, ?, ?, ?)"
+const inserirCircunscripcionCera = "INSERT INTO circunscripcions_cera(proceso_electoral_id, provincia_id, censo, votos_blanco, votos_nulos, votos_candidaturas) VALUES "
 const inserirLista = "INSERT INTO listas(candidatura_id, ambito) VALUES (? , ?)"
-const inserirMesaElectoral = "INSERT INTO mesas_electorais(proceso_electoral_id, concello_id, distrito, seccion, codigo, censo, votos_blanco, votos_nulos, votos_candidaturas) VALUES (?, ?, ?, ?, ?, ?, ?, ? ,?)"
+const inserirMesaElectoral = "INSERT INTO mesas_electorais(proceso_electoral_id, concello_id, distrito, seccion, codigo, censo, votos_blanco, votos_nulos, votos_candidaturas) VALUES "
 const inserirProcesoElectoral = "INSERT INTO procesos_electorais(tipo, ambito, data) VALUES (?, ?, ?)"
 const inserirVotosCircunscripcionCera = "INSERT INTO circunscripcions_cera_votos_candidaturas(circuscripcion_cera_id, candidatura_id, posicion, votos) VALUES "
 const inserirVotosMesaElectoral = "INSERT INTO mesa_electoral_votos_candidaturas(mesa_electoral_id, candidatura_id, posicion, votos) VALUES "
@@ -126,31 +126,84 @@ func (r *Repository) CrearListasECandidatos(listaCandidatos []election.Candidate
 func (r *Repository) CrearMesasElectorais(procesoElectoral int64, mesas []election.MesaElectoral) (map[string]int64, error) {
 	var err error
 	var mesasImportadas = make(map[string]int64)
-	for _, m := range mesas {
-		var sqlResult sql.Result
+
+	var cInserts, mInserts, cHash, mHash [][]string
+	var cValues, mValues [][]interface{}
+	var j = -1
+
+	for i, m := range mesas {
+		if i%1000 == 0 {
+			j++
+			cInserts = append(cInserts, []string{})
+			cHash = append(cHash, []string{})
+			cValues = append(cValues, []interface{}{})
+			mInserts = append(mInserts, []string{})
+			mHash = append(mHash, []string{})
+			mValues = append(mValues, []interface{}{})
+		}
+
+		hash := fmt.Sprintf("%d_%d_%d_%d_%s", m.CodigoProvincia, m.CodigoConcello, m.Distrito, m.Seccion, m.CodigoMesa)
 
 		if m.CodigoProvincia == 99 {
 			continue
 		} else if m.CodigoConcello == 999 {
-			sqlResult, err = r.pool.ExecContext(r.ctx, inserirCircunscripcionCera, procesoElectoral, m.CodigoProvincia,
+			cInserts[j] = append(cInserts[j], "(?, ?, ?, ?, ?, ?)")
+			cValues[j] = append(cValues[j], procesoElectoral, m.CodigoProvincia,
 				m.CensoIne, m.VotosBlanco, m.VotosNulos, m.VotosCandidaturas)
+			cHash[j] = append(cHash[j], hash)
 		} else {
+			mInserts[j] = append(mInserts[j], "(?, ?, ?, ?, ?, ?, ?, ?, ?)")
 			concelloId := m.CodigoProvincia*1000 + m.CodigoConcello
-			sqlResult, err = r.pool.ExecContext(r.ctx, inserirMesaElectoral, procesoElectoral, concelloId, m.Distrito,
+			mValues[j] = append(mValues[j], procesoElectoral, concelloId, m.Distrito,
 				m.Seccion, m.CodigoMesa, m.CensoIne, m.VotosBlanco, m.VotosNulos, m.VotosCandidaturas)
+			mHash[j] = append(mHash[j], hash)
+		}
+	}
+
+	var sqlResult sql.Result
+
+	for i := 0; i < len(cInserts); i++ {
+		if len(cInserts[i]) == 0 {
+			continue
 		}
 
+		sqlInsert := inserirCircunscripcionCera + strings.Join(cInserts[i], ",")
+		sqlResult, err = r.pool.ExecContext(r.ctx, sqlInsert, cValues[i]...)
 		if err != nil {
-			return nil, fmt.Errorf("non se puido gardar a mesa ou circunscripcion CERA %+v: %w", m, err)
+			return nil, fmt.Errorf("non se puideron gardar as circunscripcions CERA: %w", err)
 		}
 
 		var insertedId int64
 		insertedId, err = sqlResult.LastInsertId()
 		if err != nil {
-			return nil, fmt.Errorf("non se puido obter o id da ultima mesa insertada: %w", err)
+			return nil, fmt.Errorf("non se puido obter o id da ultima circunscripcions CERA inserida: %w", err)
 		}
-		datosMesaHash := fmt.Sprintf("%d_%d_%d_%d_%s", m.CodigoProvincia, m.CodigoConcello, m.Distrito, m.Seccion, m.CodigoMesa)
-		mesasImportadas[datosMesaHash] = insertedId
+		for j := len(cHash[i]) - 1; j >= 0; j-- {
+			mesasImportadas[cHash[i][j]] = insertedId
+			insertedId -= 1
+		}
+	}
+
+	for i := 0; i < len(mInserts); i++ {
+		if len(mInserts[i]) == 0 {
+			continue
+		}
+
+		sqlInsert := inserirMesaElectoral + strings.Join(mInserts[i], ",")
+		sqlResult, err = r.pool.ExecContext(r.ctx, sqlInsert, mValues[i]...)
+		if err != nil {
+			return nil, fmt.Errorf("non se puideron gardar as mesas electorais: %w", err)
+		}
+
+		var insertedId int64
+		insertedId, err = sqlResult.LastInsertId()
+		if err != nil {
+			return nil, fmt.Errorf("non se puido obter o id da mesa electoral inserida: %w", err)
+		}
+		for j := len(mHash[i]) - 1; j >= 0; j-- {
+			mesasImportadas[mHash[i][j]] = insertedId
+			insertedId -= 1
+		}
 	}
 
 	return mesasImportadas, nil
@@ -192,6 +245,10 @@ func (r *Repository) CrearVotosEnMesasElectorais(candidaturasImportadas map[int]
 	}
 
 	for i := 0; i < len(cInserts); i++ {
+		if len(cInserts[i]) == 0 {
+			continue
+		}
+
 		sqlInsert := inserirVotosCircunscripcionCera + strings.Join(cInserts[i], ",")
 		_, err = r.pool.ExecContext(r.ctx, sqlInsert, cValues[i]...)
 		if err != nil {
@@ -200,6 +257,10 @@ func (r *Repository) CrearVotosEnMesasElectorais(candidaturasImportadas map[int]
 	}
 
 	for i := 0; i < len(mInserts); i++ {
+		if len(mInserts[i]) == 0 {
+			continue
+		}
+
 		sqlInsert := inserirVotosMesaElectoral + strings.Join(mInserts[i], ",")
 		_, err = r.pool.ExecContext(r.ctx, sqlInsert, mValues[i]...)
 		if err != nil {
