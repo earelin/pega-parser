@@ -10,14 +10,14 @@ import (
 	"time"
 )
 
-const inserirCandidato = "INSERT INTO candidatos(lista_id, posicion, titular, nombre, apelidos) VALUES (?, ?, ?, ?, ?)"
-const inserirCandidatura = "INSERT INTO candidaturas(proceso_electoral_id, siglas, nome) VALUES (?, ?, ?)"
-const inserirCircunscripcionCera = "INSERT INTO circunscripcions_cera(proceso_electoral_id, provincia_id, censo, votos_blanco, votos_nulos, votos_candidaturas) VALUES "
-const inserirLista = "INSERT INTO listas(candidatura_id, ambito) VALUES (? , ?)"
-const inserirMesaElectoral = "INSERT INTO mesas_electorais(proceso_electoral_id, concello_id, distrito, seccion, codigo, censo, votos_blanco, votos_nulos, votos_candidaturas) VALUES "
-const inserirProcesoElectoral = "INSERT INTO procesos_electorais(tipo, ambito, data) VALUES (?, ?, ?)"
-const inserirVotosCircunscripcionCera = "INSERT INTO circunscripcions_cera_votos_candidaturas(circuscripcion_cera_id, candidatura_id, posicion, votos) VALUES "
-const inserirVotosMesaElectoral = "INSERT INTO mesa_electoral_votos_candidaturas(mesa_electoral_id, candidatura_id, posicion, votos) VALUES "
+const inserirCandidato = "INSERT INTO candidato(lista_id, posicion, titular, nombre, apelidos) VALUES (?, ?, ?, ?, ?)"
+const inserirCandidatura = "INSERT INTO candidatura(proceso_electoral_id, siglas, nome) VALUES (?, ?, ?)"
+const inserirCircunscripcionCera = "INSERT INTO circunscripcion_cera(proceso_electoral_id, provincia_id, censo, votos_blanco, votos_nulos, votos_candidaturas) VALUES "
+const inserirLista = "INSERT INTO lista(candidatura_id, ambito) VALUES (? , ?)"
+const inserirMesaElectoral = "INSERT INTO mesa_electoral(proceso_electoral_id, concello_id, distrito, seccion, codigo, censo, votos_blanco, votos_nulos, votos_candidaturas) VALUES "
+const inserirProcesoElectoral = "INSERT INTO proceso_electoral(tipo, ambito, data) VALUES (?, ?, ?)"
+const inserirVotosCircunscripcionCera = "INSERT INTO circunscripcion_cera_votos_candidatura(circuscripcion_cera_id, candidatura_id, posicion, votos) VALUES "
+const inserirVotosMesaElectoral = "INSERT INTO mesa_electoral_votos_candidatura(mesa_electoral_id, candidatura_id, posicion, votos) VALUES "
 
 type Repository struct {
 	pool *sql.DB
