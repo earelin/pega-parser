@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-const inserirConcello = "INSERT INTO concellos(id, provincia_id, nome) VALUES (?, ?, ?)"
+const inserirConcello = "INSERT INTO concello(id, provincia_id, nome) VALUES (?, ?, ?)"
 
 type Repository struct {
 	pool *sql.DB

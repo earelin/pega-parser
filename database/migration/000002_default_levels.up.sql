@@ -1,4 +1,4 @@
-INSERT INTO comunidades_autonomas(id, nome)
+INSERT INTO comunidade_autonoma(id, nome)
 VALUES (1, 'Andalucía'),
        (2, 'Aragón'),
        (3, 'Principado de Asturias'),
@@ -19,7 +19,7 @@ VALUES (1, 'Andalucía'),
        (18, 'Ceuta'),
        (19, 'Melilla');
 
-INSERT INTO provincias(id, nome, comunidade_autonoma_id)
+INSERT INTO provincia(id, nome, comunidade_autonoma_id)
 VALUES (4, 'Almería', 1),
        (11, 'Cádiz', 1),
        (14, 'Córdoba', 1),
