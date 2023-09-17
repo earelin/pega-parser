@@ -54,6 +54,7 @@ type Candidate struct {
 	Titular           bool
 	Nome              string
 	Apelidos          string
+	FoiEleito         bool
 }
 
 type MesaElectoral struct {
