@@ -10,12 +10,9 @@ import (
 	"time"
 )
 
-const inserirCandidato = "INSERT INTO candidato(lista_id, posicion, titular, nombre, apelidos) VALUES (?, ?, ?, ?, ?)"
-const inserirCandidatura = "INSERT INTO candidatura(proceso_electoral_id, siglas, nome) VALUES (?, ?, ?)"
 const inserirCircunscripcionCera = "INSERT INTO circunscripcion_cera(proceso_electoral_id, provincia_id, censo, votos_blanco, votos_nulos, votos_candidaturas) VALUES "
 const inserirLista = "INSERT INTO lista(candidatura_id, ambito) VALUES (? , ?)"
 const inserirMesaElectoral = "INSERT INTO mesa_electoral(proceso_electoral_id, concello_id, distrito, seccion, codigo, censo, votos_blanco, votos_nulos, votos_candidaturas) VALUES "
-const inserirProcesoElectoral = "INSERT INTO proceso_electoral(tipo, ambito, data) VALUES (?, ?, ?)"
 const inserirVotosCircunscripcionCera = "INSERT INTO circunscripcion_cera_votos_candidatura(circuscripcion_cera_id, candidatura_id, posicion, votos) VALUES "
 const inserirVotosMesaElectoral = "INSERT INTO mesa_electoral_votos_candidatura(mesa_electoral_id, candidatura_id, posicion, votos) VALUES "
 
@@ -53,6 +50,8 @@ func (r *Repository) CloseConnection() error {
 }
 
 func (r *Repository) CreateProcesoElectoral(e election.Election) (int64, error) {
+	const inserirProcesoElectoral = "INSERT INTO proceso_electoral(tipo, ambito, data) VALUES (?, ?, ?)"
+
 	var result sql.Result
 	var err error
 	if e.Scope == 99 {
@@ -75,10 +74,13 @@ func (r *Repository) CreateProcesoElectoral(e election.Election) (int64, error) 
 }
 
 func (r *Repository) CreateCandidaturas(procesoElectoral int64, candidatures []election.Candidatura) (map[int]int64, error) {
+	const inserirCandidatura = "INSERT INTO candidatura(proceso_electoral_id, siglas, nome) VALUES (?, ?, ?)"
+	const actualizarConCabecerias = "UPDATE candidatura SET cabeceira_estatal = ?, cabeceira_autonomica = ?, cabeceira_provincial = ? WHERE id = ?"
 	var importedItems = make(map[int]int64)
 
 	for _, c := range candidatures {
-		var result, err = r.pool.ExecContext(r.ctx, inserirCandidatura, procesoElectoral, c.Siglas, c.Nome)
+		var result, err = r.pool.ExecContext(r.ctx, inserirCandidatura,
+			procesoElectoral, c.Siglas, c.Nome)
 		if err != nil {
 			return nil, fmt.Errorf("non foi posible gardar unha candidatura: %w", err)
 		}
@@ -90,12 +92,22 @@ func (r *Repository) CreateCandidaturas(procesoElectoral int64, candidatures []e
 		}
 
 		importedItems[c.Codigo] = id
+
+		_, err = r.pool.ExecContext(r.ctx, actualizarConCabecerias,
+			importedItems[c.CabeceiraEstatal],
+			importedItems[c.CabeceiraAutonomica],
+			importedItems[c.CabeceiraProvincial],
+			id)
+		if err != nil {
+			return nil, fmt.Errorf("non foi posible actualizar unha candidatura coas cabeceiras: %w", err)
+		}
 	}
 
 	return importedItems, nil
 }
 
 func (r *Repository) CrearListasECandidatos(listaCandidatos []election.Candidate, candidaturasImportadas map[int]int64) error {
+	const inserirCandidato = "INSERT INTO candidato(lista_id, posicion, titular, nombre, apelidos) VALUES (?, ?, ?, ?, ?)"
 	var listasImportadas = make(map[string]int64)
 
 	for _, c := range listaCandidatos {

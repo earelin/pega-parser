@@ -82,9 +82,12 @@ func (e Election) Candidatures() []Candidatura {
 		}
 
 		candidatures = append(candidatures, Candidatura{
-			Codigo: c.Code,
-			Siglas: c.Acronym,
-			Nome:   c.Name,
+			Codigo:              c.Code,
+			Siglas:              c.Acronym,
+			Nome:                c.Name,
+			CabeceiraEstatal:    c.StateCode,
+			CabeceiraAutonomica: c.AutonomicCode,
+			CabeceiraProvincial: c.ProvincialCode,
 		})
 	}
 

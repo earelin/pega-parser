@@ -42,9 +42,12 @@ var ElectionTypeLabel = map[int]string{
 }
 
 type Candidatura struct {
-	Codigo int
-	Siglas string
-	Nome   string
+	Codigo              int
+	Siglas              string
+	Nome                string
+	CabeceiraEstatal    int
+	CabeceiraAutonomica int
+	CabeceiraProvincial int
 }
 
 type Candidate struct {
