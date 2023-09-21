@@ -34,5 +34,18 @@ func TestZipFile_FindFileWithPrefixAndExtension(t *testing.T) {
 	assert.Equal(t, "01021911.DAT", fileInfo.Name())
 
 	_, err = zipFile.FindFileWithPrefix("KK")
+
 	assert.Equal(t, FileNotFound, err)
+}
+
+func TestZipFile_FileList(t *testing.T) {
+	zipFile, err := NewZipFile("../../testdata/02201911_MESA.zip")
+	if err != nil {
+		t.Error(err)
+	}
+
+	var fileList = zipFile.FileList()
+	assert.Equal(t, []string{"01021911.DAT", "02021911.DAT", "03021911.DAT", "04021911.DAT", "05021911.DAT",
+		"06021911.DAT", "07021911.DAT", "08021911.DAT", "09021911.DAT", "10021911.DAT", "FICHEROS.doc",
+		"FICHEROS.rtf"}, fileList)
 }
