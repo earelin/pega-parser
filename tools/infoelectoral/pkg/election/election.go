@@ -119,6 +119,7 @@ func (e Election) CandidatesList() []Candidate {
 			Titular:           c.Type == "T",
 			Nome:              c.Name,
 			Apelidos:          strings.TrimSpace(fmt.Sprintf("%s %s", c.FirstSurname, c.SecondSurname)),
+			FoiEleito:         c.Elected == "",
 		})
 	}
 
