@@ -10,12 +10,6 @@ import (
 	"time"
 )
 
-const inserirCircunscripcionCera = "INSERT INTO circunscripcion_cera(proceso_electoral_id, provincia_id, censo, votos_blanco, votos_nulos, votos_candidaturas) VALUES "
-const inserirLista = "INSERT INTO lista(candidatura_id, ambito) VALUES (? , ?)"
-const inserirMesaElectoral = "INSERT INTO mesa_electoral(proceso_electoral_id, concello_id, distrito, seccion, codigo, censo, votos_blanco, votos_nulos, votos_candidaturas) VALUES "
-const inserirVotosCircunscripcionCera = "INSERT INTO circunscripcion_cera_votos_candidatura(circuscripcion_cera_id, candidatura_id, posicion, votos) VALUES "
-const inserirVotosMesaElectoral = "INSERT INTO mesa_electoral_votos_candidatura(mesa_electoral_id, candidatura_id, posicion, votos) VALUES "
-
 type Repository struct {
 	pool *sql.DB
 	ctx  context.Context
@@ -73,60 +67,29 @@ func (r *Repository) CreateProcesoElectoral(e election.Election) (int64, error) 
 	return id, err
 }
 
-func (r *Repository) CreateCandidaturas(procesoElectoral int64, candidatures []election.Candidatura) (map[int]int64, error) {
-	const inserirCandidatura = "INSERT INTO candidatura(proceso_electoral_id, siglas, nome) VALUES (?, ?, ?)"
-	const actualizarConCabecerias = "UPDATE candidatura SET cabeceira_estatal = ?, cabeceira_autonomica = ?, cabeceira_provincial = ? WHERE id = ?"
-	var importedItems = make(map[int]int64)
+func (r *Repository) CreateCandidaturas(procesoElectoral int64, candidatures []election.Candidatura) error {
+	const inserirCandidatura = `INSERT INTO candidatura(proceso_electoral_id, id, siglas, nome, cabeceira_estatal,
+                        cabeceira_autonomica, cabeceira_provincial) VALUES (?, ?, ?, ?, ?, ?, ?)`
 
 	for _, c := range candidatures {
-		var result, err = r.pool.ExecContext(r.ctx, inserirCandidatura,
-			procesoElectoral, c.Siglas, c.Nome)
+		_, err := r.pool.ExecContext(r.ctx, inserirCandidatura, procesoElectoral, c.Codigo, c.Siglas, c.Nome,
+			c.CabeceiraEstatal, c.CabeceiraAutonomica, c.CabeceiraProvincial)
 		if err != nil {
-			return nil, fmt.Errorf("non foi posible gardar unha candidatura: %w", err)
-		}
-
-		var id int64
-		id, err = result.LastInsertId()
-		if err != nil {
-			return nil, fmt.Errorf("no foi posible obter o id dunha candidatura gardada: %w", err)
-		}
-
-		importedItems[c.Codigo] = id
-
-		_, err = r.pool.ExecContext(r.ctx, actualizarConCabecerias,
-			importedItems[c.CabeceiraEstatal],
-			importedItems[c.CabeceiraAutonomica],
-			importedItems[c.CabeceiraProvincial],
-			id)
-		if err != nil {
-			return nil, fmt.Errorf("non foi posible actualizar unha candidatura coas cabeceiras: %w", err)
+			return fmt.Errorf("non foi posible gardar unha candidatura: %w", err)
 		}
 	}
 
-	return importedItems, nil
+	return nil
 }
 
-func (r *Repository) CrearListasECandidatos(listaCandidatos []election.Candidate, candidaturasImportadas map[int]int64) error {
-	const inserirCandidato = "INSERT INTO candidato(lista_id, posicion, titular, nombre, apelidos) VALUES (?, ?, ?, ?, ?)"
-	var listasImportadas = make(map[string]int64)
-
+func (r *Repository) CrearListasECandidatos(procesoElectoral int64, listaCandidatos []election.Candidate) error {
 	for _, c := range listaCandidatos {
-		var candidaturaId = candidaturasImportadas[c.CodigoCandidatura]
-		codigoCandidaturaEAmbitoTerritorial := fmt.Sprintf("%d_%d", c.CodigoCandidatura, c.AmbitoTerritorial)
-		var listaId, importada = listasImportadas[codigoCandidaturaEAmbitoTerritorial]
-		if !importada {
-			var result, err = r.pool.ExecContext(r.ctx, inserirLista, candidaturaId, c.AmbitoTerritorial)
-			if err != nil {
-				return fmt.Errorf("no foi posible gardar unha lista: %w", err)
-			}
-			listaId, err = result.LastInsertId()
-			if err != nil {
-				return fmt.Errorf("non foi posible obter o id dunha lista gardada: %w", err)
-			}
-			listasImportadas[codigoCandidaturaEAmbitoTerritorial] = listaId
-		}
-
-		var _, err = r.pool.ExecContext(r.ctx, inserirCandidato, listaId, c.Posicion, c.Titular, c.Nome, c.Apelidos)
+		var _, err = r.pool.ExecContext(r.ctx,
+			`INSERT INTO candidato(proceso_electoral_id, candidatura_id, ambito, posicion, titular,
+                      					 nombre, apelidos, eleito)
+				   VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+			procesoElectoral, c.CodigoCandidatura, c.AmbitoTerritorial, c.Posicion, c.Titular, c.Nome, c.Apelidos,
+			c.FoiEleito)
 		if err != nil {
 			return fmt.Errorf("non foi posible gardar un candidato: %w", err)
 		}
@@ -135,148 +98,143 @@ func (r *Repository) CrearListasECandidatos(listaCandidatos []election.Candidate
 	return nil
 }
 
-func (r *Repository) CrearMesasElectorais(procesoElectoral int64, mesas []election.MesaElectoral) (map[string]int64, error) {
+func (r *Repository) CrearMesasElectorais(procesoElectoral int64, mesas []election.MesaElectoral) error {
 	var err error
-	var mesasImportadas = make(map[string]int64)
 
-	var cInserts, mInserts, cHash, mHash [][]string
-	var cValues, mValues [][]interface{}
-	var j = -1
+	var cInserts, mInserts []string
+	var cValues, mValues []interface{}
 
 	for i, m := range mesas {
-		if i%1000 == 0 {
-			j++
-			cInserts = append(cInserts, []string{})
-			cHash = append(cHash, []string{})
-			cValues = append(cValues, []interface{}{})
-			mInserts = append(mInserts, []string{})
-			mHash = append(mHash, []string{})
-			mValues = append(mValues, []interface{}{})
-		}
+		if i%1000 == 0 && i != 0 {
+			err = r.inserirMultipleMesasECircunscripcionsCera(cInserts, mInserts, cValues, mValues)
+			if err != nil {
+				return fmt.Errorf("non se puideron gardar os dataos de mesas e circunscipcions: %w", err)
+			}
 
-		hash := fmt.Sprintf("%d_%d_%d_%d_%s", m.CodigoProvincia, m.CodigoConcello, m.Distrito, m.Seccion, m.CodigoMesa)
+			cInserts = []string{}
+			cValues = []interface{}{}
+			mInserts = []string{}
+			mValues = []interface{}{}
+		}
 
 		if m.CodigoProvincia == 99 {
 			continue
 		} else if m.CodigoConcello == 999 {
-			cInserts[j] = append(cInserts[j], "(?, ?, ?, ?, ?, ?)")
-			cValues[j] = append(cValues[j], procesoElectoral, m.CodigoProvincia,
-				m.CensoIne, m.VotosBlanco, m.VotosNulos, m.VotosCandidaturas)
-			cHash[j] = append(cHash[j], hash)
+			cInserts = append(cInserts, "(?, ?, ?, ?, ?, ?)")
+			cValues = append(cValues, procesoElectoral, m.CodigoProvincia,
+				m.CensoEscrutinioOCera, m.VotosBlanco, m.VotosNulos, m.VotosCandidaturas)
 		} else {
-			mInserts[j] = append(mInserts[j], "(?, ?, ?, ?, ?, ?, ?, ?, ?)")
+			mInserts = append(mInserts, "(?, ?, ?, ?, ?, ?, ?, ?, ?)")
 			concelloId := m.CodigoProvincia*1000 + m.CodigoConcello
-			mValues[j] = append(mValues[j], procesoElectoral, concelloId, m.Distrito,
+			mValues = append(mValues, procesoElectoral, concelloId, m.Distrito,
 				m.Seccion, m.CodigoMesa, m.CensoIne, m.VotosBlanco, m.VotosNulos, m.VotosCandidaturas)
-			mHash[j] = append(mHash[j], hash)
 		}
 	}
 
-	var sqlResult sql.Result
-
-	for i := 0; i < len(cInserts); i++ {
-		if len(cInserts[i]) == 0 {
-			continue
-		}
-
-		sqlInsert := inserirCircunscripcionCera + strings.Join(cInserts[i], ",")
-		sqlResult, err = r.pool.ExecContext(r.ctx, sqlInsert, cValues[i]...)
-		if err != nil {
-			return nil, fmt.Errorf("non se puideron gardar as circunscripcions CERA: %w", err)
-		}
-
-		var insertedId int64
-		insertedId, err = sqlResult.LastInsertId()
-		if err != nil {
-			return nil, fmt.Errorf("non se puido obter o id da ultima circunscripcions CERA inserida: %w", err)
-		}
-		for j := len(cHash[i]) - 1; j >= 0; j-- {
-			mesasImportadas[cHash[i][j]] = insertedId
-			insertedId -= 1
-		}
+	err = r.inserirMultipleMesasECircunscripcionsCera(cInserts, mInserts, cValues, mValues)
+	if err != nil {
+		return fmt.Errorf("non se puideron gardar os dataos de mesas e circunscipcions: %w", err)
 	}
 
-	for i := 0; i < len(mInserts); i++ {
-		if len(mInserts[i]) == 0 {
-			continue
-		}
-
-		sqlInsert := inserirMesaElectoral + strings.Join(mInserts[i], ",")
-		sqlResult, err = r.pool.ExecContext(r.ctx, sqlInsert, mValues[i]...)
-		if err != nil {
-			return nil, fmt.Errorf("non se puideron gardar as mesas electorais: %w", err)
-		}
-
-		var insertedId int64
-		insertedId, err = sqlResult.LastInsertId()
-		if err != nil {
-			return nil, fmt.Errorf("non se puido obter o id da mesa electoral inserida: %w", err)
-		}
-		for j := len(mHash[i]) - 1; j >= 0; j-- {
-			mesasImportadas[mHash[i][j]] = insertedId
-			insertedId -= 1
-		}
-	}
-
-	return mesasImportadas, nil
+	return nil
 }
 
-func (r *Repository) CrearVotosEnMesasElectorais(candidaturasImportadas map[int]int64, mesasImportadas map[string]int64, votos []election.VotosMesaElectoral) error {
+func (r *Repository) inserirMultipleMesasECircunscripcionsCera(cInserts, mInserts []string, cValues, mValues []interface{}) error {
+	const inserirCircunscripcionCera = `
+		INSERT INTO circunscripcion_cera(proceso_electoral_id, provincia_id, censo, votos_blanco,
+		                                 votos_nulos, votos_candidaturas)
+		VALUES `
+	const inserirMesaElectoral = `
+		INSERT INTO mesa_electoral(proceso_electoral_id, concello_id, distrito, seccion, codigo, censo,
+		                           votos_blanco, votos_nulos, votos_candidaturas)
+		VALUES `
+
 	var err error
 
-	var cInserts, mInserts [][]string
-	var cValues, mValues [][]interface{}
-	var j = -1
+	if len(cInserts) > 0 {
+		sqlInsert := inserirCircunscripcionCera + strings.Join(cInserts, ",")
+		_, err = r.pool.ExecContext(r.ctx, sqlInsert, cValues...)
+		if err != nil {
+			return fmt.Errorf("non se puideron gardar as circunscripcions CERA: %w", err)
+		}
+	}
+
+	if len(mInserts) > 0 {
+		sqlInsert := inserirMesaElectoral + strings.Join(mInserts, ",")
+		_, err = r.pool.ExecContext(r.ctx, sqlInsert, mValues...)
+		if err != nil {
+			return fmt.Errorf("non se puideron gardar as mesas electorais: %w", err)
+		}
+	}
+
+	return nil
+}
+
+func (r *Repository) CrearVotosEnMesasElectorais(procesoElectoral int64, votos []election.VotosMesaElectoral) error {
+
+	var err error
+
+	var cInserts, mInserts []string
+	var cValues, mValues []interface{}
 
 	for i, v := range votos {
-		if i%1000 == 0 {
-			j++
-			cInserts = append(cInserts, []string{})
-			cValues = append(cValues, []interface{}{})
-			mInserts = append(mInserts, []string{})
-			mValues = append(mValues, []interface{}{})
-		}
+		if i%1000 == 0 && i != 0 {
+			err = r.insertirMultiplesVotos(cInserts, mInserts, cValues, mValues)
+			if err != nil {
+				return fmt.Errorf("non se puideron gardar os vortos dunha mesa ou circunscripcion: %w", err)
+			}
 
-		hashCircunscripcionOuMesa := fmt.Sprintf("%d_%d_%d_%d_%s", v.CodigoProvincia, v.CodigoConcello, v.Distrito, v.Seccion, v.CodigoMesa)
-		circunscripcionOuMesa := mesasImportadas[hashCircunscripcionOuMesa]
-		candidatura := candidaturasImportadas[v.CandidaturaOuSenador]
+			cInserts = []string{}
+			cValues = []interface{}{}
+			mInserts = []string{}
+			mValues = []interface{}{}
+		}
 
 		if v.CodigoProvincia == 99 || v.Votos == 0 {
 			continue
 		} else if v.CodigoConcello == 999 {
-			cInserts[j] = append(cInserts[j], "(?, ?, ?, ?)")
-			cValues[j] = append(cValues[j], circunscripcionOuMesa, candidatura, nil, v.Votos)
+			cInserts = append(cInserts, "(?, ?, ?, ?, ?)")
+			cValues = append(cValues, procesoElectoral, v.CodigoProvincia, v.CandidaturaOuSenador, nil, v.Votos)
 		} else {
-			mInserts[j] = append(mInserts[j], "(?, ?, ?, ?)")
-			mValues[j] = append(mValues[j], circunscripcionOuMesa, candidatura, nil, v.Votos)
-		}
-
-		if err != nil {
-			return fmt.Errorf("non se puideron insertar os votos dunha candidatura: %w", err)
+			mInserts = append(mInserts, "(?, ?, ?, ?, ?, ?, ?, ?)")
+			mValues = append(mValues, procesoElectoral, v.CodigoProvincia*1000+v.CodigoConcello, v.Distrito, v.Seccion,
+				v.CodigoMesa, v.CandidaturaOuSenador, nil, v.Votos)
 		}
 	}
 
-	for i := 0; i < len(cInserts); i++ {
-		if len(cInserts[i]) == 0 {
-			continue
-		}
+	err = r.insertirMultiplesVotos(cInserts, mInserts, cValues, mValues)
+	if err != nil {
+		return fmt.Errorf("non se puideron gardar os vortos dunha mesa ou circunscripcion: %w", err)
+	}
 
-		sqlInsert := inserirVotosCircunscripcionCera + strings.Join(cInserts[i], ",")
-		_, err = r.pool.ExecContext(r.ctx, sqlInsert, cValues[i]...)
+	return nil
+}
+
+func (r *Repository) insertirMultiplesVotos(cInserts, mInserts []string, cValues, mValues []interface{}) error {
+	const inserirVotosCircunscripcionCera = `
+		INSERT INTO circunscripcion_cera_votos_candidatura(proceso_electoral_id, provincia_id, candidatura_id,
+				    									   posicion, votos)
+		VALUES `
+	const inserirVotosMesaElectoral = `
+		INSERT INTO mesa_electoral_votos_candidatura(proceso_electoral_id, concello_id, distrito, seccion,
+		                                             codigo, candidatura_id, posicion, votos)
+		VALUES `
+
+	var err error
+
+	if len(cInserts) > 0 {
+		sqlInsert := inserirVotosCircunscripcionCera + strings.Join(cInserts, ",")
+		_, err = r.pool.ExecContext(r.ctx, sqlInsert, cValues...)
 		if err != nil {
-			return fmt.Errorf("non se puideron gardar os votos de circunscripcion CERA: %w", err)
+			return fmt.Errorf("non se puideron gardar os votos das circunscripcions CERA: %w", err)
 		}
 	}
 
-	for i := 0; i < len(mInserts); i++ {
-		if len(mInserts[i]) == 0 {
-			continue
-		}
-
-		sqlInsert := inserirVotosMesaElectoral + strings.Join(mInserts[i], ",")
-		_, err = r.pool.ExecContext(r.ctx, sqlInsert, mValues[i]...)
+	if len(mInserts) > 0 {
+		sqlInsert := inserirVotosMesaElectoral + strings.Join(mInserts, ",")
+		_, err = r.pool.ExecContext(r.ctx, sqlInsert, mValues...)
 		if err != nil {
-			return fmt.Errorf("non se puideron gardar os votos de mesa electoral: %w", err)
+			return fmt.Errorf("non se puideron gardar os votos das mesas electorais: %w", err)
 		}
 	}
 

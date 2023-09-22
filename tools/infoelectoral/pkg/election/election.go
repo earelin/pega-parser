@@ -122,7 +122,7 @@ func (e Election) CandidatesList() []Candidate {
 			Titular:           c.Type == "T",
 			Nome:              c.Name,
 			Apelidos:          strings.TrimSpace(fmt.Sprintf("%s %s", c.FirstSurname, c.SecondSurname)),
-			FoiEleito:         c.Elected == "",
+			FoiEleito:         c.Elected == "S",
 		})
 	}
 
@@ -144,15 +144,16 @@ func (e Election) MesasElectorais() []MesaElectoral {
 		}
 
 		mesas = append(mesas, MesaElectoral{
-			CodigoProvincia:   m.CodigoProvincia,
-			CodigoConcello:    m.CodigoMunicipio,
-			Distrito:          m.NumeroDistritoMunicipal,
-			Seccion:           m.Seccion,
-			CodigoMesa:        m.Mesa,
-			CensoIne:          m.CensoIne,
-			VotosBlanco:       m.VotosBlanco,
-			VotosNulos:        m.VotosNulos,
-			VotosCandidaturas: m.VotosACandidaturas,
+			CodigoProvincia:      m.CodigoProvincia,
+			CodigoConcello:       m.CodigoMunicipio,
+			Distrito:             m.NumeroDistritoMunicipal,
+			Seccion:              m.Seccion,
+			CodigoMesa:           m.Mesa,
+			CensoIne:             m.CensoIne,
+			CensoEscrutinioOCera: m.CensoEscrutinioOCera,
+			VotosBlanco:          m.VotosBlanco,
+			VotosNulos:           m.VotosNulos,
+			VotosCandidaturas:    m.VotosACandidaturas,
 		})
 	}
 
