@@ -190,7 +190,7 @@ func (r *Repository) CrearVotosEnMesasElectorais(procesoElectoral int64, votos [
 			mValues = []interface{}{}
 		}
 
-		if v.CodigoProvincia == 99 {
+		if v.CodigoProvincia == 99 || v.Votos == 0 {
 			continue
 		} else if v.CodigoConcello == 999 {
 			cInserts = append(cInserts, "(?, ?, ?, ?, ?)")
