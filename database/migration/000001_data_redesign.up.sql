@@ -41,15 +41,6 @@ CREATE TABLE candidatura
     CONSTRAINT FOREIGN KEY (proceso_electoral_id) REFERENCES proceso_electoral (id) ON DELETE CASCADE
 );
 
-CREATE TABLE lista
-(
-    proceso_electoral_id INT UNSIGNED NOT NULL,
-    candidatura_id       INT UNSIGNED NOT NULL,
-    ambito               INT UNSIGNED NOT NULL,
-    CONSTRAINT PRIMARY KEY (proceso_electoral_id, candidatura_id, ambito),
-    CONSTRAINT FOREIGN KEY (proceso_electoral_id, candidatura_id) REFERENCES candidatura (proceso_electoral_id, id) ON DELETE CASCADE
-);
-
 CREATE TABLE candidato
 (
     proceso_electoral_id INT UNSIGNED     NOT NULL,
@@ -59,8 +50,9 @@ CREATE TABLE candidato
     titular              BOOLEAN          NOT NULL,
     nombre               VARCHAR(25)      NOT NULL,
     apelidos             VARCHAR(50)      NOT NULL,
+    eleito              BOOLEAN          NOT NULL,
     CONSTRAINT PRIMARY KEY (proceso_electoral_id, candidatura_id, ambito, posicion),
-    CONSTRAINT FOREIGN KEY (proceso_electoral_id, candidatura_id, ambito) REFERENCES lista (proceso_electoral_id, candidatura_id, ambito) ON DELETE CASCADE
+    CONSTRAINT FOREIGN KEY (proceso_electoral_id, candidatura_id) REFERENCES candidatura (proceso_electoral_id, id) ON DELETE CASCADE
 );
 
 CREATE TABLE mesa_electoral

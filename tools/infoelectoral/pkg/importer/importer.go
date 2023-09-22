@@ -16,27 +16,25 @@ func ImportElectionData(r *repository.Repository, e election.Election) error {
 	}
 
 	candidatures := e.Candidatures()
-	var importedCandidatures map[int]int64
-	importedCandidatures, err = r.CreateCandidaturas(procesoElectoralId, candidatures)
+	err = r.CreateCandidaturas(procesoElectoralId, candidatures)
 	if err != nil {
 		return fmt.Errorf("non se puideron gardar as candidaturas: %w", err)
 	}
 
 	listaCandidatos := e.CandidatesList()
-	err = r.CrearListasECandidatos(listaCandidatos, importedCandidatures)
+	err = r.CrearListasECandidatos(procesoElectoralId, listaCandidatos)
 	if err != nil {
 		return fmt.Errorf("non se puideron gardar as listas e candidatos: %w", err)
 	}
 
 	mesas := e.MesasElectorais()
-	var mesasImportadas map[string]int64
-	mesasImportadas, err = r.CrearMesasElectorais(procesoElectoralId, mesas)
+	err = r.CrearMesasElectorais(procesoElectoralId, mesas)
 	if err != nil {
 		return fmt.Errorf("non se puideron crear as mesas electorais: %w", err)
 	}
 
 	votosMesas := e.VotosMesasElectorais()
-	err = r.CrearVotosEnMesasElectorais(importedCandidatures, mesasImportadas, votosMesas)
+	err = r.CrearVotosEnMesasElectorais(procesoElectoralId, votosMesas)
 
 	return err
 }
