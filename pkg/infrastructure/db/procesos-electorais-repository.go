@@ -44,7 +44,7 @@ func (r *ProcesosElectoraisSqlRepository) FindAll() []domain.ProcesoElectoral {
 
 func (r *ProcesosElectoraisSqlRepository) FindDatosXeraisById(id int) (domain.DatosXerais, bool) {
 	var datosXerais domain.DatosXerais
-	row := r.pool.QueryRow("SELECT id, data, tipo, ambito FROM proceso_electoral WHERE id = ?", id)
+	row := r.pool.QueryRow("SELECT id, data, tipo, ambito FROM  WHERE id = ?", id)
 
 	var err = row.Scan()
 	if errors.Is(err, sql.ErrNoRows) {
