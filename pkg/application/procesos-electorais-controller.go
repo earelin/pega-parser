@@ -6,16 +6,33 @@ import (
 )
 
 type ProcesosElectoraisController struct {
-	procesosElectoraisRepository domain.ProcesosElectoraisRepository
+	repository domain.ProcesosElectoraisRepository
 }
 
 func (c ProcesosElectoraisController) GetProcesosElectorais(gc *gin.Context) {
-	procesosElectorais := c.procesosElectoraisRepository.FindAll()
+	procesosElectorais := c.repository.FindAll()
 	gc.JSON(200, procesosElectorais)
+}
+
+func (c ProcesosElectoraisController) GetProcesoElectoral(gc *gin.Context) {
+	var id Id
+	if err := gc.ShouldBindUri(&id); err != nil {
+		gc.JSON(400, gin.H{"msg": err})
+		return
+	}
+
+	ps, ok := c.repository.FindById(id.Id)
+
+	if ok {
+		gc.JSON(200, ps)
+	} else {
+		gc.Status(404)
+	}
 }
 
 func NewProcesosElectoraisController(e *gin.Engine, procesosElectoraisRepository domain.ProcesosElectoraisRepository) {
 	c := &ProcesosElectoraisController{}
-	c.procesosElectoraisRepository = procesosElectoraisRepository
+	c.repository = procesosElectoraisRepository
 	e.GET("/procesos-electorais", c.GetProcesosElectorais)
+	e.GET("/proceso-electoral/:id", c.GetProcesoElectoral)
 }

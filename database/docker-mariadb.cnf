@@ -9,3 +9,5 @@ collation-server      = utf8mb4_general_ci
 
 innodb_buffer_pool_size = 2G
 innodb_log_file_size = 1G
+
+query_cache_size = 512M
