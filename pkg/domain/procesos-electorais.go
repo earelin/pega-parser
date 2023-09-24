@@ -18,5 +18,5 @@ type DatosXerais struct {
 
 type ProcesosElectoraisRepository interface {
 	FindAll() []ProcesoElectoral
-	FindDatosXeraisById(id int) (DatosXerais, bool)
+	FindDatosXeraisProcesoById(id int) (DatosXerais, bool)
 }

@@ -21,7 +21,7 @@ func (c ProcesosElectoraisController) GetDatosXerais(gc *gin.Context) {
 		return
 	}
 
-	ps, ok := c.repository.FindDatosXeraisById(id.Id)
+	ps, ok := c.repository.FindDatosXeraisProcesoById(id.Id)
 
 	if ok {
 		gc.JSON(200, ps)

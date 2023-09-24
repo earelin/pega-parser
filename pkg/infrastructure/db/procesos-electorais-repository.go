@@ -42,11 +42,15 @@ func (r *ProcesosElectoraisSqlRepository) FindAll() []domain.ProcesoElectoral {
 	return procesos
 }
 
-func (r *ProcesosElectoraisSqlRepository) FindDatosXeraisById(id int) (domain.DatosXerais, bool) {
-	var datosXerais domain.DatosXerais
-	row := r.pool.QueryRow("SELECT id, data, tipo, ambito FROM  WHERE id = ?", id)
+func (r *ProcesosElectoraisSqlRepository) FindDatosXeraisProcesoById(id int) (domain.DatosXerais, bool) {
+	return r.findDatosXerais("SELECT censo_ine, censo_cera FROM datos_xerais WHERE id = ?", id)
+}
 
-	var err = row.Scan()
+func (r *ProcesosElectoraisSqlRepository) findDatosXerais(query string, id int) (domain.DatosXerais, bool) {
+	var datosXerais domain.DatosXerais
+	row := r.pool.QueryRow(query, id)
+
+	var err = row.Scan(&datosXerais.CensoIne, &datosXerais.CensoCera)
 	if errors.Is(err, sql.ErrNoRows) {
 		return datosXerais, false
 	} else if err != nil {
