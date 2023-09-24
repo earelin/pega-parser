@@ -128,6 +128,28 @@ Datos xerais do proceso electoral.
   segundoAvanceParticipacion: iso string
 }
 ```
+#### GET `/procesos-electorais/{id}/datos-xerais/{nivel_administrativo}/{id_entidade}`
+
+Datos xerais do proceso electoral nunha entidade administrativa
+
+*Parametros*
+
+`id`: Id do proceso electoral.
+
+`nivel_administrativo`: Nivel administrativo: `mesa`, `concello`, `provincia`, `comunidade-autonoma`.
+
+`id_entidade`: Id da entidade administrativa.
+
+*Valor Retornado*
+
+```
+{
+  censoIne: number
+  censoCera: number
+  primeiroAvanceParticipacion: iso string
+  segundoAvanceParticipacion: iso string
+}
+```
 
 #### GET `/procesos-electorais/{id}/resultados`
 
@@ -186,29 +208,6 @@ Resultados nunha entidate administrativa.
       votos: number;
     }
   ];
-}
-```
-
-#### GET `/procesos-electorais/{id}/datos-xerais/{nivel_administrativo}/{id_entidade}`
-
-Datos xerais do proceso electoral nunha entidade administrativa
-
-*Parametros*
-
-`id`: Id do proceso electoral.
-
-`nivel_administrativo`: Nivel administrativo: `mesa`, `concello`, `provincia`, `comunidade-autonoma`.
-
-`id_entidade`: Id da entidade administrativa.
-
-*Valor Retornado*
-
-```
-{
-  censoIne: number
-  censoCera: number
-  primeiroAvanceParticipacion: iso string
-  segundoAvanceParticipacion: iso string
 }
 ```
 
