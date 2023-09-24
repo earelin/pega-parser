@@ -61,7 +61,7 @@ electorais almacenados no sistema.
 ]
 ```
 
-#### GET `/concellos/pescuda`
+#### GET `/concellos/pescuda/{search}`
 
 *Valor Retornado*
 
