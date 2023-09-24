@@ -15,21 +15,41 @@ func NewEntidadesAdministrativasSqlRepository(pool *sql.DB) *EntidadesAdministra
 }
 
 func (r *EntidadesAdministrativasSqlRepository) FindAllComunidadesAutonomas() []domain.EntidadeAdministrativa {
-	const query = "SELECT id, nome FROM comunidade_autonoma"
-	var comunidades []domain.EntidadeAdministrativa
-	rows, err := r.pool.Query(query)
+	return r.findEntidades("SELECT id, nome FROM comunidade_autonoma ORDER BY nome")
+}
+
+func (r *EntidadesAdministrativasSqlRepository) FindAllProvincias() []domain.EntidadeAdministrativa {
+	return r.findEntidades("SELECT id, nome FROM provincia ORDER BY nome")
+}
+
+func (r *EntidadesAdministrativasSqlRepository) FindAllProvinciasByComunidadeAutonoma(caId int) []domain.EntidadeAdministrativa {
+	return r.findEntidades("SELECT id, nome FROM provincia WHERE comunidade_autonoma_id = ? ORDER BY nome", caId)
+}
+
+func (r *EntidadesAdministrativasSqlRepository) FindAllConcellosByProvincia(pId int) []domain.EntidadeAdministrativa {
+	return r.findEntidades("SELECT id, nome FROM concello WHERE provincia_id = ? ORDER BY nome", pId)
+}
+
+func (r *EntidadesAdministrativasSqlRepository) FindAllConcellosByName(name string) []domain.EntidadeAdministrativa {
+	log.Printf("Searching for concellos with name: %s", name)
+	return r.findEntidades("SELECT id, nome FROM concello WHERE nome LIKE ? ORDER BY nome", "%"+name+"%")
+}
+
+func (r *EntidadesAdministrativasSqlRepository) findEntidades(sql string, args ...any) []domain.EntidadeAdministrativa {
+	var entidades []domain.EntidadeAdministrativa
+	rows, err := r.pool.Query(sql, args...)
 	if err != nil {
-		log.Printf("Error querying comunidades autonomas: %s", err)
+		log.Printf("Error querying entidaes: %s", err)
 	}
 
 	for rows.Next() {
-		var comunidade domain.EntidadeAdministrativa
-		err = rows.Scan(&comunidade.Id, &comunidade.Nome)
+		var provincia domain.EntidadeAdministrativa
+		err = rows.Scan(&provincia.Id, &provincia.Nome)
 		if err != nil {
-			log.Printf("Error scanning comunidades autonomas: %s", err)
+			log.Printf("Error scanning entidades: %s", err)
 		}
-		comunidades = append(comunidades, comunidade)
+		entidades = append(entidades, provincia)
 	}
 
-	return comunidades
+	return entidades
 }

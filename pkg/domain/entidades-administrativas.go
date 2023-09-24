@@ -7,4 +7,8 @@ type EntidadeAdministrativa struct {
 
 type EntidadesAdministrativasRepository interface {
 	FindAllComunidadesAutonomas() []EntidadeAdministrativa
+	FindAllProvincias() []EntidadeAdministrativa
+	FindAllProvinciasByComunidadeAutonoma(caId int) []EntidadeAdministrativa
+	FindAllConcellosByProvincia(pId int) []EntidadeAdministrativa
+	FindAllConcellosByName(name string) []EntidadeAdministrativa
 }
