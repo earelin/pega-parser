@@ -33,7 +33,7 @@ func (r *ProcesosElectoraisSqlRepository) FindAll() []domain.ProcesoElectoral {
 		}
 		proceso.Data, err = time.Parse("2006-01-02 15:04:05", dataRaw)
 		if err != nil {
-			log.Printf("Error parsing date: %s. %w", dataRaw, err)
+			log.Printf("Error parsing date: %s. %s", dataRaw, err)
 		}
 		proceso.Ambito = int(ambitoRaw.Int16)
 		procesos = append(procesos, proceso)
@@ -42,24 +42,16 @@ func (r *ProcesosElectoraisSqlRepository) FindAll() []domain.ProcesoElectoral {
 	return procesos
 }
 
-func (r *ProcesosElectoraisSqlRepository) FindById(id int) (domain.ProcesoElectoralDetails, bool) {
-	var proceso domain.ProcesoElectoralDetails
+func (r *ProcesosElectoraisSqlRepository) FindDatosXeraisById(id int) (domain.DatosXerais, bool) {
+	var datosXerais domain.DatosXerais
 	row := r.pool.QueryRow("SELECT id, data, tipo, ambito FROM proceso_electoral WHERE id = ?", id)
 
-	var dataRaw string
-	var ambitoRaw sql.NullInt16
-	var err = row.Scan(&proceso.Id, &dataRaw, &proceso.Tipo, &ambitoRaw)
+	var err = row.Scan()
 	if errors.Is(err, sql.ErrNoRows) {
-		return proceso, false
+		return datosXerais, false
 	} else if err != nil {
 		log.Printf("Error scanning procesos: %s", err)
 	}
 
-	proceso.Data, err = time.Parse("2006-01-02 15:04:05", dataRaw)
-	if err != nil {
-		log.Printf("Error parsing date: %s. %w", dataRaw, err)
-	}
-	proceso.Ambito = int(ambitoRaw.Int16)
-
-	return proceso, true
+	return datosXerais, true
 }

@@ -9,14 +9,14 @@ type ProcesoElectoral struct {
 	Ambito int       `json:"ambito"`
 }
 
-type ProcesoElectoralDetails struct {
-	Id     int       `json:"id"`
-	Data   time.Time `json:"data"`
-	Tipo   int       `json:"tipo"`
-	Ambito int       `json:"ambito"`
+type DatosXerais struct {
+	CensoIne                    int       `json:"censoIne"`
+	CensoCera                   int       `json:"censoCera"`
+	PrimeiroAvanceParticipacion time.Time `json:"primeiroAvanceParticipacion"`
+	SegundoAvanceParticipacion  time.Time `json:"segundoAvanceParticipacion"`
 }
 
 type ProcesosElectoraisRepository interface {
 	FindAll() []ProcesoElectoral
-	FindById(id int) (ProcesoElectoralDetails, bool)
+	FindDatosXeraisById(id int) (DatosXerais, bool)
 }

@@ -14,14 +14,14 @@ func (c ProcesosElectoraisController) GetProcesosElectorais(gc *gin.Context) {
 	gc.JSON(200, procesosElectorais)
 }
 
-func (c ProcesosElectoraisController) GetProcesoElectoral(gc *gin.Context) {
+func (c ProcesosElectoraisController) GetDatosXerais(gc *gin.Context) {
 	var id Id
 	if err := gc.ShouldBindUri(&id); err != nil {
 		gc.JSON(400, gin.H{"msg": err})
 		return
 	}
 
-	ps, ok := c.repository.FindById(id.Id)
+	ps, ok := c.repository.FindDatosXeraisById(id.Id)
 
 	if ok {
 		gc.JSON(200, ps)
@@ -34,5 +34,5 @@ func NewProcesosElectoraisController(e *gin.Engine, procesosElectoraisRepository
 	c := &ProcesosElectoraisController{}
 	c.repository = procesosElectoraisRepository
 	e.GET("/procesos-electorais", c.GetProcesosElectorais)
-	e.GET("/proceso-electoral/:id", c.GetProcesoElectoral)
+	e.GET("/proceso-electoral/:id/datos-xerais", c.GetDatosXerais)
 }
