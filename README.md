@@ -114,6 +114,10 @@ Código INE.
 
 Datos xerais do proceso electoral.
 
+*Parametros*
+
+`id`: Id do proceso electoral.
+
 *Valor Retornado*
 
 ```
@@ -128,6 +132,42 @@ Datos xerais do proceso electoral.
 #### GET `/procesos-electorais/{id}/resultados`
 
 Resultados xerais do proceso electoral.
+
+*Parametros*
+
+`id`: Id do proceso electoral.
+
+*Valor Retornado*
+
+```
+{
+  votantesPrimeiroAvanceParticipacion: number;
+  votantesSegundoAvanceParticipacion: number;
+  votantesCere: number;
+  votosEnBranco: number;
+  votosNulos: number;
+  votosACandaturas: number;
+  votosPorCandidatura: [
+    {
+      candidatura: Candidatura;
+      representantesEleitos: number;
+      votos: number;
+    }
+  ];
+}
+```
+
+#### GET `/procesos-electorais/{id}/resultados/{nivel_administrativo}/{id_entidade}`
+
+Resultados nunha entidate administrativa.
+
+*Parametros*
+
+`id`: Id do proceso electoral.
+
+`nivel_administrativo`: Nivel administrativo: `mesa`, `concello`, `provincia`, `comunidade-autonoma`.
+
+`id_entidade`: Id da entidade administrativa.
 
 *Valor Retornado*
 
