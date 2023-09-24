@@ -46,9 +46,13 @@ func (r *ProcesosElectoraisSqlRepository) FindDatosXeraisProcesoById(id int) (do
 	return r.findDatosXerais("SELECT censo_ine, censo_cera FROM datos_xerais WHERE id = ?", id)
 }
 
-func (r *ProcesosElectoraisSqlRepository) findDatosXerais(query string, id int) (domain.DatosXerais, bool) {
+func (r *ProcesosElectoraisSqlRepository) FindDatosXeraisByComunidadeAutonoma(id int, comunidadeAutonomaId int) (domain.DatosXerais, bool) {
+	return r.findDatosXerais("SELECT censo_ine, censo_cera FROM datos_xerais_autonomicos WHERE id = ? AND comunidade_autonoma_id = ?", id, comunidadeAutonomaId)
+}
+
+func (r *ProcesosElectoraisSqlRepository) findDatosXerais(query string, args ...any) (domain.DatosXerais, bool) {
 	var datosXerais domain.DatosXerais
-	row := r.pool.QueryRow(query, id)
+	row := r.pool.QueryRow(query, args...)
 
 	var err = row.Scan(&datosXerais.CensoIne, &datosXerais.CensoCera)
 	if errors.Is(err, sql.ErrNoRows) {
