@@ -189,6 +189,29 @@ Resultados nunha entidate administrativa.
 }
 ```
 
+#### GET `/procesos-electorais/{id}/datos-xerais/{nivel_administrativo}/{id_entidade}`
+
+Datos xerais do proceso electoral nunha entidade administrativa
+
+*Parametros*
+
+`id`: Id do proceso electoral.
+
+`nivel_administrativo`: Nivel administrativo: `mesa`, `concello`, `provincia`, `comunidade-autonoma`.
+
+`id_entidade`: Id da entidade administrativa.
+
+*Valor Retornado*
+
+```
+{
+  censoIne: number
+  censoCera: number
+  primeiroAvanceParticipacion: iso string
+  segundoAvanceParticipacion: iso string
+}
+```
+
 ## Ferramentas
 
 ### inebase
