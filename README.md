@@ -136,7 +136,8 @@ Datos xerais do proceso electoral nunha entidade administrativa
 
 `id`: Id do proceso electoral.
 
-`nivel_administrativo`: Nivel administrativo: `mesa`, `concello`, `provincia`, `comunidade-autonoma`.
+`nivel_administrativo`: Nivel administrativo: `mesa`, `seccion`, `distrito`, `concello`, `provincia`,
+`comunidade-autonoma`.
 
 `id_entidade`: Id da entidade administrativa.
 
