@@ -20,4 +20,6 @@ type ProcesosElectoraisRepository interface {
 	FindAll() []ProcesoElectoral
 	FindDatosXeraisProcesoById(id int) (DatosXerais, bool)
 	FindDatosXeraisByComunidadeAutonoma(id int, comunidadeAutonomaId int) (DatosXerais, bool)
+	FindDatosXeraisByProvincia(id int, provinciaId int) (DatosXerais, bool)
+	FindDatosXeraisByConcello(id int, concelloId int) (DatosXerais, bool)
 }

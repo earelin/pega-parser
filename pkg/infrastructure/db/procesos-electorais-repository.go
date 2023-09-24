@@ -50,6 +50,14 @@ func (r *ProcesosElectoraisSqlRepository) FindDatosXeraisByComunidadeAutonoma(id
 	return r.findDatosXerais("SELECT censo_ine, censo_cera FROM datos_xerais_autonomicos WHERE id = ? AND comunidade_autonoma_id = ?", id, comunidadeAutonomaId)
 }
 
+func (r *ProcesosElectoraisSqlRepository) FindDatosXeraisByProvincia(id int, provinciaId int) (domain.DatosXerais, bool) {
+	return r.findDatosXerais("SELECT censo_ine, censo_cera FROM datos_xerais_provincias WHERE id = ? AND provincia_id = ?", id, provinciaId)
+}
+
+func (r *ProcesosElectoraisSqlRepository) FindDatosXeraisByConcello(id int, concelloId int) (domain.DatosXerais, bool) {
+	return r.findDatosXerais("SELECT censo_ine, 0 FROM datos_xerais_concellos WHERE id = ? AND concello_id = ?", id, concelloId)
+}
+
 func (r *ProcesosElectoraisSqlRepository) findDatosXerais(query string, args ...any) (domain.DatosXerais, bool) {
 	var datosXerais domain.DatosXerais
 	row := r.pool.QueryRow(query, args...)
