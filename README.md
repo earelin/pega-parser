@@ -120,6 +120,8 @@ Datos xerais do proceso electoral.
 {
   censoIne: number
   censoCera: number
+  primeiroAvanceParticipacion: iso string
+  segundoAvanceParticipacion: iso string
 }
 ```
 
