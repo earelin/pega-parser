@@ -24,4 +24,5 @@ type ProcesosElectoraisRepository interface {
 	FindDatosXeraisByConcello(id int, concelloId int) (DatosXerais, bool)
 	FindDatosXeraisByDistrito(id int, concelloId int, distritoId int) (DatosXerais, bool)
 	FindDatosXeraisBySeccion(id int, concelloId int, distritoId int, seccionId int) (DatosXerais, bool)
+	FindDatosXeraisByMesa(id int, concelloId int, distritoId int, seccionId int, codigoMesa string) (DatosXerais, bool)
 }
