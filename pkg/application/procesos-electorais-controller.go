@@ -92,6 +92,47 @@ func (c ProcesosElectoraisController) GetDatosXeraisConcello(gc *gin.Context) {
 	}
 }
 
+func (c ProcesosElectoraisController) GetDatosXeraisDistrito(gc *gin.Context) {
+	var uriParams struct {
+		Id         int `uri:"id"`
+		ConcelloId int `uri:"concelloId"`
+		DistritoId int `uri:"distritoId"`
+	}
+	if err := gc.ShouldBindUri(&uriParams); err != nil {
+		gc.JSON(400, gin.H{"msg": err})
+		return
+	}
+
+	ps, ok := c.repository.FindDatosXeraisByDistrito(uriParams.Id, uriParams.ConcelloId, uriParams.DistritoId)
+
+	if ok {
+		gc.JSON(200, ps)
+	} else {
+		gc.Status(404)
+	}
+}
+
+func (c ProcesosElectoraisController) GetDatosXeraisSeccion(gc *gin.Context) {
+	var uriParams struct {
+		Id         int `uri:"id"`
+		ConcelloId int `uri:"concelloId"`
+		DistritoId int `uri:"distritoId"`
+		SeccionId  int `uri:"seccionId"`
+	}
+	if err := gc.ShouldBindUri(&uriParams); err != nil {
+		gc.JSON(400, gin.H{"msg": err})
+		return
+	}
+
+	ps, ok := c.repository.FindDatosXeraisBySeccion(uriParams.Id, uriParams.ConcelloId, uriParams.DistritoId, uriParams.SeccionId)
+
+	if ok {
+		gc.JSON(200, ps)
+	} else {
+		gc.Status(404)
+	}
+}
+
 func NewProcesosElectoraisController(e *gin.Engine, procesosElectoraisRepository domain.ProcesosElectoraisRepository) {
 	c := &ProcesosElectoraisController{}
 	c.repository = procesosElectoraisRepository
@@ -100,4 +141,6 @@ func NewProcesosElectoraisController(e *gin.Engine, procesosElectoraisRepository
 	e.GET("/proceso-electoral/:id/datos-xerais/comunidade-autonoma/:comunidadeAutonomaId", c.GetDatosXeraisComunidadeAutonoma)
 	e.GET("/proceso-electoral/:id/datos-xerais/provincia/:provinciaId", c.GetDatosXeraisProvincia)
 	e.GET("/proceso-electoral/:id/datos-xerais/concello/:concelloId", c.GetDatosXeraisConcello)
+	e.GET("/proceso-electoral/:id/datos-xerais/concello/:concelloId/:distritoId", c.GetDatosXeraisDistrito)
+	e.GET("/proceso-electoral/:id/datos-xerais/concello/:concelloId/:distritoId/:seccionId", c.GetDatosXeraisSeccion)
 }
