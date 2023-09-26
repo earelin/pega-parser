@@ -38,6 +38,7 @@ func (r *EntidadesAdministrativasSqlRepository) FindAllConcellosByName(name stri
 func (r *EntidadesAdministrativasSqlRepository) findEntidades(sql string, args ...any) []domain.EntidadeAdministrativa {
 	var entidades []domain.EntidadeAdministrativa
 	rows, err := r.pool.Query(sql, args...)
+	defer rows.Close()
 	if err != nil {
 		log.Printf("Error querying entidaes: %s", err)
 	}

@@ -5,11 +5,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+func NewResultadosController(e *gin.Engine, repository domain.ResultadosRepository) {
+	c := &ResultadosController{repository: repository}
+	e.GET("/proceso-electoral/:id/resultados", c.GetResultadosByProceso)
+}
+
 type ResultadosController struct {
 	repository domain.ResultadosRepository
 }
 
-func NewResultadosController(e *gin.Engine, repository domain.ResultadosRepository) {
-	c := &ResultadosController{}
-	c.repository = repository
+func (c ResultadosController) GetResultadosByProceso(gc *gin.Context) {
+
 }

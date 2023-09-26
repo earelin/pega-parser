@@ -15,5 +15,6 @@ func ApplicationConfig(e *gin.Engine) {
 	var ear = db.NewEntidadesAdministrativasSqlRepository(pool)
 	var per = db.NewProcesosElectoraisSqlRepository(pool)
 	var dxr = db.NewDatosXeraisSqlRepository(pool)
-	application.ConfigureApplicationLayer(e, ear, per, dxr)
+	var rr = db.NewResultadosSqlRepository(pool)
+	application.ConfigureApplicationLayer(e, ear, per, dxr, rr)
 }

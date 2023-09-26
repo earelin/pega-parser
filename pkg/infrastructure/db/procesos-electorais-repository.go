@@ -18,6 +18,7 @@ func NewProcesosElectoraisSqlRepository(pool *sql.DB) *ProcesosElectoraisSqlRepo
 func (r *ProcesosElectoraisSqlRepository) FindAll() []domain.ProcesoElectoral {
 	var procesos []domain.ProcesoElectoral
 	rows, err := r.pool.Query("SELECT id, data, tipo, ambito FROM proceso_electoral ORDER BY data DESC")
+	defer rows.Close()
 	if err != nil {
 		log.Printf("Error querying procesos: %s", err)
 	}

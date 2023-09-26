@@ -5,18 +5,31 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+func NewDatosXeraisController(e *gin.Engine, datosXeraisRepository domain.DatosXeraisRepository) {
+	c := &DatosXeraisController{repository: datosXeraisRepository}
+	e.GET("/proceso-electoral/:id/datos-xerais", c.GetDatosXerais)
+	e.GET("/proceso-electoral/:id/datos-xerais/comunidade-autonoma/:comunidadeAutonomaId", c.GetDatosXeraisComunidadeAutonoma)
+	e.GET("/proceso-electoral/:id/datos-xerais/provincia/:provinciaId", c.GetDatosXeraisProvincia)
+	e.GET("/proceso-electoral/:id/datos-xerais/concello/:concelloId", c.GetDatosXeraisConcello)
+	e.GET("/proceso-electoral/:id/datos-xerais/concello/:concelloId/:distritoId", c.GetDatosXeraisDistrito)
+	e.GET("/proceso-electoral/:id/datos-xerais/concello/:concelloId/:distritoId/:seccionId", c.GetDatosXeraisSeccion)
+	e.GET("/proceso-electoral/:id/datos-xerais/concello/:concelloId/:distritoId/:seccionId/:codigoMesa", c.GetDatosXeraisMesa)
+}
+
 type DatosXeraisController struct {
 	repository domain.DatosXeraisRepository
 }
 
 func (c DatosXeraisController) GetDatosXerais(gc *gin.Context) {
-	var id Id
-	if err := gc.ShouldBindUri(&id); err != nil {
+	var uriParams struct {
+		Id int `uri:"id"`
+	}
+	if err := gc.ShouldBindUri(&uriParams); err != nil {
 		gc.JSON(400, gin.H{"msg": err})
 		return
 	}
 
-	ps, ok := c.repository.FindByProceso(id.Id)
+	ps, ok := c.repository.FindByProceso(uriParams.Id)
 
 	if ok {
 		gc.JSON(200, ps)
@@ -143,16 +156,4 @@ func (c DatosXeraisController) GetDatosXeraisMesa(gc *gin.Context) {
 	} else {
 		gc.Status(404)
 	}
-}
-
-func NewDatosXeraisController(e *gin.Engine, datosXeraisRepository domain.DatosXeraisRepository) {
-	c := &DatosXeraisController{}
-	c.repository = datosXeraisRepository
-	e.GET("/proceso-electoral/:id/datos-xerais", c.GetDatosXerais)
-	e.GET("/proceso-electoral/:id/datos-xerais/comunidade-autonoma/:comunidadeAutonomaId", c.GetDatosXeraisComunidadeAutonoma)
-	e.GET("/proceso-electoral/:id/datos-xerais/provincia/:provinciaId", c.GetDatosXeraisProvincia)
-	e.GET("/proceso-electoral/:id/datos-xerais/concello/:concelloId", c.GetDatosXeraisConcello)
-	e.GET("/proceso-electoral/:id/datos-xerais/concello/:concelloId/:distritoId", c.GetDatosXeraisDistrito)
-	e.GET("/proceso-electoral/:id/datos-xerais/concello/:concelloId/:distritoId/:seccionId", c.GetDatosXeraisSeccion)
-	e.GET("/proceso-electoral/:id/datos-xerais/concello/:concelloId/:distritoId/:seccionId/:codigoMesa", c.GetDatosXeraisMesa)
 }
