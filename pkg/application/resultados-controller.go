@@ -15,5 +15,19 @@ type ResultadosController struct {
 }
 
 func (c ResultadosController) GetResultadosByProceso(gc *gin.Context) {
+	var uriParams struct {
+		Id int `uri:"id"`
+	}
+	if err := gc.ShouldBindUri(&uriParams); err != nil {
+		gc.JSON(400, gin.H{"msg": err})
+		return
+	}
 
+	ps, ok := c.repository.FindByProceso(uriParams.Id)
+
+	if ok {
+		gc.JSON(200, ps)
+	} else {
+		gc.Status(404)
+	}
 }

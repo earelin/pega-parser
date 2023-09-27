@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestConfig_toString(t *testing.T) {
+func Test_toString(t *testing.T) {
 	tests := []struct {
 		name   string
 		config Config

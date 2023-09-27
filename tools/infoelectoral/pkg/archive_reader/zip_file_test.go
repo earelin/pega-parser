@@ -20,7 +20,7 @@ func TestNewZipFile(t *testing.T) {
 	}
 }
 
-func TestZipFile_FindFileWithPrefixAndExtension(t *testing.T) {
+func TestZipFileFindFileWithPrefixAndExtension(t *testing.T) {
 	zipFile, err := NewZipFile("../../testdata/02201911_MESA.zip")
 	if err != nil {
 		t.Error(err)
@@ -38,7 +38,7 @@ func TestZipFile_FindFileWithPrefixAndExtension(t *testing.T) {
 	assert.Equal(t, FileNotFound, err)
 }
 
-func TestZipFile_FileList(t *testing.T) {
+func TestZipFileFileList(t *testing.T) {
 	zipFile, err := NewZipFile("../../testdata/02201911_MESA.zip")
 	if err != nil {
 		t.Error(err)
