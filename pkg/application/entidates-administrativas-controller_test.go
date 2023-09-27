@@ -10,6 +10,49 @@ import (
 	"testing"
 )
 
+func TestGetComunidadesAutonomas(t *testing.T) {
+	router := gin.Default()
+	repository := new(EntidadesAdministrativasRepositoryMock)
+	NewEntidadesAdministrativasController(router, repository)
+
+	repository.On("FindAllComunidadesAutonomas").
+		Return(comunidadesAutonomas)
+
+	w := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", "/comunidades-autonomas", nil)
+	router.ServeHTTP(w, req)
+
+	assert.Equal(t, 200, w.Code)
+	assert.Equal(t, comunidadesAutonomasResponse, w.Body.String())
+}
+
+func TestGetProvincias(t *testing.T) {
+	router := gin.Default()
+	repository := new(EntidadesAdministrativasRepositoryMock)
+	NewEntidadesAdministrativasController(router, repository)
+
+	repository.On("FindAllProvincias").
+		Return(provincias)
+
+	w := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", "/provincias", nil)
+	router.ServeHTTP(w, req)
+
+	assert.Equal(t, 200, w.Code)
+	assert.Equal(t, provinciasResponse, w.Body.String())
+}
+
+var comunidadesAutonomas = []domain.EntidadeAdministrativa{
+	{
+		Id:   1,
+		Nome: "Galicia",
+	},
+	{
+		Id:   2,
+		Nome: "Asturias",
+	},
+}
+
 type EntidadesAdministrativasRepositoryMock struct {
 	mock.Mock
 }
@@ -37,49 +80,6 @@ func (m *EntidadesAdministrativasRepositoryMock) FindAllConcellosByProvincia(pro
 func (m *EntidadesAdministrativasRepositoryMock) FindAllConcellosByName(name string) []domain.EntidadeAdministrativa {
 	args := m.Called(name)
 	return args.Get(0).([]domain.EntidadeAdministrativa)
-}
-
-func TestEntidadesAdministrativasController_GetComunidadesAutonomas(t *testing.T) {
-	router := gin.Default()
-	repository := new(EntidadesAdministrativasRepositoryMock)
-	NewEntidadesAdministrativasController(router, repository)
-
-	repository.On("FindAllComunidadesAutonomas").
-		Return(comunidadesAutonomas)
-
-	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("GET", "/comunidades-autonomas", nil)
-	router.ServeHTTP(w, req)
-
-	assert.Equal(t, 200, w.Code)
-	assert.Equal(t, comunidadesAutonomasResponse, w.Body.String())
-}
-
-func TestEntidadesAdministrativasController_GetProvincias(t *testing.T) {
-	router := gin.Default()
-	repository := new(EntidadesAdministrativasRepositoryMock)
-	NewEntidadesAdministrativasController(router, repository)
-
-	repository.On("FindAllProvincias").
-		Return(provincias)
-
-	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("GET", "/provincias", nil)
-	router.ServeHTTP(w, req)
-
-	assert.Equal(t, 200, w.Code)
-	assert.Equal(t, provinciasResponse, w.Body.String())
-}
-
-var comunidadesAutonomas = []domain.EntidadeAdministrativa{
-	{
-		Id:   1,
-		Nome: "Galicia",
-	},
-	{
-		Id:   2,
-		Nome: "Asturias",
-	},
 }
 
 var comunidadesAutonomasResponse = `[{"id":1,"nome":"Galicia"},{"id":2,"nome":"Asturias"}]`
