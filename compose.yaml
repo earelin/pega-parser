@@ -2,8 +2,8 @@ services:
   db:
     image: mariadb
     environment:
-      MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: "yes"
       MARIADB_DATABASE: pega
+      MARIADB_ROOT_PASSWORD: secret
     ports:
       - 3306:3306
     volumes:

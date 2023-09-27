@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/earelin/pega/pkg"
 	"github.com/gin-gonic/gin"
-	_ "github.com/go-sql-driver/mysql"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 func main() {

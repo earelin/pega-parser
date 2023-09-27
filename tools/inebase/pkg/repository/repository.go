@@ -19,7 +19,7 @@ type Repository struct {
 func NewRepository(c Config, ctx context.Context) (*Repository, error) {
 	var r Repository
 
-	var pool, err = sql.Open("mysql", c.toString())
+	var pool, err = sql.Open("sqlite", c.Filename)
 	if err != nil {
 		return nil, err
 	}

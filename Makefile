@@ -1,4 +1,5 @@
 BIN_DIR       := $(CURDIR)/bin
+CMD_DIR       := $(CURDIR)/cmd
 TOOLS_BIN_DIR := $(BIN_DIR)/tools
 TOOLS_SRC_DIR := $(CURDIR)/tools
 INSTALL_PATH  ?= /usr/local/bin
@@ -6,6 +7,7 @@ TARGETS       := darwin/amd64 darwin/arm64 linux/amd64 windows/amd64
 
 .PHONY: all
 all: build-tools
+	go build -o $(BIN_DIR) $(CMD_DIR)
 
 .PHONY: clean
 clean:
@@ -22,11 +24,11 @@ build-tools:
 
 .PHONY: migrate-down
 migrate-down:
-	migrate -path database/migration -database mysql://root@tcp/pega down
+	migrate -path database/migration -database sqlite3://database.sqlite down
 
 .PHONY: migrate-up
 migrate-up:
-	migrate -path database/migration -database mysql://root@tcp/pega up
+	migrate -path database/migration -database sqlite3://database.sqlite up
 
 .PHONY: test
 test:

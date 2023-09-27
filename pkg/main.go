@@ -8,8 +8,7 @@ import (
 
 func ApplicationConfig(e *gin.Engine) {
 	dbConfig := db.Config{
-		Database: "pega",
-		User:     "root",
+		Filename: "./database.sqlite",
 	}
 	var pool = dbConfig.BuildPool()
 	var ear = db.NewEntidadesAdministrativasSqlRepository(pool)

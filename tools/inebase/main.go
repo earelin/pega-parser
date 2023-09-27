@@ -65,7 +65,7 @@ func parseArgs(w io.Writer, args []string) (config.Config, error) {
 
 	fs.StringVar(&c.RepositoryConfig.Host, "host", "", "Enderezo da base de datos")
 	fs.StringVar(&c.RepositoryConfig.User, "user", "root", "Usuario da base de datos")
-	fs.StringVar(&c.RepositoryConfig.Password, "password", "", "Contrasinal da base de datos")
+	fs.StringVar(&c.RepositoryConfig.Password, "password", "secret", "Contrasinal da base de datos")
 	fs.StringVar(&c.RepositoryConfig.Database, "database", "pega", "Nome da base de datos")
 
 	err := fs.Parse(args[1:])

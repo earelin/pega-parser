@@ -30,3 +30,4 @@ go.work
 
 # Working files
 tools/infoelectoral/*.json
+*.sqlite
