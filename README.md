@@ -1,5 +1,7 @@
 # Pega
 
+[![codecov](https://codecov.io/gh/earelin/pega/graph/badge.svg?token=7CXXF1vn9p)](https://codecov.io/gh/earelin/pega)
+
 O proxecto Pega ten o obxectivo de extraer e amosar datos electorais.
 
 Implementa una API REST para consular los datos de resultados
