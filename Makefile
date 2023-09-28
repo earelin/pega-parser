@@ -7,7 +7,7 @@ TARGETS       := darwin/amd64 darwin/arm64 linux/amd64 windows/amd64
 
 .PHONY: all
 all: build-tools
-	go build -o $(BIN_DIR) $(CMD_DIR)
+	go build -o $(BIN_DIR) $(CMD_DIR)/pega
 
 .PHONY: clean
 clean:
