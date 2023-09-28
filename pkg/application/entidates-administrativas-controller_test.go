@@ -73,6 +73,37 @@ func TestGetComunidadesAutonomaProvincias_ComunidadeAutonomaNotFound(t *testing.
 	assert.Equal(t, 404, w.Code)
 }
 
+func TestGetConcellosProvincia(t *testing.T) {
+	router := gin.Default()
+	repository := new(EntidadesAdministrativasRepositoryMock)
+	NewEntidadesAdministrativasController(router, repository)
+
+	repository.On("FindAllConcellosByProvincia", 1).
+		Return(concellos)
+
+	w := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", "/provincia/1/concellos", nil)
+	router.ServeHTTP(w, req)
+
+	assert.Equal(t, 200, w.Code)
+	assert.Equal(t, concellosResponse, w.Body.String())
+}
+
+func TestGetConcellosProvincia_ProvinciaNotFound(t *testing.T) {
+	router := gin.Default()
+	repository := new(EntidadesAdministrativasRepositoryMock)
+	NewEntidadesAdministrativasController(router, repository)
+
+	repository.On("FindAllConcellosByProvincia", 1).
+		Return([]domain.EntidadeAdministrativa{})
+
+	w := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", "/provincia/1/concellos", nil)
+	router.ServeHTTP(w, req)
+
+	assert.Equal(t, 404, w.Code)
+}
+
 var comunidadesAutonomas = []domain.EntidadeAdministrativa{
 	{
 		Id:   1,
@@ -127,3 +158,16 @@ var provincias = []domain.EntidadeAdministrativa{
 }
 
 var provinciasResponse = `[{"id":1,"nome":"A Coruña"},{"id":2,"nome":"Lugo"}]`
+
+var concellos = []domain.EntidadeAdministrativa{
+	{
+		Id:   1,
+		Nome: "A Coruña",
+	},
+	{
+		Id:   2,
+		Nome: "Santiago de Compostela",
+	},
+}
+
+var concellosResponse = `[{"id":1,"nome":"A Coruña"},{"id":2,"nome":"Santiago de Compostela"}]`

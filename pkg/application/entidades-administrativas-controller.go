@@ -50,8 +50,14 @@ func (c *EntidadesAdministrativasController) GetConcellosProvincia(gc *gin.Conte
 		gc.JSON(400, gin.H{"msg": err})
 		return
 	}
+
 	cs := c.repository.FindAllConcellosByProvincia(id.Id)
-	gc.JSON(200, cs)
+
+	if len(cs) == 0 {
+		gc.Status(404)
+	} else {
+		gc.JSON(200, cs)
+	}
 }
 
 func (c *EntidadesAdministrativasController) GetConcellosByName(gc *gin.Context) {
