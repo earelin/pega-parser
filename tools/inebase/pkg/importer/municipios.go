@@ -28,12 +28,7 @@ func ImportarConcellos(c config.Config, r *repository.Repository) error {
 	if err != nil {
 		return fmt.Errorf("non se puido abrir o ficheiro %s: %w", c.FilePath, err)
 	}
-	defer func() {
-		// Close the spreadsheet.
-		if err := f.Close(); err != nil {
-			fmt.Println(err)
-		}
-	}()
+	defer f.Close()
 
 	var sheets = f.GetSheetList()
 	rows, err := f.GetRows(sheets[0])
