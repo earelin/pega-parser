@@ -1,12 +1,8 @@
 package domain
 
-import "time"
-
 type DatosXerais struct {
-	CensoIne                    int       `json:"censoIne"`
-	CensoCera                   int       `json:"censoCera"`
-	PrimeiroAvanceParticipacion time.Time `json:"primeiroAvanceParticipacion"`
-	SegundoAvanceParticipacion  time.Time `json:"segundoAvanceParticipacion"`
+	CensoIne  int `json:"censoIne"`
+	CensoCera int `json:"censoCera"`
 }
 
 type DatosXeraisRepository interface {
