@@ -42,15 +42,189 @@ func TestGetDatosXerais_Null(t *testing.T) {
 }
 
 func TestGetDatosXeraisComunidadeAutonoma(t *testing.T) {
-	t.Skip("Not implemented")
+	router := gin.Default()
+	repository := new(DatosXeraisRepositoryMock)
+	NewDatosXeraisController(router, repository)
+
+	repository.On("FindByComunidadeAutonoma", 1, 2).
+		Return(datosXerais, true)
+
+	w := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", "/proceso-electoral/1/datos-xerais/comunidade-autonoma/2", nil)
+	router.ServeHTTP(w, req)
+
+	assert.Equal(t, 200, w.Code)
+	assert.Equal(t, datosXeraisResponse, w.Body.String())
+}
+
+func TestGetDatosXeraisComunidadeAutonoma_Null(t *testing.T) {
+	router := gin.Default()
+	repository := new(DatosXeraisRepositoryMock)
+	NewDatosXeraisController(router, repository)
+
+	repository.On("FindByComunidadeAutonoma", 1, 2).
+		Return(domain.DatosXerais{}, false)
+
+	w := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", "/proceso-electoral/1/datos-xerais/comunidade-autonoma/2", nil)
+	router.ServeHTTP(w, req)
+
+	assert.Equal(t, 404, w.Code)
 }
 
 func TestGetDatosXeraisProvincia(t *testing.T) {
-	t.Skip("Not implemented")
+	router := gin.Default()
+	repository := new(DatosXeraisRepositoryMock)
+	NewDatosXeraisController(router, repository)
+
+	repository.On("FindByProvincia", 1, 2).
+		Return(datosXerais, true)
+
+	w := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", "/proceso-electoral/1/datos-xerais/provincia/2", nil)
+	router.ServeHTTP(w, req)
+
+	assert.Equal(t, 200, w.Code)
+	assert.Equal(t, datosXeraisResponse, w.Body.String())
+}
+
+func TestGetDatosXeraisProvincia_Null(t *testing.T) {
+	router := gin.Default()
+	repository := new(DatosXeraisRepositoryMock)
+	NewDatosXeraisController(router, repository)
+
+	repository.On("FindByProvincia", 1, 2).
+		Return(domain.DatosXerais{}, false)
+
+	w := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", "/proceso-electoral/1/datos-xerais/provincia/2", nil)
+	router.ServeHTTP(w, req)
+
+	assert.Equal(t, 404, w.Code)
 }
 
 func TestGetDatosXeraisConcello(t *testing.T) {
-	t.Skip("Not implemented")
+	router := gin.Default()
+	repository := new(DatosXeraisRepositoryMock)
+	NewDatosXeraisController(router, repository)
+
+	repository.On("FindByConcello", 1, 1001).
+		Return(datosXerais, true)
+
+	w := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", "/proceso-electoral/1/datos-xerais/concello/1001", nil)
+	router.ServeHTTP(w, req)
+
+	assert.Equal(t, 200, w.Code)
+	assert.Equal(t, datosXeraisResponse, w.Body.String())
+}
+
+func TestGetDatosXeraisConcello_Null(t *testing.T) {
+	router := gin.Default()
+	repository := new(DatosXeraisRepositoryMock)
+	NewDatosXeraisController(router, repository)
+
+	repository.On("FindByConcello", 1, 1001).
+		Return(domain.DatosXerais{}, false)
+
+	w := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", "/proceso-electoral/1/datos-xerais/concello/1001", nil)
+	router.ServeHTTP(w, req)
+
+	assert.Equal(t, 404, w.Code)
+}
+
+func TestGetDatosXeraisDistrito(t *testing.T) {
+	router := gin.Default()
+	repository := new(DatosXeraisRepositoryMock)
+	NewDatosXeraisController(router, repository)
+
+	repository.On("FindByDistrito", 1, 1001, 1).
+		Return(datosXerais, true)
+
+	w := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", "/proceso-electoral/1/datos-xerais/concello/1001/1", nil)
+	router.ServeHTTP(w, req)
+
+	assert.Equal(t, 200, w.Code)
+	assert.Equal(t, datosXeraisResponse, w.Body.String())
+}
+
+func TestGetDatosXeraisDistrito_Null(t *testing.T) {
+	router := gin.Default()
+	repository := new(DatosXeraisRepositoryMock)
+	NewDatosXeraisController(router, repository)
+
+	repository.On("FindByDistrito", 1, 1001, 1).
+		Return(domain.DatosXerais{}, false)
+
+	w := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", "/proceso-electoral/1/datos-xerais/concello/1001/1", nil)
+	router.ServeHTTP(w, req)
+
+	assert.Equal(t, 404, w.Code)
+}
+
+func TestGetDatosXeraisSeccion(t *testing.T) {
+	router := gin.Default()
+	repository := new(DatosXeraisRepositoryMock)
+	NewDatosXeraisController(router, repository)
+
+	repository.On("FindBySeccion", 1, 1001, 1, 1).
+		Return(datosXerais, true)
+
+	w := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", "/proceso-electoral/1/datos-xerais/concello/1001/1/1", nil)
+	router.ServeHTTP(w, req)
+
+	assert.Equal(t, 200, w.Code)
+	assert.Equal(t, datosXeraisResponse, w.Body.String())
+}
+
+func TestGetDatosXeraisSeccion_Null(t *testing.T) {
+	router := gin.Default()
+	repository := new(DatosXeraisRepositoryMock)
+	NewDatosXeraisController(router, repository)
+
+	repository.On("FindBySeccion", 1, 1001, 1, 1).
+		Return(domain.DatosXerais{}, false)
+
+	w := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", "/proceso-electoral/1/datos-xerais/concello/1001/1/1", nil)
+	router.ServeHTTP(w, req)
+
+	assert.Equal(t, 404, w.Code)
+}
+
+func TestGetDatosXeraisMesa(t *testing.T) {
+	router := gin.Default()
+	repository := new(DatosXeraisRepositoryMock)
+	NewDatosXeraisController(router, repository)
+
+	repository.On("FindByMesa", 1, 1001, 1, 1, "U").
+		Return(datosXerais, true)
+
+	w := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", "/proceso-electoral/1/datos-xerais/concello/1001/1/1/U", nil)
+	router.ServeHTTP(w, req)
+
+	assert.Equal(t, 200, w.Code)
+	assert.Equal(t, datosXeraisResponse, w.Body.String())
+}
+
+func TestGetDatosXeraisMesa_Null(t *testing.T) {
+	router := gin.Default()
+	repository := new(DatosXeraisRepositoryMock)
+	NewDatosXeraisController(router, repository)
+
+	repository.On("FindByMesa", 1, 1001, 1, 1, "U").
+		Return(domain.DatosXerais{}, false)
+
+	w := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", "/proceso-electoral/1/datos-xerais/concello/1001/1/1/U", nil)
+	router.ServeHTTP(w, req)
+
+	assert.Equal(t, 404, w.Code)
 }
 
 type DatosXeraisRepositoryMock struct {
