@@ -5,11 +5,11 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/earelin/pega/tools/inebase/pkg/model"
-	_ "github.com/go-sql-driver/mysql"
+	_ "github.com/mattn/go-sqlite3"
 	"time"
 )
 
-const inserirConcello = "INSERT INTO concello(id, provincia_id, nome) VALUES (?, ?, ?)"
+const inserirConcello = "INSERT INTO concello (id, provincia_id, nome) VALUES (?, ?, ?)"
 
 type Repository struct {
 	pool *sql.DB
@@ -19,14 +19,10 @@ type Repository struct {
 func NewRepository(c Config, ctx context.Context) (*Repository, error) {
 	var r Repository
 
-	var pool, err = sql.Open("sqlite", c.Filename)
+	var pool, err = sql.Open("sqlite3", c.Filename)
 	if err != nil {
 		return nil, err
 	}
-
-	pool.SetConnMaxLifetime(0)
-	pool.SetMaxIdleConns(3)
-	pool.SetMaxOpenConns(3)
 
 	r.pool = pool
 	r.ctx = ctx

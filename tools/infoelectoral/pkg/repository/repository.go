@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/earelin/pega/tools/infoelectoral/pkg/election"
-	_ "github.com/go-sql-driver/mysql"
+	_ "github.com/mattn/go-sqlite3"
 	"strings"
 	"time"
 )
