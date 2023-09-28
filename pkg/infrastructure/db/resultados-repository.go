@@ -16,8 +16,20 @@ type ResultadosSqlRepository struct {
 
 func (r *ResultadosSqlRepository) FindByProceso(id int) (domain.Resultados, bool) {
 	return r.find(`
-SELECT
-    FROM `, id)
+	SELECT SUM(votos_branco)   AS votos_branco,
+       SUM(votos_nulos)        AS votos_nulos,
+       SUM(votos_candidaturas) AS votos_candidaturas
+	FROM (SELECT SUM(votos_blanco)       AS votos_branco,
+             SUM(votos_nulos)        AS votos_nulos,
+             SUM(votos_candidaturas) AS votos_candidaturas
+      FROM mesa_electoral me
+      WHERE me.proceso_electoral_id = ?
+      UNION
+      SELECT SUM(votos_blanco)       AS votos_branco,
+             SUM(votos_nulos)        AS votos_nulos,
+             SUM(votos_candidaturas) AS votos_candidaturas
+      FROM circunscripcion_cera cc
+      WHERE cc.proceso_electoral_id = ?) AS votos`, id, id)
 }
 
 func (r *ResultadosSqlRepository) FindByComunidadeAutonoma(id int, comunidadeAutonomaId int) (domain.Resultados, bool) {
@@ -47,29 +59,11 @@ func (r *ResultadosSqlRepository) FindByMesa(id int, concelloId int, distritoId 
 func (r *ResultadosSqlRepository) find(query string, args ...any) (domain.Resultados, bool) {
 	var resultados domain.Resultados
 
-	rows, err := r.pool.Query(query, args...)
+	row := r.pool.QueryRow(query, args...)
+	err := row.Scan(&resultados.VotosBlanco, &resultados.VotosNulos, &resultados.VotosCandidaturas)
 	if err != nil {
-		log.Printf("Error querying resultados: %s", err)
-	}
-	defer rows.Close()
-
-	var firstResult = true
-	for rows.Next() {
-		var votosBranco, votosNulos int
-		var vc = domain.VotosCandidatura{}
-
-		err = rows.Scan(votosBranco, votosNulos, &vc.Candidatura.Id, &vc.Candidatura.Name, &vc.Votos)
-		if err != nil {
-			log.Printf("Error scanning resultados: %s", err)
-		}
-
-		if firstResult {
-			resultados.VotosBlanco = votosBranco
-			resultados.VotosNulos = votosNulos
-			firstResult = false
-		}
-
-		resultados.VotosCandidaturas = append(resultados.VotosCandidaturas, vc)
+		log.Printf("Error scanning resultados: %s", err)
+		return resultados, false
 	}
 
 	return resultados, true

@@ -168,20 +168,36 @@ Resultados xerais do proceso electoral.
 
 ```
 {
-  votantesPrimeiroAvanceParticipacion: number;
-  votantesSegundoAvanceParticipacion: number;
-  votantesCere: number;
-  votosEnBranco: number;
-  votosNulos: number;
-  votosACandaturas: number;
-  votosPorCandidatura: [
-    {
-      candidatura: Candidatura;
-      representantesEleitos: number;
-      votos: number;
-    }
-  ];
+  votantesPrimeiroAvanceParticipacion: number
+  votantesSegundoAvanceParticipacion: number
+  votantesCere: number
+  votosEnBranco: number
+  votosNulos: number
+  votosACandidaturas: number
 }
+```
+
+#### GET `/procesos-electorais/{id}/resultados/candidaturas`
+
+Resultados xerais por candidaturas.
+
+*Parametros*
+
+`id`: Id do proceso electoral.
+
+*Valor Retornado*
+
+```
+[
+  {
+    candidatura: {
+      id: number
+      nome: string
+    }
+    representantesEleitos: number
+    votos: number
+  }
+]
 ```
 
 #### GET `/procesos-electorais/{id}/resultados/{nivel_administrativo}/{id_entidade}`
