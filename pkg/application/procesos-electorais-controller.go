@@ -9,11 +9,6 @@ type ProcesosElectoraisController struct {
 	repository domain.ProcesosElectoraisRepository
 }
 
-type IdAndComunidadeAutonomaId struct {
-	Id                   int `uri:"id"`
-	ComunidadeAutonomaId int `uri:"comunidadeAutonomaId"`
-}
-
 func (c ProcesosElectoraisController) GetProcesosElectorais(gc *gin.Context) {
 	procesosElectorais := c.repository.FindAll()
 	gc.JSON(200, procesosElectorais)

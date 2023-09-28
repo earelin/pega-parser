@@ -112,6 +112,8 @@ Código INE.
     tipo: int
     ambito: int
     data: iso string
+    primeiroAvanceParticipacion: iso string
+    segundoAvanceParticipacion: iso string
   }
 ]
 ```
@@ -130,8 +132,6 @@ Datos xerais do proceso electoral.
 {
   censoIne: number
   censoCera: number
-  primeiroAvanceParticipacion: iso string
-  segundoAvanceParticipacion: iso string
 }
 ```
 #### GET `/procesos-electorais/{id}/datos-xerais/{nivel_administrativo}/{id_entidade}`
@@ -153,8 +153,6 @@ Datos xerais do proceso electoral nunha entidade administrativa
 {
   censoIne: number
   censoCera: number
-  primeiroAvanceParticipacion: iso string
-  segundoAvanceParticipacion: iso string
 }
 ```
 

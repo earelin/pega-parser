@@ -31,7 +31,7 @@ func (r *ProcesosElectoraisSqlRepository) FindAll() []domain.ProcesoElectoral {
 		if err != nil {
 			log.Printf("Error scanning procesos: %s", err)
 		}
-		proceso.Data, err = time.Parse("2006-01-02 15:04:05", dataRaw)
+		proceso.Data, err = time.Parse("2006-01-02T15:04:05Z", dataRaw)
 		if err != nil {
 			log.Printf("Error parsing date: %s. %s", dataRaw, err)
 		}
