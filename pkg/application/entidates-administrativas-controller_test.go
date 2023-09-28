@@ -104,6 +104,22 @@ func TestGetConcellosProvincia_ProvinciaNotFound(t *testing.T) {
 	assert.Equal(t, 404, w.Code)
 }
 
+func TestGetConcellosByName(t *testing.T) {
+	router := gin.Default()
+	repository := new(EntidadesAdministrativasRepositoryMock)
+	NewEntidadesAdministrativasController(router, repository)
+
+	repository.On("FindAllConcellosByName", "com").
+		Return(concellos)
+
+	w := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", "/concellos/pescuda/com", nil)
+	router.ServeHTTP(w, req)
+
+	assert.Equal(t, 200, w.Code)
+	assert.Equal(t, concellosResponse, w.Body.String())
+}
+
 var comunidadesAutonomas = []domain.EntidadeAdministrativa{
 	{
 		Id:   1,
