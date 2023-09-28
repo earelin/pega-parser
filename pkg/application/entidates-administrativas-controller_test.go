@@ -42,6 +42,37 @@ func TestGetProvincias(t *testing.T) {
 	assert.Equal(t, provinciasResponse, w.Body.String())
 }
 
+func TestGetComunidadesAutonomaProvincias(t *testing.T) {
+	router := gin.Default()
+	repository := new(EntidadesAdministrativasRepositoryMock)
+	NewEntidadesAdministrativasController(router, repository)
+
+	repository.On("FindAllProvinciasByComunidadeAutonoma", 1).
+		Return(provincias)
+
+	w := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", "/comunidade-autonoma/1/provincias", nil)
+	router.ServeHTTP(w, req)
+
+	assert.Equal(t, 200, w.Code)
+	assert.Equal(t, provinciasResponse, w.Body.String())
+}
+
+func TestGetComunidadesAutonomaProvincias_ComunidadeAutonomaNotFound(t *testing.T) {
+	router := gin.Default()
+	repository := new(EntidadesAdministrativasRepositoryMock)
+	NewEntidadesAdministrativasController(router, repository)
+
+	repository.On("FindAllProvinciasByComunidadeAutonoma", 1).
+		Return([]domain.EntidadeAdministrativa{})
+
+	w := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", "/comunidade-autonoma/1/provincias", nil)
+	router.ServeHTTP(w, req)
+
+	assert.Equal(t, 404, w.Code)
+}
+
 var comunidadesAutonomas = []domain.EntidadeAdministrativa{
 	{
 		Id:   1,

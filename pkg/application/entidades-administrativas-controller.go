@@ -36,7 +36,12 @@ func (c *EntidadesAdministrativasController) GetComunidadesAutonomaProvincias(gc
 		return
 	}
 	ps := c.repository.FindAllProvinciasByComunidadeAutonoma(id.Id)
-	gc.JSON(200, ps)
+
+	if len(ps) == 0 {
+		gc.Status(404)
+	} else {
+		gc.JSON(200, ps)
+	}
 }
 
 func (c *EntidadesAdministrativasController) GetConcellosProvincia(gc *gin.Context) {
