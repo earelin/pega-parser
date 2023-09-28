@@ -35,62 +35,7 @@ func Test_parseArgs(t *testing.T) {
 			want: config.Config{
 				FilePath: "file",
 				RepositoryConfig: repository.Config{
-					Host:     "",
-					Database: "pega",
-					User:     "root",
-					Password: "",
-				},
-			},
-		},
-		{
-			name: "host",
-			args: []string{"infoelectoral", "-host", "test", "file"},
-			want: config.Config{
-				FilePath: "file",
-				RepositoryConfig: repository.Config{
-					Host:     "test",
-					Database: "pega",
-					User:     "root",
-					Password: "",
-				},
-			},
-		},
-		{
-			name: "database name",
-			args: []string{"infoelectoral", "-database", "test", "file"},
-			want: config.Config{
-				FilePath: "file",
-				RepositoryConfig: repository.Config{
-					Host:     "",
-					Database: "test",
-					User:     "root",
-					Password: "",
-				},
-			},
-		},
-		{
-			name: "user",
-			args: []string{"infoelectoral", "-user", "test", "file"},
-			want: config.Config{
-				FilePath: "file",
-				RepositoryConfig: repository.Config{
-					Host:     "",
-					Database: "pega",
-					User:     "test",
-					Password: "",
-				},
-			},
-		},
-		{
-			name: "password",
-			args: []string{"infoelectoral", "-password", "test", "file"},
-			want: config.Config{
-				FilePath: "file",
-				RepositoryConfig: repository.Config{
-					Host:     "",
-					Database: "pega",
-					User:     "root",
-					Password: "test",
+					Filename: "database.sqlite",
 				},
 			},
 		},

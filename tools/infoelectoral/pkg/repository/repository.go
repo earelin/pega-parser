@@ -18,14 +18,12 @@ type Repository struct {
 func NewRepository(c Config, ctx context.Context) (*Repository, error) {
 	var r Repository
 
-	var pool, err = sql.Open("mysql", c.toString())
+	var pool, err = sql.Open("sqlite3", c.Filename)
 	if err != nil {
 		return nil, err
 	}
 
 	pool.SetConnMaxLifetime(0)
-	pool.SetMaxIdleConns(3)
-	pool.SetMaxOpenConns(3)
 
 	r.pool = pool
 	r.ctx = ctx
@@ -44,7 +42,7 @@ func (r *Repository) CloseConnection() error {
 }
 
 func (r *Repository) CreateProcesoElectoral(e election.Election) (int64, error) {
-	const inserirProcesoElectoral = "INSERT INTO proceso_electoral(tipo, ambito, data) VALUES (?, ?, ?)"
+	const inserirProcesoElectoral = "INSERT INTO proceso_electoral (tipo, ambito, data) VALUES (?, ?, ?)"
 
 	var result sql.Result
 	var err error
@@ -68,7 +66,7 @@ func (r *Repository) CreateProcesoElectoral(e election.Election) (int64, error) 
 }
 
 func (r *Repository) CreateCandidaturas(procesoElectoral int64, candidatures []election.Candidatura) error {
-	const inserirCandidatura = `INSERT INTO candidatura(proceso_electoral_id, id, siglas, nome, cabeceira_estatal,
+	const inserirCandidatura = `INSERT INTO candidatura (proceso_electoral_id, id, siglas, nome, cabeceira_estatal,
                         cabeceira_autonomica, cabeceira_provincial) VALUES (?, ?, ?, ?, ?, ?, ?)`
 
 	for _, c := range candidatures {
@@ -85,7 +83,7 @@ func (r *Repository) CreateCandidaturas(procesoElectoral int64, candidatures []e
 func (r *Repository) CrearListasECandidatos(procesoElectoral int64, listaCandidatos []election.Candidate) error {
 	for _, c := range listaCandidatos {
 		var _, err = r.pool.ExecContext(r.ctx,
-			`INSERT INTO candidato(proceso_electoral_id, candidatura_id, ambito, posicion, titular,
+			`INSERT INTO candidato (proceso_electoral_id, candidatura_id, ambito, posicion, titular,
                       					 nombre, apelidos, eleito)
 				   VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
 			procesoElectoral, c.CodigoCandidatura, c.AmbitoTerritorial, c.Posicion, c.Titular, c.Nome, c.Apelidos,
@@ -141,11 +139,11 @@ func (r *Repository) CrearMesasElectorais(procesoElectoral int64, mesas []electi
 
 func (r *Repository) inserirMultipleMesasECircunscripcionsCera(cInserts, mInserts []string, cValues, mValues []interface{}) error {
 	const inserirCircunscripcionCera = `
-		INSERT INTO circunscripcion_cera(proceso_electoral_id, provincia_id, censo, votos_blanco,
+		INSERT INTO circunscripcion_cera (proceso_electoral_id, provincia_id, censo, votos_blanco,
 		                                 votos_nulos, votos_candidaturas)
 		VALUES `
 	const inserirMesaElectoral = `
-		INSERT INTO mesa_electoral(proceso_electoral_id, concello_id, distrito, seccion, codigo, censo,
+		INSERT INTO mesa_electoral (proceso_electoral_id, concello_id, distrito, seccion, codigo, censo,
 		                           votos_blanco, votos_nulos, votos_candidaturas)
 		VALUES `
 
@@ -212,11 +210,11 @@ func (r *Repository) CrearVotosEnMesasElectorais(procesoElectoral int64, votos [
 
 func (r *Repository) insertirMultiplesVotos(cInserts, mInserts []string, cValues, mValues []interface{}) error {
 	const inserirVotosCircunscripcionCera = `
-		INSERT INTO circunscripcion_cera_votos_candidatura(proceso_electoral_id, provincia_id, candidatura_id,
+		INSERT INTO circunscripcion_cera_votos_candidatura (proceso_electoral_id, provincia_id, candidatura_id,
 				    									   posicion, votos)
 		VALUES `
 	const inserirVotosMesaElectoral = `
-		INSERT INTO mesa_electoral_votos_candidatura(proceso_electoral_id, concello_id, distrito, seccion,
+		INSERT INTO mesa_electoral_votos_candidatura (proceso_electoral_id, concello_id, distrito, seccion,
 		                                             codigo, candidatura_id, posicion, votos)
 		VALUES `
 

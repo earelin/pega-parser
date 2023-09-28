@@ -42,51 +42,7 @@ func Test_parseArgs_loadConfig(t *testing.T) {
 				FilePath: "file",
 				DataSet:  "dataset",
 				RepositoryConfig: repository.Config{
-					Filename: "pega.db",
-				},
-			},
-		},
-		{
-			name: "host",
-			args: []string{"inebase", "-host", "test", "dataset", "file"},
-			want: config.Config{
-				FilePath: "file",
-				DataSet:  "dataset",
-				RepositoryConfig: repository.Config{
-					Filename: "pega.db",
-				},
-			},
-		},
-		{
-			name: "database name",
-			args: []string{"inebase", "-database", "test", "dataset", "file"},
-			want: config.Config{
-				FilePath: "file",
-				DataSet:  "dataset",
-				RepositoryConfig: repository.Config{
-					Filename: "pega.db",
-				},
-			},
-		},
-		{
-			name: "user",
-			args: []string{"inebase", "-user", "test", "dataset", "file"},
-			want: config.Config{
-				FilePath: "file",
-				DataSet:  "dataset",
-				RepositoryConfig: repository.Config{
-					Filename: "pega.db",
-				},
-			},
-		},
-		{
-			name: "password",
-			args: []string{"inebase", "-password", "test", "dataset", "file"},
-			want: config.Config{
-				FilePath: "file",
-				DataSet:  "dataset",
-				RepositoryConfig: repository.Config{
-					Filename: "pega.db",
+					Filename: "database.sqlite",
 				},
 			},
 		},
