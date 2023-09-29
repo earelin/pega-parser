@@ -28,7 +28,10 @@ func (c ProcesosElectoraisController) GetProcesosElectorais(gc *gin.Context) {
 	gc.JSON(200, procesosElectorais)
 }
 
-func NewProcesosElectoraisController(e *gin.Engine, procesosElectoraisRepository domain.ProcesosElectoraisRepository) {
+func NewProcesosElectoraisController(
+	e *gin.Engine,
+	procesosElectoraisRepository domain.ProcesosElectoraisRepository,
+) {
 	c := &ProcesosElectoraisController{}
 	c.repository = procesosElectoraisRepository
 	e.GET("/procesos-electorais", c.GetProcesosElectorais)

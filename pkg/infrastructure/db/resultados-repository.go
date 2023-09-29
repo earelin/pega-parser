@@ -46,27 +46,39 @@ func (r *ResultadosSqlRepository) FindByProceso(id int) (domain.Resultados, bool
       WHERE cc.proceso_electoral_id = ?) AS votos`, id, id)
 }
 
-func (r *ResultadosSqlRepository) FindByComunidadeAutonoma(id int, comunidadeAutonomaId int) (domain.Resultados, bool) {
+func (r *ResultadosSqlRepository) FindByComunidadeAutonoma(
+	id int, comunidadeAutonomaId int,
+) (domain.Resultados, bool) {
 	return domain.Resultados{}, false
 }
 
-func (r *ResultadosSqlRepository) FindByProvincia(id int, provinciaId int) (domain.Resultados, bool) {
+func (r *ResultadosSqlRepository) FindByProvincia(
+	id int, provinciaId int,
+) (domain.Resultados, bool) {
 	return domain.Resultados{}, false
 }
 
-func (r *ResultadosSqlRepository) FindByConcello(id int, concelloId int) (domain.Resultados, bool) {
+func (r *ResultadosSqlRepository) FindByConcello(
+	id int, concelloId int,
+) (domain.Resultados, bool) {
 	return domain.Resultados{}, false
 }
 
-func (r *ResultadosSqlRepository) FindByDistrito(id int, concelloId int, distritoId int) (domain.Resultados, bool) {
+func (r *ResultadosSqlRepository) FindByDistrito(
+	id int, concelloId int, distritoId int,
+) (domain.Resultados, bool) {
 	return domain.Resultados{}, false
 }
 
-func (r *ResultadosSqlRepository) FindBySeccion(id int, concelloId int, distritoId int, seccionId int) (domain.Resultados, bool) {
+func (r *ResultadosSqlRepository) FindBySeccion(
+	id int, concelloId int, distritoId int, seccionId int,
+) (domain.Resultados, bool) {
 	return domain.Resultados{}, false
 }
 
-func (r *ResultadosSqlRepository) FindByMesa(id int, concelloId int, distritoId int, seccionId int, codigoMesa string) (domain.Resultados, bool) {
+func (r *ResultadosSqlRepository) FindByMesa(
+	id int, concelloId int, distritoId int, seccionId int, codigoMesa string,
+) (domain.Resultados, bool) {
 	return domain.Resultados{}, false
 }
 

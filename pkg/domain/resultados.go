@@ -32,7 +32,9 @@ type ResultadosRepository interface {
 	FindByConcello(id int, concelloId int) (Resultados, bool)
 	FindByDistrito(id int, concelloId int, distritoId int) (Resultados, bool)
 	FindBySeccion(id int, concelloId int, distritoId int, seccionId int) (Resultados, bool)
-	FindByMesa(id int, concelloId int, distritoId int, seccionId int, codigoMesa string) (Resultados, bool)
+	FindByMesa(
+		id int, concelloId int, distritoId int, seccionId int, codigoMesa string,
+	) (Resultados, bool)
 }
 
 type ResultadosCandidaturasRepository interface {
@@ -41,6 +43,10 @@ type ResultadosCandidaturasRepository interface {
 	FindByProvincia(id int, provinciaId int) ([]ResultadoCandidatura, bool)
 	FindByConcello(id int, concelloId int) ([]ResultadoCandidatura, bool)
 	FindByDistrito(id int, concelloId int, distritoId int) ([]ResultadoCandidatura, bool)
-	FindBySeccion(id int, concelloId int, distritoId int, seccionId int) ([]ResultadoCandidatura, bool)
-	FindByMesa(id int, concelloId int, distritoId int, seccionId int, codigoMesa string) ([]ResultadoCandidatura, bool)
+	FindBySeccion(
+		id int, concelloId int, distritoId int, seccionId int,
+	) ([]ResultadoCandidatura, bool)
+	FindByMesa(
+		id int, concelloId int, distritoId int, seccionId int, codigoMesa string,
+	) ([]ResultadoCandidatura, bool)
 }

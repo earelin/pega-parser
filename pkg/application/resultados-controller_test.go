@@ -64,32 +64,45 @@ func (m *ResultadosRepositoryMock) FindByProceso(id int) (domain.Resultados, boo
 	return args.Get(0).(domain.Resultados), args.Bool(1)
 }
 
-func (m *ResultadosRepositoryMock) FindByComunidadeAutonoma(id int, comunidadeAutonomaId int) (domain.Resultados, bool) {
+func (m *ResultadosRepositoryMock) FindByComunidadeAutonoma(
+	id int, comunidadeAutonomaId int,
+) (domain.Resultados, bool) {
 	args := m.Called(id, comunidadeAutonomaId)
 	return args.Get(0).(domain.Resultados), args.Bool(1)
 }
 
-func (m *ResultadosRepositoryMock) FindByProvincia(id int, provinciaId int) (domain.Resultados, bool) {
+func (m *ResultadosRepositoryMock) FindByProvincia(
+	id int, provinciaId int,
+) (domain.Resultados, bool) {
 	args := m.Called(id, provinciaId)
 	return args.Get(0).(domain.Resultados), args.Bool(1)
 }
 
-func (m *ResultadosRepositoryMock) FindByConcello(id int, concelloId int) (domain.Resultados, bool) {
+func (m *ResultadosRepositoryMock) FindByConcello(
+	id int, concelloId int,
+) (domain.Resultados, bool) {
 	args := m.Called(id, concelloId)
 	return args.Get(0).(domain.Resultados), args.Bool(1)
 }
 
-func (m *ResultadosRepositoryMock) FindByDistrito(id int, concelloId int, distritoId int) (domain.Resultados, bool) {
+func (m *ResultadosRepositoryMock) FindByDistrito(
+	id int, concelloId int, distritoId int,
+) (domain.Resultados, bool) {
 	args := m.Called(id, concelloId, distritoId)
 	return args.Get(0).(domain.Resultados), args.Bool(1)
 }
 
-func (m *ResultadosRepositoryMock) FindBySeccion(id int, concelloId int, distritoId int, seccionId int) (domain.Resultados, bool) {
+func (m *ResultadosRepositoryMock) FindBySeccion(
+	id int, concelloId int, distritoId int, seccionId int,
+) (domain.Resultados, bool) {
 	args := m.Called(id, concelloId, distritoId, seccionId)
 	return args.Get(0).(domain.Resultados), args.Bool(1)
 }
 
-func (m *ResultadosRepositoryMock) FindByMesa(id int, concelloId int, distritoId int, seccionId int, codigoMesa string) (domain.Resultados, bool) {
+func (m *ResultadosRepositoryMock) FindByMesa(
+	id int, concelloId int, distritoId int,
+	seccionId int, codigoMesa string,
+) (domain.Resultados, bool) {
 	args := m.Called(id, concelloId, distritoId, seccionId, codigoMesa)
 	return args.Get(0).(domain.Resultados), args.Bool(1)
 }

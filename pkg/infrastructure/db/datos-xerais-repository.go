@@ -33,28 +33,64 @@ func (r *DatosXeraisSqlRepository) FindByProceso(id int) (domain.DatosXerais, bo
 	return r.find("SELECT censo_ine, censo_cera FROM datos_xerais WHERE id = ?", id)
 }
 
-func (r *DatosXeraisSqlRepository) FindByComunidadeAutonoma(id int, comunidadeAutonomaId int) (domain.DatosXerais, bool) {
-	return r.find("SELECT censo_ine, censo_cera FROM datos_xerais_autonomicos WHERE id = ? AND comunidade_autonoma_id = ?", id, comunidadeAutonomaId)
+func (r *DatosXeraisSqlRepository) FindByComunidadeAutonoma(
+	id int, comunidadeAutonomaId int,
+) (domain.DatosXerais, bool) {
+	return r.find(`
+		SELECT censo_ine, censo_cera
+		FROM datos_xerais_autonomicos
+		WHERE id = ? AND comunidade_autonoma_id = ?`,
+		id, comunidadeAutonomaId)
 }
 
-func (r *DatosXeraisSqlRepository) FindByProvincia(id int, provinciaId int) (domain.DatosXerais, bool) {
-	return r.find("SELECT censo_ine, censo_cera FROM datos_xerais_provincias WHERE id = ? AND provincia_id = ?", id, provinciaId)
+func (r *DatosXeraisSqlRepository) FindByProvincia(
+	id int, provinciaId int,
+) (domain.DatosXerais, bool) {
+	return r.find(`
+		SELECT censo_ine, censo_cera
+		FROM datos_xerais_provincias
+		WHERE id = ? AND provincia_id = ?`,
+		id, provinciaId)
 }
 
-func (r *DatosXeraisSqlRepository) FindByConcello(id int, concelloId int) (domain.DatosXerais, bool) {
-	return r.find("SELECT censo_ine, 0 FROM datos_xerais_concellos WHERE id = ? AND concello_id = ?", id, concelloId)
+func (r *DatosXeraisSqlRepository) FindByConcello(
+	id int, concelloId int,
+) (domain.DatosXerais, bool) {
+	return r.find(`
+		SELECT censo_ine, 0
+		FROM datos_xerais_concellos
+		WHERE id = ? AND concello_id = ?`,
+		id, concelloId)
 }
 
-func (r *DatosXeraisSqlRepository) FindByDistrito(id int, concelloId int, distritoId int) (domain.DatosXerais, bool) {
-	return r.find("SELECT censo_ine, 0 FROM datos_xerais_distritos WHERE id = ? AND concello_id = ? AND distrito = ?", id, concelloId, distritoId)
+func (r *DatosXeraisSqlRepository) FindByDistrito(
+	id int, concelloId int, distritoId int,
+) (domain.DatosXerais, bool) {
+	return r.find(`
+		SELECT censo_ine, 0
+		FROM datos_xerais_distritos
+		WHERE id = ? AND concello_id = ? AND distrito = ?`,
+		id, concelloId, distritoId)
 }
 
-func (r *DatosXeraisSqlRepository) FindBySeccion(id int, concelloId int, distritoId int, seccionId int) (domain.DatosXerais, bool) {
-	return r.find("SELECT censo_ine, 0 FROM datos_xerais_seccions WHERE id = ? AND concello_id = ? AND distrito = ? AND seccion = ?", id, concelloId, distritoId, seccionId)
+func (r *DatosXeraisSqlRepository) FindBySeccion(
+	id int, concelloId int, distritoId int, seccionId int,
+) (domain.DatosXerais, bool) {
+	return r.find(`
+		SELECT censo_ine, 0
+		FROM datos_xerais_seccions
+		WHERE id = ? AND concello_id = ? AND distrito = ? AND seccion = ?`,
+		id, concelloId, distritoId, seccionId)
 }
 
-func (r *DatosXeraisSqlRepository) FindByMesa(id int, concelloId int, distritoId int, seccionId int, codigoMesa string) (domain.DatosXerais, bool) {
-	return r.find("SELECT censo, 0 FROM mesa_electoral WHERE proceso_electoral_id = ? AND concello_id = ? AND distrito = ? AND seccion = ? AND codigo = ?",
+func (r *DatosXeraisSqlRepository) FindByMesa(
+	id int, concelloId int, distritoId int, seccionId int, codigoMesa string,
+) (domain.DatosXerais, bool) {
+	return r.find(`
+		SELECT censo, 0
+		FROM mesa_electoral
+		WHERE proceso_electoral_id = ? AND concello_id = ? AND
+		      distrito = ? AND seccion = ? AND codigo = ?`,
 		id, concelloId, distritoId, seccionId, codigoMesa)
 }
 

@@ -59,7 +59,7 @@ func TestZipFileFileList(t *testing.T) {
 	}
 
 	var fileList = zipFile.FileList()
-	assert.Equal(t, []string{"01021911.DAT", "02021911.DAT", "03021911.DAT", "04021911.DAT", "05021911.DAT",
-		"06021911.DAT", "07021911.DAT", "08021911.DAT", "09021911.DAT", "10021911.DAT", "FICHEROS.doc",
-		"FICHEROS.rtf"}, fileList)
+	assert.Equal(t, []string{"01021911.DAT", "02021911.DAT", "03021911.DAT", "04021911.DAT",
+		"05021911.DAT", "06021911.DAT", "07021911.DAT", "08021911.DAT", "09021911.DAT",
+		"10021911.DAT", "FICHEROS.doc", "FICHEROS.rtf"}, fileList)
 }

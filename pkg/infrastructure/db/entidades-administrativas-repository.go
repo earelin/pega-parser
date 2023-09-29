@@ -36,20 +36,39 @@ func (r *EntidadesAdministrativasSqlRepository) FindAllProvincias() []domain.Ent
 	return r.findEntidades("SELECT id, nome FROM provincia ORDER BY nome")
 }
 
-func (r *EntidadesAdministrativasSqlRepository) FindAllProvinciasByComunidadeAutonoma(caId int) []domain.EntidadeAdministrativa {
-	return r.findEntidades("SELECT id, nome FROM provincia WHERE comunidade_autonoma_id = ? ORDER BY nome", caId)
+func (r *EntidadesAdministrativasSqlRepository) FindAllProvinciasByComunidadeAutonoma(
+	caId int,
+) []domain.EntidadeAdministrativa {
+	return r.findEntidades(`
+		SELECT id, nome
+		FROM provincia
+		WHERE comunidade_autonoma_id = ? ORDER BY nome`,
+		caId)
 }
 
-func (r *EntidadesAdministrativasSqlRepository) FindAllConcellosByProvincia(pId int) []domain.EntidadeAdministrativa {
-	return r.findEntidades("SELECT id, nome FROM concello WHERE provincia_id = ? ORDER BY nome", pId)
+func (r *EntidadesAdministrativasSqlRepository) FindAllConcellosByProvincia(
+	pId int,
+) []domain.EntidadeAdministrativa {
+	return r.findEntidades(`
+		SELECT id, nome
+		FROM concello
+		WHERE provincia_id = ? ORDER BY nome`,
+		pId)
 }
 
-func (r *EntidadesAdministrativasSqlRepository) FindAllConcellosByName(name string) []domain.EntidadeAdministrativa {
-	log.Printf("Searching for concellos with name: %s", name)
-	return r.findEntidades("SELECT id, nome FROM concello WHERE nome LIKE ? ORDER BY nome", "%"+name+"%")
+func (r *EntidadesAdministrativasSqlRepository) FindAllConcellosByName(
+	name string,
+) []domain.EntidadeAdministrativa {
+	return r.findEntidades(`
+		SELECT id, nome
+		FROM concello
+		WHERE nome LIKE ? ORDER BY nome`,
+		"%"+name+"%")
 }
 
-func (r *EntidadesAdministrativasSqlRepository) findEntidades(sql string, args ...any) []domain.EntidadeAdministrativa {
+func (r *EntidadesAdministrativasSqlRepository) findEntidades(
+	sql string, args ...any,
+) []domain.EntidadeAdministrativa {
 	var entidades []domain.EntidadeAdministrativa
 	rows, err := r.pool.Query(sql, args...)
 	if err != nil {

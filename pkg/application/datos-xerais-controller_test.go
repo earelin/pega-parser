@@ -64,7 +64,8 @@ func TestGetDatosXeraisComunidadeAutonoma(t *testing.T) {
 		Return(datosXerais, true)
 
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("GET", "/proceso-electoral/1/datos-xerais/comunidade-autonoma/2", nil)
+	req, _ := http.NewRequest("GET",
+		"/proceso-electoral/1/datos-xerais/comunidade-autonoma/2", nil)
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, 200, w.Code)
@@ -80,7 +81,8 @@ func TestGetDatosXeraisComunidadeAutonoma_Null(t *testing.T) {
 		Return(domain.DatosXerais{}, false)
 
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("GET", "/proceso-electoral/1/datos-xerais/comunidade-autonoma/2", nil)
+	req, _ := http.NewRequest("GET",
+		"/proceso-electoral/1/datos-xerais/comunidade-autonoma/2", nil)
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, 404, w.Code)
@@ -95,7 +97,8 @@ func TestGetDatosXeraisProvincia(t *testing.T) {
 		Return(datosXerais, true)
 
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("GET", "/proceso-electoral/1/datos-xerais/provincia/2", nil)
+	req, _ := http.NewRequest("GET",
+		"/proceso-electoral/1/datos-xerais/provincia/2", nil)
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, 200, w.Code)
@@ -111,7 +114,8 @@ func TestGetDatosXeraisProvincia_Null(t *testing.T) {
 		Return(domain.DatosXerais{}, false)
 
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("GET", "/proceso-electoral/1/datos-xerais/provincia/2", nil)
+	req, _ := http.NewRequest("GET",
+		"/proceso-electoral/1/datos-xerais/provincia/2", nil)
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, 404, w.Code)
@@ -126,7 +130,8 @@ func TestGetDatosXeraisConcello(t *testing.T) {
 		Return(datosXerais, true)
 
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("GET", "/proceso-electoral/1/datos-xerais/concello/1001", nil)
+	req, _ := http.NewRequest("GET",
+		"/proceso-electoral/1/datos-xerais/concello/1001", nil)
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, 200, w.Code)
@@ -142,7 +147,8 @@ func TestGetDatosXeraisConcello_Null(t *testing.T) {
 		Return(domain.DatosXerais{}, false)
 
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("GET", "/proceso-electoral/1/datos-xerais/concello/1001", nil)
+	req, _ := http.NewRequest("GET",
+		"/proceso-electoral/1/datos-xerais/concello/1001", nil)
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, 404, w.Code)
@@ -157,7 +163,8 @@ func TestGetDatosXeraisDistrito(t *testing.T) {
 		Return(datosXerais, true)
 
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("GET", "/proceso-electoral/1/datos-xerais/concello/1001/1", nil)
+	req, _ := http.NewRequest("GET",
+		"/proceso-electoral/1/datos-xerais/concello/1001/1", nil)
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, 200, w.Code)
@@ -173,7 +180,8 @@ func TestGetDatosXeraisDistrito_Null(t *testing.T) {
 		Return(domain.DatosXerais{}, false)
 
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("GET", "/proceso-electoral/1/datos-xerais/concello/1001/1", nil)
+	req, _ := http.NewRequest("GET",
+		"/proceso-electoral/1/datos-xerais/concello/1001/1", nil)
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, 404, w.Code)
@@ -188,7 +196,8 @@ func TestGetDatosXeraisSeccion(t *testing.T) {
 		Return(datosXerais, true)
 
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("GET", "/proceso-electoral/1/datos-xerais/concello/1001/1/1", nil)
+	req, _ := http.NewRequest("GET",
+		"/proceso-electoral/1/datos-xerais/concello/1001/1/1", nil)
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, 200, w.Code)
@@ -204,7 +213,8 @@ func TestGetDatosXeraisSeccion_Null(t *testing.T) {
 		Return(domain.DatosXerais{}, false)
 
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("GET", "/proceso-electoral/1/datos-xerais/concello/1001/1/1", nil)
+	req, _ := http.NewRequest("GET",
+		"/proceso-electoral/1/datos-xerais/concello/1001/1/1", nil)
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, 404, w.Code)
@@ -219,7 +229,8 @@ func TestGetDatosXeraisMesa(t *testing.T) {
 		Return(datosXerais, true)
 
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("GET", "/proceso-electoral/1/datos-xerais/concello/1001/1/1/U", nil)
+	req, _ := http.NewRequest("GET",
+		"/proceso-electoral/1/datos-xerais/concello/1001/1/1/U", nil)
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, 200, w.Code)
@@ -235,7 +246,8 @@ func TestGetDatosXeraisMesa_Null(t *testing.T) {
 		Return(domain.DatosXerais{}, false)
 
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("GET", "/proceso-electoral/1/datos-xerais/concello/1001/1/1/U", nil)
+	req, _ := http.NewRequest("GET",
+		"/proceso-electoral/1/datos-xerais/concello/1001/1/1/U", nil)
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, 404, w.Code)
@@ -250,32 +262,39 @@ func (m *DatosXeraisRepositoryMock) FindByProceso(id int) (domain.DatosXerais, b
 	return args.Get(0).(domain.DatosXerais), args.Bool(1)
 }
 
-func (m *DatosXeraisRepositoryMock) FindByComunidadeAutonoma(id int, comunidadeAutonomaId int) (domain.DatosXerais, bool) {
+func (m *DatosXeraisRepositoryMock) FindByComunidadeAutonoma(
+	id int, comunidadeAutonomaId int) (domain.DatosXerais, bool) {
 	args := m.Called(id, comunidadeAutonomaId)
 	return args.Get(0).(domain.DatosXerais), args.Bool(1)
 }
 
-func (m *DatosXeraisRepositoryMock) FindByProvincia(id int, provinciaId int) (domain.DatosXerais, bool) {
+func (m *DatosXeraisRepositoryMock) FindByProvincia(
+	id int, provinciaId int) (domain.DatosXerais, bool) {
 	args := m.Called(id, provinciaId)
 	return args.Get(0).(domain.DatosXerais), args.Bool(1)
 }
 
-func (m *DatosXeraisRepositoryMock) FindByConcello(id int, concelloId int) (domain.DatosXerais, bool) {
+func (m *DatosXeraisRepositoryMock) FindByConcello(
+	id int, concelloId int) (domain.DatosXerais, bool) {
 	args := m.Called(id, concelloId)
 	return args.Get(0).(domain.DatosXerais), args.Bool(1)
 }
 
-func (m *DatosXeraisRepositoryMock) FindByDistrito(id int, concelloId int, distritoId int) (domain.DatosXerais, bool) {
+func (m *DatosXeraisRepositoryMock) FindByDistrito(
+	id int, concelloId int, distritoId int) (domain.DatosXerais, bool) {
 	args := m.Called(id, concelloId, distritoId)
 	return args.Get(0).(domain.DatosXerais), args.Bool(1)
 }
 
-func (m *DatosXeraisRepositoryMock) FindBySeccion(id int, concelloId int, distritoId int, seccionId int) (domain.DatosXerais, bool) {
+func (m *DatosXeraisRepositoryMock) FindBySeccion(
+	id int, concelloId int, distritoId int, seccionId int) (domain.DatosXerais, bool) {
 	args := m.Called(id, concelloId, distritoId, seccionId)
 	return args.Get(0).(domain.DatosXerais), args.Bool(1)
 }
 
-func (m *DatosXeraisRepositoryMock) FindByMesa(id int, concelloId int, distritoId int, seccionId int, codigoMesa string) (domain.DatosXerais, bool) {
+func (m *DatosXeraisRepositoryMock) FindByMesa(
+	id int, concelloId int, distritoId int, seccionId int, codigoMesa string) (
+	domain.DatosXerais, bool) {
 	args := m.Called(id, concelloId, distritoId, seccionId, codigoMesa)
 	return args.Get(0).(domain.DatosXerais), args.Bool(1)
 }

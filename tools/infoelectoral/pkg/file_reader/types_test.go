@@ -85,12 +85,13 @@ func TestCandidatureRead(t *testing.T) {
 
 	candidatures := []CandidatureLine{
 		{
-			ElectionType:   2,
-			Year:           2019,
-			Month:          11,
-			Code:           2,
-			Acronym:        "AHORA CANARIAS",
-			Name:           "AHORA CANARIAS: Alternativa Nacionalista Canaria (ANC) y Unidad del Pueblo",
+			ElectionType: 2,
+			Year:         2019,
+			Month:        11,
+			Code:         2,
+			Acronym:      "AHORA CANARIAS",
+			Name: "AHORA CANARIAS: Alternativa Nacionalista Canaria (ANC) y Unidad del" +
+				" Pueblo",
 			ProvincialCode: 2,
 			AutonomicCode:  2,
 			StateCode:      2,

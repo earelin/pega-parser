@@ -23,7 +23,10 @@ type EntidadesAdministrativasController struct {
 	repository domain.EntidadesAdministrativasRepository
 }
 
-func NewEntidadesAdministrativasController(e *gin.Engine, repository domain.EntidadesAdministrativasRepository) {
+func NewEntidadesAdministrativasController(
+	e *gin.Engine,
+	repository domain.EntidadesAdministrativasRepository,
+) {
 	c := &EntidadesAdministrativasController{}
 	c.repository = repository
 	e.GET("/comunidades-autonomas", c.GetComunidadesAutonomas)

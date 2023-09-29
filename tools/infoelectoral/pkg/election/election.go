@@ -144,7 +144,8 @@ func (e Election) CandidatesList() []Candidate {
 }
 
 func (e Election) MesasElectorais() []MesaElectoral {
-	fr := getFileReader[file_reader.DatosComunsDeMesasECera](e.zipFile, e.files.TablesAndCeraCommonDataFile)
+	fr := getFileReader[file_reader.DatosComunsDeMesasECera](
+		e.zipFile, e.files.TablesAndCeraCommonDataFile)
 	defer fr.Close()
 
 	var mesas []MesaElectoral
@@ -175,7 +176,8 @@ func (e Election) MesasElectorais() []MesaElectoral {
 }
 
 func (e Election) VotosMesasElectorais() []VotosMesaElectoral {
-	fr := getFileReader[file_reader.DatoCandidaturasDeMesasECera](e.zipFile, e.files.TablesAndCeraCandidaturesDataFile)
+	fr := getFileReader[file_reader.DatoCandidaturasDeMesasECera](
+		e.zipFile, e.files.TablesAndCeraCandidaturesDataFile)
 	defer fr.Close()
 
 	var votosMesas []VotosMesaElectoral
@@ -202,7 +204,9 @@ func (e Election) VotosMesasElectorais() []VotosMesaElectoral {
 	return votosMesas
 }
 
-func getFileReader[T any](archive *archive_reader.ZipFile, filename string) file_reader.FileReader[T] {
+func getFileReader[T any](
+	archive *archive_reader.ZipFile, filename string,
+) file_reader.FileReader[T] {
 	var err error
 	var file fs.File
 	file, err = archive.Open(filename)

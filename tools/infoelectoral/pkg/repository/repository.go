@@ -80,8 +80,9 @@ func (r *Repository) CreateProcesoElectoral(e election.Election) (int64, error) 
 }
 
 func (r *Repository) CreateCandidaturas(procesoElectoral int64, candidatures []election.Candidatura) error {
-	const inserirCandidatura = `INSERT INTO candidatura (proceso_electoral_id, id, siglas, nome, cabeceira_estatal,
-                        cabeceira_autonomica, cabeceira_provincial) VALUES (?, ?, ?, ?, ?, ?, ?)`
+	const inserirCandidatura = `INSERT INTO candidatura (proceso_electoral_id, id, siglas, nome,
+                         cabeceira_estatal, cabeceira_autonomica, cabeceira_provincial)
+						 VALUES (?, ?, ?, ?, ?, ?, ?)`
 
 	for _, c := range candidatures {
 		_, err := r.pool.ExecContext(r.ctx, inserirCandidatura, procesoElectoral, c.Codigo, c.Siglas, c.Nome,

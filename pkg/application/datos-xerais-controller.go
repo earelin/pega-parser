@@ -22,12 +22,21 @@ import (
 func NewDatosXeraisController(e *gin.Engine, datosXeraisRepository domain.DatosXeraisRepository) {
 	c := &DatosXeraisController{repository: datosXeraisRepository}
 	e.GET("/proceso-electoral/:id/datos-xerais", c.GetDatosXerais)
-	e.GET("/proceso-electoral/:id/datos-xerais/comunidade-autonoma/:comunidadeAutonomaId", c.GetDatosXeraisComunidadeAutonoma)
-	e.GET("/proceso-electoral/:id/datos-xerais/provincia/:provinciaId", c.GetDatosXeraisProvincia)
-	e.GET("/proceso-electoral/:id/datos-xerais/concello/:concelloId", c.GetDatosXeraisConcello)
-	e.GET("/proceso-electoral/:id/datos-xerais/concello/:concelloId/:distritoId", c.GetDatosXeraisDistrito)
-	e.GET("/proceso-electoral/:id/datos-xerais/concello/:concelloId/:distritoId/:seccionId", c.GetDatosXeraisSeccion)
-	e.GET("/proceso-electoral/:id/datos-xerais/concello/:concelloId/:distritoId/:seccionId/:codigoMesa", c.GetDatosXeraisMesa)
+	e.GET(
+		"/proceso-electoral/:id/datos-xerais/comunidade-autonoma/:comunidadeAutonomaId",
+		c.GetDatosXeraisComunidadeAutonoma)
+	e.GET("/proceso-electoral/:id/datos-xerais/provincia/:provinciaId",
+		c.GetDatosXeraisProvincia)
+	e.GET("/proceso-electoral/:id/datos-xerais/concello/:concelloId",
+		c.GetDatosXeraisConcello)
+	e.GET("/proceso-electoral/:id/datos-xerais/concello/:concelloId/:distritoId",
+		c.GetDatosXeraisDistrito)
+	e.GET(
+		"/proceso-electoral/:id/datos-xerais/concello/:concelloId/:distritoId/:seccionId",
+		c.GetDatosXeraisSeccion)
+	e.GET(
+		"/proceso-electoral/:id/datos-xerais/concello/:concelloId/:distritoId/:seccionId/:codigoMesa",
+		c.GetDatosXeraisMesa)
 }
 
 type DatosXeraisController struct {
@@ -141,7 +150,8 @@ func (c DatosXeraisController) GetDatosXeraisSeccion(gc *gin.Context) {
 		return
 	}
 
-	ps, ok := c.repository.FindBySeccion(uriParams.Id, uriParams.ConcelloId, uriParams.DistritoId, uriParams.SeccionId)
+	ps, ok := c.repository.FindBySeccion(uriParams.Id, uriParams.ConcelloId, uriParams.DistritoId,
+		uriParams.SeccionId)
 
 	if ok {
 		gc.JSON(200, ps)
@@ -163,7 +173,8 @@ func (c DatosXeraisController) GetDatosXeraisMesa(gc *gin.Context) {
 		return
 	}
 
-	ps, ok := c.repository.FindByMesa(uriParams.Id, uriParams.ConcelloId, uriParams.DistritoId, uriParams.SeccionId, uriParams.CodigoMesa)
+	ps, ok := c.repository.FindByMesa(uriParams.Id, uriParams.ConcelloId, uriParams.DistritoId,
+		uriParams.SeccionId, uriParams.CodigoMesa)
 
 	if ok {
 		gc.JSON(200, ps)

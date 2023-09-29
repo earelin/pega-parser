@@ -65,4 +65,5 @@ var procesosElectorais = []domain.ProcesoElectoral{
 	},
 }
 
-var processosElectoraisResult = `[{"id":1,"data":"2019-05-26T00:00:00Z","tipo":7,"ambito":0},{"id":2,"data":"2018-02-13T00:00:00Z","tipo":6,"ambito":1}]`
+var processosElectoraisResult = `[{"id":1,"data":"2019-05-26T00:00:00Z","tipo":7,"ambito":0},` +
+	`{"id":2,"data":"2018-02-13T00:00:00Z","tipo":6,"ambito":1}]`

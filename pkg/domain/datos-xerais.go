@@ -26,5 +26,7 @@ type DatosXeraisRepository interface {
 	FindByConcello(id int, concelloId int) (DatosXerais, bool)
 	FindByDistrito(id int, concelloId int, distritoId int) (DatosXerais, bool)
 	FindBySeccion(id int, concelloId int, distritoId int, seccionId int) (DatosXerais, bool)
-	FindByMesa(id int, concelloId int, distritoId int, seccionId int, codigoMesa string) (DatosXerais, bool)
+	FindByMesa(
+		id int, concelloId int, distritoId int, seccionId int, codigoMesa string,
+	) (DatosXerais, bool)
 }

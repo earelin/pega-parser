@@ -77,7 +77,8 @@ func parseArgs(w io.Writer, args []string) (config.Config, error) {
 	fs := flag.NewFlagSet("inebase", flag.ContinueOnError)
 	fs.SetOutput(w)
 
-	fs.StringVar(&c.RepositoryConfig.Filename, "file", "database.sqlite", "Ficheiro da base de datos")
+	fs.StringVar(&c.RepositoryConfig.Filename, "file",
+		"database.sqlite", "Ficheiro da base de datos")
 
 	err := fs.Parse(args[1:])
 	if err != nil {

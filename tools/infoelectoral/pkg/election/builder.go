@@ -58,7 +58,8 @@ func loadControlData(e *Election, archive *archive_reader.ZipFile) {
 
 	e.Type = control.ElectionType
 	var generateFileName = buildFilenameGenerator(control.ElectionType, control.Month, control.Year)
-	var generateCustomPrefixFileName = buildCustomPrefixFilenameGenerator(control.Month, control.Year)
+	var generateCustomPrefixFileName = buildCustomPrefixFilenameGenerator(
+		control.Month, control.Year)
 
 	e.files = dataFiles{
 		IdentificationFile:                               generateFileName(true, FicheiroIdentificacionPrefixo),
@@ -80,7 +81,9 @@ func loadControlData(e *Election, archive *archive_reader.ZipFile) {
 }
 
 func loadIdentificationData(e *Election, archive *archive_reader.ZipFile) {
-	var identificationFileReader = getFileReader[file_reader.IdentificationLine](archive, e.files.IdentificationFile)
+	var identificationFileReader = getFileReader[file_reader.IdentificationLine](
+		archive, e.files.IdentificationFile,
+	)
 
 	var identification file_reader.IdentificationLine
 	var err error
