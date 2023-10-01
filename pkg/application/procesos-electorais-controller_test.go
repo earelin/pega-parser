@@ -38,7 +38,23 @@ func TestGetProcesosElectorais(t *testing.T) {
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, 200, w.Code)
-	assert.Equal(t, processosElectoraisResult, w.Body.String())
+	assert.Equal(t, procesosElectoraisResult, w.Body.String())
+}
+
+func TestGetProcesoElectoral(t *testing.T) {
+	router := gin.Default()
+	repository := new(ProcesosElectoraisRepositoryMock)
+	NewProcesosElectoraisController(router, repository)
+
+	repository.On("FindById", 2).
+		Return(procesosElectorais[1], true)
+
+	w := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", "/proceso-electoral/2", nil)
+	router.ServeHTTP(w, req)
+
+	assert.Equal(t, 200, w.Code)
+	assert.Equal(t, procesoElectoralResult, w.Body.String())
 }
 
 type ProcesosElectoraisRepositoryMock struct {
@@ -48,6 +64,11 @@ type ProcesosElectoraisRepositoryMock struct {
 func (m *ProcesosElectoraisRepositoryMock) FindAll() []domain.ProcesoElectoral {
 	args := m.Called()
 	return args.Get(0).([]domain.ProcesoElectoral)
+}
+
+func (m *ProcesosElectoraisRepositoryMock) FindById(id int) (domain.ProcesoElectoral, bool) {
+	args := m.Called(id)
+	return args.Get(0).(domain.ProcesoElectoral), args.Bool(1)
 }
 
 var procesosElectorais = []domain.ProcesoElectoral{
@@ -65,5 +86,7 @@ var procesosElectorais = []domain.ProcesoElectoral{
 	},
 }
 
-var processosElectoraisResult = `[{"id":1,"data":"2019-05-26T00:00:00Z","tipo":7,"ambito":0},` +
+var procesosElectoraisResult = `[{"id":1,"data":"2019-05-26T00:00:00Z","tipo":7,"ambito":0},` +
 	`{"id":2,"data":"2018-02-13T00:00:00Z","tipo":6,"ambito":1}]`
+
+var procesoElectoralResult = `{"id":2,"data":"2018-02-13T00:00:00Z","tipo":6,"ambito":1}`

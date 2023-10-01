@@ -58,3 +58,21 @@ func (r *ProcesosElectoraisSqlRepository) FindAll() []domain.ProcesoElectoral {
 
 	return procesos
 }
+
+func (r *ProcesosElectoraisSqlRepository) FindById(id int) (domain.ProcesoElectoral, bool) {
+	var proceso domain.ProcesoElectoral
+	row := r.pool.QueryRow(`
+		SELECT id, data, tipo, ambito
+		FROM proceso_electoral
+		WHERE id = ?`, id)
+
+	var ambito sql.NullInt16
+	var err = row.Scan(&proceso.Id, &proceso.Data, &proceso.Tipo, &ambito)
+	if err != nil {
+		log.Printf("Error scanning proceso: %s", err)
+		return proceso, false
+	}
+	proceso.Ambito = int(ambito.Int16)
+
+	return proceso, true
+}

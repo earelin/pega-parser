@@ -25,4 +25,5 @@ type ProcesoElectoral struct {
 
 type ProcesosElectoraisRepository interface {
 	FindAll() []ProcesoElectoral
+	FindById(id int) (ProcesoElectoral, bool)
 }

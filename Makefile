@@ -30,6 +30,10 @@ migrate-down:
 migrate-up:
 	migrate -path database/migration -database sqlite3://database.sqlite up
 
+.PHONY: run
+run:
+	go run $(CMD_DIR)/pega
+
 .PHONY: test
 test:
 	go test -v ./...
