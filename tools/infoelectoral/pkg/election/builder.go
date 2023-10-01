@@ -62,21 +62,35 @@ func loadControlData(e *Election, archive *archive_reader.ZipFile) {
 		control.Month, control.Year)
 
 	e.files = dataFiles{
-		IdentificationFile:                               generateFileName(true, FicheiroIdentificacionPrefixo),
-		CandidaturesFile:                                 generateFileName(control.CandidaturesFile, FicheiroCandidaturasPrefixo),
-		CandidatesListFile:                               generateFileName(control.CandidatesListFile, FicheiroListaCandidatosPrefix),
-		MunicipalitiesCommonDataFile:                     generateFileName(control.MunicipalitiesCommonDataFile, FicheiroDatosComunsConcellosPrefixo),
-		MunicipalitiesCandidaturesDataFile:               generateFileName(control.MunicipalitiesCandidaturesDataFile, MunicipalitiesCandidaturesDataFilePrefix),
-		MunicipalitiesSuperiorScopeCommonDataFile:        generateFileName(control.MunicipalitiesSuperiorScopeCommonDataFile, MunicipalitiesSuperiorScopeCommonDataFilePrefix),
-		MunicipalitiesSuperiorScopeCandidaturesDataFile:  generateFileName(control.MunicipalitiesSuperiorScopeCandidaturesDataFile, MunicipalitiesSuperiorScopeCandidaturesDataFile),
-		TablesAndCeraCommonDataFile:                      generateFileName(control.TablesAndCeraCommonDataFile, TablesAndCeraCommonDataFilePrefix),
-		TablesAndCeraCandidaturesDataFile:                generateFileName(control.TablesAndCeraCandidaturesDataFile, TablesAndCeraCandidaturesDataFilePrefix),
-		MunicipalitiesSmallerThan250CommonDataFile:       generateFileName(control.MunicipalitiesSmallerThan250CommonDataFile, MunicipalitiesSmallerThan250CommonDataFilePrefix),
-		MunicipalitiesSmallerThan250CandidaturesDataFile: generateFileName(control.MunicipalitiesSmallerThan250CandidaturesDataFile, MunicipalitiesSmallerThan250CommonDataFilePrefix),
-		JudicialDistrictCommonDataFile:                   generateCustomPrefixFileName(control.JudicialDistrictCommonDataFile, JudicialDistrictCommonDataFilePrefix),
-		JudicialDistrictCandidaturesDataFile:             generateCustomPrefixFileName(control.JudicialDistrictCandidaturesDataFile, JudicialDistrictCandidaturesDataFilePrefix),
-		ProvincialCouncilCommonDataFile:                  generateCustomPrefixFileName(control.ProvincialCouncilCommonDataFile, ProvincialCouncilCommonDataFilePrefix),
-		ProvincialCouncilCandidaturesDataFile:            generateCustomPrefixFileName(control.ProvincialCouncilCandidaturesDataFile, ProvincialCouncilCandidaturesDataFilePrefix),
+		IdentificationFile: generateFileName(true, FicheiroIdentificacionPrefixo),
+		CandidaturesFile: generateFileName(
+			control.CandidaturesFile, FicheiroCandidaturasPrefixo),
+		CandidatesListFile: generateFileName(
+			control.CandidatesListFile, FicheiroListaCandidatosPrefix),
+		MunicipalitiesCommonDataFile: generateFileName(
+			control.MunicipalitiesCommonDataFile, FicheiroDatosComunsConcellosPrefixo),
+		MunicipalitiesCandidaturesDataFile: generateFileName(
+			control.MunicipalitiesCandidaturesDataFile, MunicipalitiesCandidaturesDataFilePrefix),
+		MunicipalitiesSuperiorScopeCommonDataFile: generateFileName(
+			control.MunicipalitiesSuperiorScopeCommonDataFile, MunicipalitiesSuperiorScopeCommonDataFilePrefix),
+		MunicipalitiesSuperiorScopeCandidaturesDataFile: generateFileName(
+			control.MunicipalitiesSuperiorScopeCandidaturesDataFile, MunicipalitiesSuperiorScopeCandidaturesDataFile),
+		TablesAndCeraCommonDataFile: generateFileName(
+			control.TablesAndCeraCommonDataFile, TablesAndCeraCommonDataFilePrefix),
+		TablesAndCeraCandidaturesDataFile: generateFileName(
+			control.TablesAndCeraCandidaturesDataFile, TablesAndCeraCandidaturesDataFilePrefix),
+		MunicipalitiesSmallerThan250CommonDataFile: generateFileName(
+			control.MunicipalitiesSmallerThan250CommonDataFile, MunicipalitiesSmallerThan250CommonDataFilePrefix),
+		MunicipalitiesSmallerThan250CandidaturesDataFile: generateFileName(
+			control.MunicipalitiesSmallerThan250CandidaturesDataFile, MunicipalitiesSmallerThan250CommonDataFilePrefix),
+		JudicialDistrictCommonDataFile: generateCustomPrefixFileName(
+			control.JudicialDistrictCommonDataFile, JudicialDistrictCommonDataFilePrefix),
+		JudicialDistrictCandidaturesDataFile: generateCustomPrefixFileName(
+			control.JudicialDistrictCandidaturesDataFile, JudicialDistrictCandidaturesDataFilePrefix),
+		ProvincialCouncilCommonDataFile: generateCustomPrefixFileName(
+			control.ProvincialCouncilCommonDataFile, ProvincialCouncilCommonDataFilePrefix),
+		ProvincialCouncilCandidaturesDataFile: generateCustomPrefixFileName(
+			control.ProvincialCouncilCandidaturesDataFile, ProvincialCouncilCandidaturesDataFilePrefix),
 	}
 }
 

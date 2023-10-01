@@ -159,12 +159,16 @@ func (m *EntidadesAdministrativasRepositoryMock) FindAllProvincias() []domain.En
 	return args.Get(0).([]domain.EntidadeAdministrativa)
 }
 
-func (m *EntidadesAdministrativasRepositoryMock) FindAllProvinciasByComunidadeAutonoma(comunidadeAutonomaId int) []domain.EntidadeAdministrativa {
+func (m *EntidadesAdministrativasRepositoryMock) FindAllProvinciasByComunidadeAutonoma(
+	comunidadeAutonomaId int,
+) []domain.EntidadeAdministrativa {
 	args := m.Called(comunidadeAutonomaId)
 	return args.Get(0).([]domain.EntidadeAdministrativa)
 }
 
-func (m *EntidadesAdministrativasRepositoryMock) FindAllConcellosByProvincia(provinciaId int) []domain.EntidadeAdministrativa {
+func (m *EntidadesAdministrativasRepositoryMock) FindAllConcellosByProvincia(
+	provinciaId int,
+) []domain.EntidadeAdministrativa {
 	args := m.Called(provinciaId)
 	return args.Get(0).([]domain.EntidadeAdministrativa)
 }
