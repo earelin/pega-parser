@@ -21,8 +21,8 @@ type Resultados struct {
 }
 
 type ResultadoCandidatura struct {
-	Candidatura Candidatura
-	Votos       int
+	Candidatura Candidatura `json:"candidatura"`
+	Votos       int         `json:"votos"`
 }
 
 type ResultadosRepository interface {

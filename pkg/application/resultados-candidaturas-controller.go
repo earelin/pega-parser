@@ -19,17 +19,29 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func ConfigureApplicationLayer(e *gin.Engine,
-	ear domain.EntidadesAdministrativasRepository,
-	per domain.ProcesosElectoraisRepository,
-	dxr domain.DatosXeraisRepository,
-	rr domain.ResultadosRepository,
-	rrc domain.ResultadosCandidaturasRepository,
-) {
-	MonitoringConfig(e)
-	NewEntidadesAdministrativasController(e, ear)
-	NewProcesosElectoraisController(e, per)
-	NewDatosXeraisController(e, dxr)
-	NewResultadosController(e, rr)
-	NewResultadosCandidaturasController(e, rrc)
+func NewResultadosCandidaturasController(e *gin.Engine, repository domain.ResultadosCandidaturasRepository) {
+	c := &ResultadosCandidaturasController{repository: repository}
+	e.GET("/proceso-electoral/:id/resultados/candidaturas", c.GetResultadosCandidaturasByProceso)
+}
+
+type ResultadosCandidaturasController struct {
+	repository domain.ResultadosCandidaturasRepository
+}
+
+func (c ResultadosCandidaturasController) GetResultadosCandidaturasByProceso(gc *gin.Context) {
+	var uriParams struct {
+		Id int `uri:"id"`
+	}
+	if err := gc.ShouldBindUri(&uriParams); err != nil {
+		gc.JSON(400, gin.H{"msg": err})
+		return
+	}
+
+	rc, ok := c.repository.FindByProceso(uriParams.Id)
+
+	if ok {
+		gc.JSON(200, rc)
+	} else {
+		gc.Status(404)
+	}
 }

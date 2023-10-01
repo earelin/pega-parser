@@ -15,6 +15,6 @@
 package domain
 
 type Candidatura struct {
-	Id   int
-	Name string
+	Id   int    `json:"id"`
+	Nome string `json:"nome"`
 }
