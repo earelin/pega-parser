@@ -17,13 +17,19 @@ package domain
 import "time"
 
 type ProcesoElectoral struct {
-	Id     int       `json:"id"`
-	Data   time.Time `json:"data"`
-	Tipo   int       `json:"tipo"`
-	Ambito int       `json:"ambito"`
+	Id     int                  `json:"id"`
+	Data   time.Time            `json:"data"`
+	Tipo   TipoProcesoElectoral `json:"tipo"`
+	Ambito int                  `json:"ambito"`
 }
 
 type ProcesosElectoraisRepository interface {
 	FindAll() []ProcesoElectoral
 	FindById(id int) (ProcesoElectoral, bool)
+	FindAllTipos() []TipoProcesoElectoral
+}
+
+type TipoProcesoElectoral struct {
+	Id   int    `json:"id"`
+	Nome string `json:"nome"`
 }

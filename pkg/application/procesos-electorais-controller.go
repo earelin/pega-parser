@@ -30,6 +30,7 @@ func NewProcesosElectoraisController(
 	c := &ProcesosElectoraisController{}
 	c.repository = procesosElectoraisRepository
 	e.GET("/procesos-electorais", c.GetProcesosElectorais)
+	e.GET("/procesos-electorais/tipos", c.GetProcesosElectoraisTipos)
 	e.GET("/proceso-electoral/:id", c.GetProcesoElectoral)
 }
 
@@ -54,4 +55,9 @@ func (c ProcesosElectoraisController) GetProcesoElectoral(gc *gin.Context) {
 	} else {
 		gc.Status(404)
 	}
+}
+
+func (c ProcesosElectoraisController) GetProcesosElectoraisTipos(gc *gin.Context) {
+	procesosElectoraisTipos := c.repository.FindAllTipos()
+	gc.JSON(200, procesosElectoraisTipos)
 }

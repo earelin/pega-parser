@@ -32,8 +32,9 @@ func NewProcesosElectoraisSqlRepository(pool *sql.DB) *ProcesosElectoraisSqlRepo
 func (r *ProcesosElectoraisSqlRepository) FindAll() []domain.ProcesoElectoral {
 	var procesos []domain.ProcesoElectoral
 	rows, err := r.pool.Query(`
-		SELECT id, data, tipo, ambito
-		FROM proceso_electoral
+		SELECT pe.id AS id, data, tpe.id AS tipo_id, tpe.nome AS tipo_nome, ambito
+		FROM proceso_electoral pe
+		LEFT JOIN tipo_proceso_electoral tpe ON tpe.id = pe.tipo
 		ORDER BY data DESC`)
 	if err != nil {
 		log.Printf("Error querying procesos: %s", err)
@@ -44,7 +45,7 @@ func (r *ProcesosElectoraisSqlRepository) FindAll() []domain.ProcesoElectoral {
 		var proceso domain.ProcesoElectoral
 		var dataRaw string
 		var ambitoRaw sql.NullInt16
-		err = rows.Scan(&proceso.Id, &dataRaw, &proceso.Tipo, &ambitoRaw)
+		err = rows.Scan(&proceso.Id, &dataRaw, &proceso.Tipo.Id, &proceso.Tipo.Nome, &ambitoRaw)
 		if err != nil {
 			log.Printf("Error scanning procesos: %s", err)
 		}
@@ -62,17 +63,40 @@ func (r *ProcesosElectoraisSqlRepository) FindAll() []domain.ProcesoElectoral {
 func (r *ProcesosElectoraisSqlRepository) FindById(id int) (domain.ProcesoElectoral, bool) {
 	var proceso domain.ProcesoElectoral
 	row := r.pool.QueryRow(`
-		SELECT id, data, tipo, ambito
-		FROM proceso_electoral
-		WHERE id = ?`, id)
+		SELECT pe.id AS id, data, tpe.id AS tipo_id, tpe.nome AS tipo_nome, ambito
+		FROM proceso_electoral pe
+		LEFT JOIN tipo_proceso_electoral tpe ON tpe.id = pe.tipo
+		WHERE pe.id = ?`, id)
 
-	var ambito sql.NullInt16
-	var err = row.Scan(&proceso.Id, &proceso.Data, &proceso.Tipo, &ambito)
+	var ambitoRaw sql.NullInt16
+	var err = row.Scan(&proceso.Id, &proceso.Data, &proceso.Tipo.Id, &proceso.Tipo.Nome, &ambitoRaw)
 	if err != nil {
 		log.Printf("Error scanning proceso: %s", err)
 		return proceso, false
 	}
-	proceso.Ambito = int(ambito.Int16)
+	proceso.Ambito = int(ambitoRaw.Int16)
 
 	return proceso, true
+}
+
+func (r *ProcesosElectoraisSqlRepository) FindAllTipos() []domain.TipoProcesoElectoral {
+	var tipos []domain.TipoProcesoElectoral
+	rows, err := r.pool.Query(`
+		SELECT id, nome
+		FROM tipo_proceso_electoral`)
+	if err != nil {
+		log.Printf("Error querying tipos: %s", err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var tipo domain.TipoProcesoElectoral
+		err = rows.Scan(&tipo.Id, &tipo.Nome)
+		if err != nil {
+			log.Printf("Error scanning tipos: %s", err)
+		}
+		tipos = append(tipos, tipo)
+	}
+
+	return tipos
 }
