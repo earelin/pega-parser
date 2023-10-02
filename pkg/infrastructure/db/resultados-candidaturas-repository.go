@@ -44,7 +44,7 @@ func (r *ResultadosCandidaturasSqlRepository) FindByProceso(id int) ([]domain.Re
 		WHERE c.proceso_electoral_id = ?
 		GROUP BY ce.id) AS votos
 	GROUP BY id, nome
-	ORDER BY nome`, id, id)
+	ORDER BY votos DESC`, id, id)
 }
 
 func (r *ResultadosCandidaturasSqlRepository) FindByComunidadeAutonoma(
