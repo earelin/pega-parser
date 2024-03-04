@@ -19,6 +19,7 @@ lint:
 
 .PHONY: build-tools
 build-tools:
+	go build -o $(TOOLS_BIN_DIR)/galiza $(TOOLS_SRC_DIR)/galiza/main.go
 	go build -o $(TOOLS_BIN_DIR)/inebase $(TOOLS_SRC_DIR)/inebase/main.go
 	go build -o $(TOOLS_BIN_DIR)/infoelectoral $(TOOLS_SRC_DIR)/infoelectoral/main.go
 
