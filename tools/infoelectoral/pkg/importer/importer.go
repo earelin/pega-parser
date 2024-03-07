@@ -44,11 +44,14 @@ func ImportElectionData(r *repository.Repository, e election.Election) error {
 	mesas := e.MesasElectorais()
 	err = r.CrearMesasElectorais(procesoElectoralId, mesas)
 	if err != nil {
-		return fmt.Errorf("non se puideron crear as mesas electorais: %w", err)
+		return fmt.Errorf("non se puideron importar as mesas electorais: %w", err)
 	}
 
 	votosMesas := e.VotosMesasElectorais()
 	err = r.CrearVotosEnMesasElectorais(procesoElectoralId, votosMesas)
+	if err != nil {
+		return fmt.Errorf("non se puideron importar os votos en mesa: %w", err)
+	}
 
 	return err
 }
