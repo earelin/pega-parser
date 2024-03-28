@@ -1,5 +1,0 @@
-SET FOREIGN_KEY_CHECKS = 0;
-TRUNCATE concello;
-TRUNCATE provincia;
-TRUNCATE comunidade_autonoma;
-SET FOREIGN_KEY_CHECKS = 1;
