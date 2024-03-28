@@ -19,9 +19,9 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	"github.com/earelin/pega/tools/galiza/pkg/config"
-	"github.com/earelin/pega/tools/galiza/pkg/importer"
-	"github.com/earelin/pega/tools/galiza/pkg/repository"
+	"github.com/earelin/pega/tools/spreadsheet/pkg/config"
+	"github.com/earelin/pega/tools/spreadsheet/pkg/importer"
+	"github.com/earelin/pega/tools/spreadsheet/pkg/repository"
 	"io"
 	"os"
 )
@@ -73,7 +73,7 @@ func start(w io.Writer, args []string) {
 func parseArgs(w io.Writer, args []string) (config.Config, error) {
 	var c config.Config
 
-	fs := flag.NewFlagSet("galiza", flag.ContinueOnError)
+	fs := flag.NewFlagSet("spreadsheet", flag.ContinueOnError)
 	fs.SetOutput(w)
 
 	return c, nil
@@ -81,7 +81,7 @@ func parseArgs(w io.Writer, args []string) (config.Config, error) {
 
 func showUsage() {
 	fmt.Println(`	Uso:
-		galiza [opcions] ficheiro
+		spreadsheet [opcions] ficheiro
 
 		ficheiro: Ruta ao ficheiro
 

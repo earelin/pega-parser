@@ -17,7 +17,7 @@ package repository
 import (
 	"context"
 	"database/sql"
-	"github.com/earelin/pega/tools/galiza/pkg/config"
+	"github.com/earelin/pega/tools/spreadsheet/pkg/config"
 	_ "github.com/mattn/go-sqlite3"
 	"time"
 )

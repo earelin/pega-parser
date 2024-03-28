@@ -12,22 +12,13 @@
  * this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package db
+package importer
 
 import (
-	"database/sql"
-	"log"
+	"github.com/earelin/pega/tools/spreadsheet/pkg/config"
+	"github.com/earelin/pega/tools/spreadsheet/pkg/repository"
 )
 
-type Config struct {
-	Filename string
-}
-
-func (rc Config) BuildPool() *sql.DB {
-	var pool, err = sql.Open("sqlite3", rc.Filename)
-	if err != nil {
-		log.Panicf("Error connecting to database: %s", err)
-	}
-
-	return pool
+func ImportCandidaturas(conf config.Config, r *repository.Repository) error {
+	return nil
 }

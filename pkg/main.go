@@ -16,19 +16,19 @@ package pkg
 
 import (
 	"github.com/earelin/pega/pkg/application"
-	"github.com/earelin/pega/pkg/infrastructure/db"
+	"github.com/earelin/pega/pkg/repository"
 	"github.com/gin-gonic/gin"
 )
 
 func ApplicationConfig(e *gin.Engine) {
-	dbConfig := db.Config{
+	dbConfig := repository.Config{
 		Filename: "./database.sqlite",
 	}
 	var pool = dbConfig.BuildPool()
-	var ear = db.NewEntidadesAdministrativasSqlRepository(pool)
-	var per = db.NewProcesosElectoraisSqlRepository(pool)
-	var dxr = db.NewDatosXeraisSqlRepository(pool)
-	var rr = db.NewResultadosSqlRepository(pool)
-	var rrc = db.NewResultadosCandidaturasSqlRepository(pool)
+	var ear = repository.NewEntidadesAdministrativasSqlRepository(pool)
+	var per = repository.NewProcesosElectoraisSqlRepository(pool)
+	var dxr = repository.NewDatosXeraisSqlRepository(pool)
+	var rr = repository.NewResultadosSqlRepository(pool)
+	var rrc = repository.NewResultadosCandidaturasSqlRepository(pool)
 	application.ConfigureApplicationLayer(e, ear, per, dxr, rr, rrc)
 }
