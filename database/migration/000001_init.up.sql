@@ -34,6 +34,13 @@ CREATE TABLE concello
     FOREIGN KEY (provincia_id) REFERENCES provincia (id)
 );
 
+CREATE TABLE organizacion_politica
+(
+    id     INTEGER UNSIGNED PRIMARY KEY,
+    siglas VARCHAR(50)  NOT NULL,
+    nome   VARCHAR(150) NOT NULL
+);
+
 CREATE TABLE proceso_electoral
 (
     id     INTEGER UNSIGNED PRIMARY KEY,
@@ -42,33 +49,69 @@ CREATE TABLE proceso_electoral
     data   DATETIME         NOT NULL
 );
 
-CREATE TABLE organizacion_politica
-(
-    id     INTEGER UNSIGNED PRIMARY KEY,
-    siglas VARCHAR(50)  NOT NULL,
-    nome   VARCHAR(150) NOT NULL
-);
-
 CREATE TABLE candidatura
 (
     proceso_electoral_id INTEGER UNSIGNED NOT NULL,
     id                   INTEGER UNSIGNED NOT NULL,
     siglas               VARCHAR(50)      NOT NULL,
     nome                 VARCHAR(150),
-    organizacion_id      INTEGER UNSIGNED,
     PRIMARY KEY (proceso_electoral_id, id),
-    FOREIGN KEY (proceso_electoral_id) REFERENCES proceso_electoral (id) ON DELETE CASCADE,
-    FOREIGN KEY (organizacion_id) REFERENCES organizacion_politica (id)
+    FOREIGN KEY (proceso_electoral_id) REFERENCES proceso_electoral (id) ON DELETE CASCADE
 );
 
-CREATE TABLE resultados_concello
+CREATE TABLE candidatura_organizacion_politica
 (
-    proceso_electoral_id INTEGER UNSIGNED NOT NULL,
-    concello_id          SMALLINT UNSIGNED NOT NULL,
-    candidatura_id       INTEGER UNSIGNED NOT NULL,
-    votos                INTEGER UNSIGNED NOT NULL,
+    candidatura_id           INTEGER UNSIGNED NOT NULL,
+    organizacion_politica_id INTEGER UNSIGNED NOT NULL,
+    PRIMARY KEY (candidatura_id, organizacion_politica_id),
+    FOREIGN KEY (candidatura_id) REFERENCES candidatura (id) ON DELETE CASCADE,
+    FOREIGN KEY (organizacion_politica_id) REFERENCES organizacion_politica (id)
+);
+
+CREATE TABLE concello_resultados
+(
+    proceso_electoral_id INTEGER UNSIGNED  NOT NULL,
+    concello_id          INTEGER UNSIGNED NOT NULL,
+    censo                INTEGER UNSIGNED  NOT NULL,
+    votos_blanco         INTEGER UNSIGNED  NOT NULL,
+    votos_nulos          INTEGER UNSIGNED  NOT NULL,
+    votos_candidaturas   INTEGER UNSIGNED  NOT NULL,
+    PRIMARY KEY (proceso_electoral_id, concello_id),
+    FOREIGN KEY (proceso_electoral_id) REFERENCES proceso_electoral (id) ON DELETE CASCADE,
+    FOREIGN KEY (concello_id) REFERENCES concello (id)
+);
+
+CREATE TABLE concello_votos_candidaturas
+(
+    proceso_electoral_id INTEGER UNSIGNED  NOT NULL,
+    concello_id          INTEGER UNSIGNED NOT NULL,
+    candidatura_id       INTEGER UNSIGNED  NOT NULL,
+    votos                INTEGER UNSIGNED  NOT NULL,
     PRIMARY KEY (proceso_electoral_id, concello_id, candidatura_id),
     FOREIGN KEY (proceso_electoral_id) REFERENCES proceso_electoral (id) ON DELETE CASCADE,
     FOREIGN KEY (concello_id) REFERENCES concello (id),
     FOREIGN KEY (candidatura_id) REFERENCES candidatura (id)
+);
+
+CREATE TABLE cera_resultados
+(
+    proceso_electoral_id INTEGER UNSIGNED NOT NULL,
+    provincia_id         INTEGER UNSIGNED NOT NULL,
+    censo                INTEGER UNSIGNED NOT NULL,
+    votos_blanco         INTEGER UNSIGNED NOT NULL,
+    votos_nulos          INTEGER UNSIGNED NOT NULL,
+    votos_candidaturas   INTEGER UNSIGNED NOT NULL,
+    PRIMARY KEY (proceso_electoral_id, provincia_id),
+    FOREIGN KEY (proceso_electoral_id) REFERENCES proceso_electoral (id) ON DELETE CASCADE,
+    FOREIGN KEY (provincia_id) REFERENCES provincia (id)
+);
+
+CREATE TABLE cera_votos_candidaturas
+(
+    proceso_electoral_id INTEGER UNSIGNED  NOT NULL,
+    provincia_id         INTEGER UNSIGNED  NOT NULL,
+    candidatura_id       INTEGER UNSIGNED  NOT NULL,
+    votos                SMALLINT UNSIGNED NOT NULL,
+    FOREIGN KEY (proceso_electoral_id, provincia_id) REFERENCES cera_resultados (proceso_electoral_id, provincia_id) ON DELETE CASCADE,
+    FOREIGN KEY (proceso_electoral_id, candidatura_id) REFERENCES candidatura (proceso_electoral_id, id) ON DELETE CASCADE
 );

@@ -12,10 +12,14 @@
  * this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-DROP TABLE comunidade_autonoma;
-DROP TABLE provincia;
-DROP TABLE concello;
+DROP TABLE cera_votos_candidaturas;
+DROP TABLE cera_resultados;
+DROP TABLE concello_votos_candidaturas;
+DROP TABLE concello_resultados;
+DROP TABLE candidatura_organizacion_politica;
+DROP TABLE candidatura;
 DROP TABLE proceso_electoral;
 DROP TABLE organizacion_politica;
-DROP TABLE candidatura;
-DROP TABLE resultados_concello;
+DROP TABLE concello;
+DROP TABLE provincia;
+DROP TABLE comunidade_autonoma;
