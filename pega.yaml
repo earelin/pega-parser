@@ -6,22 +6,72 @@ info:
 servers:
   - url: 'https://localhost:8080'
 paths:
+  /v1/comunidades-autonomas:
+    get:
+      summary: Lista de comunidades autónomas
+      tags:
+        - Divisions Administrativas
+      responses:
+        '200':
+          $ref: '#/components/responses/DivisionsAdministrativas'
+  /v1/comunidade-autonoma/{id}/provincias:
+    get:
+      summary: Lista de provincias dunha comunidade autónoma
+      tags:
+        - Divisions Administrativas
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          $ref: '#/components/responses/DivisionsAdministrativas'
+  /v1/provincias:
+    get:
+      summary: Lista de provincias
+      tags:
+        - Divisions Administrativas
+      responses:
+        '200':
+          $ref: '#/components/responses/DivisionsAdministrativas'
+  /v1/provincia/{id}/concellos:
+    get:
+      summary: Lista de concellos dunha provincia
+      tags:
+        - Divisions Administrativas
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          $ref: '#/components/responses/DivisionsAdministrativas'
   /v1/procesos-electorais:
     get:
       summary: Listar procesos electorais
+      tags:
+        - Procesos Electorais
       responses:
         '200':
           $ref: '#/components/responses/ProcesosElectorais'
     post:
       summary: Crear proceso electoral
+      tags:
+        - Procesos Electorais
       requestBody:
         $ref: '#/components/requestBodies/ProcesoElectoral'
       responses:
         '201':
           $ref: '#/components/responses/ProcesoElectoral'
-  /v1/procesos-electorais/{id}:
+  /v1/proceso-electoral/{id}:
     get:
       summary: Obter proceso electoral
+      tags:
+        - Procesos Electorais
       parameters:
         - name: id
           in: path
@@ -33,6 +83,8 @@ paths:
           $ref: '#/components/responses/ProcesoElectoral'
     put:
       summary: Modificar proceso electoral
+      tags:
+        - Procesos Electorais
       parameters:
         - name: id
           in: path
@@ -46,6 +98,8 @@ paths:
           $ref: '#/components/responses/ProcesoElectoral'
     delete:
       summary: Eliminar proceso electoral
+      tags:
+        - Procesos Electorais
       parameters:
         - name: id
           in: path
@@ -57,6 +111,13 @@ paths:
           description: Deleted
 components:
   schemas:
+    DivisionAdministrativa:
+      type: object
+      properties:
+        id:
+          type: integer
+        nome:
+          type: string
     ProcesoElectoral:
       type: object
       properties:
@@ -88,6 +149,14 @@ components:
           publicado:
             type: boolean
   responses:
+    DivisionsAdministrativas:
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/DivisionAdministrativa'
     ProcesoElectoral:
       description: OK
       content:
