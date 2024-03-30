@@ -7,7 +7,7 @@ TARGETS       := darwin/amd64 darwin/arm64 linux/amd64 windows/amd64
 
 .PHONY: all
 all: build-tools
-	go build -o $(BIN_DIR) $(CMD_DIR)/pega
+	go build -o $(BIN_DIR) $(CMD_DIR)/pega-server
 
 .PHONY: clean
 clean:
@@ -19,9 +19,8 @@ lint:
 
 .PHONY: build-tools
 build-tools:
-	go build -o $(TOOLS_BIN_DIR)/spreadsheet $(TOOLS_SRC_DIR)/spreadsheet/main.go
-	go build -o $(TOOLS_BIN_DIR)/inebase $(TOOLS_SRC_DIR)/inebase/main.go
-	go build -o $(TOOLS_BIN_DIR)/infoelectoral $(TOOLS_SRC_DIR)/infoelectoral/main.go
+	go build -o $(TOOLS_BIN_DIR)/pega-importer $(TOOLS_SRC_DIR)/importer/main.go
+	go build -o $(TOOLS_BIN_DIR)/pega $(TOOLS_SRC_DIR)/cli/main.go
 
 .PHONY: migrate-down
 migrate-down:
@@ -34,6 +33,14 @@ migrate-up:
 .PHONY: run
 run:
 	go run $(CMD_DIR)/pega
+
+.PHONY: run-cli
+run-cli:
+	go run $(TOOLS_SRC_DIR)/cli/main.go
+
+.PHONY: run-importer
+run-importer:
+	go run $(TOOLS_SRC_DIR)/importer
 
 .PHONY: test
 test:
