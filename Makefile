@@ -1,13 +1,11 @@
 BIN_DIR       := $(CURDIR)/bin
 CMD_DIR       := $(CURDIR)/cmd
-TOOLS_BIN_DIR := $(BIN_DIR)/tools
-TOOLS_SRC_DIR := $(CURDIR)/tools
 INSTALL_PATH  ?= /usr/local/bin
 TARGETS       := darwin/amd64 darwin/arm64 linux/amd64 windows/amd64
 
 .PHONY: all
-all: build-tools
-	go build -o $(BIN_DIR) $(CMD_DIR)/pega-server
+all:
+	go build -o $(BIN_DIR)/pega $(CMD_DIR)/pega
 
 .PHONY: clean
 clean:
@@ -16,11 +14,6 @@ clean:
 .PHONY: lint
 lint:
 	golangci-lint run
-
-.PHONY: build-tools
-build-tools:
-	go build -o $(TOOLS_BIN_DIR)/pega-importer $(TOOLS_SRC_DIR)/importer/main.go
-	go build -o $(TOOLS_BIN_DIR)/pega $(TOOLS_SRC_DIR)/cli/main.go
 
 .PHONY: migrate-down
 migrate-down:
@@ -33,14 +26,6 @@ migrate-up:
 .PHONY: run
 run:
 	go run $(CMD_DIR)/pega
-
-.PHONY: run-cli
-run-cli:
-	go run $(TOOLS_SRC_DIR)/cli/main.go
-
-.PHONY: run-importer
-run-importer:
-	go run $(TOOLS_SRC_DIR)/importer
 
 .PHONY: test
 test:
