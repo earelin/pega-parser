@@ -1,0 +1,132 @@
+openapi: 3.0.3
+info:
+  title: Pega
+  description: Pega
+  version: 2.0.0
+servers:
+  - url: 'https'
+paths:
+  /v1/procesos-electorais:
+    get:
+      summary: Listar procesos electorais
+      responses:
+        '200':
+          $ref: '#/components/responses/ProcesosElectorais'
+    post:
+      summary: Crear proceso electoral
+      requestBody:
+        $ref: '#/components/requestBodies/ProcesoElectoral'
+      responses:
+        '201':
+          $ref: '#/components/responses/ProcesoElectoral'
+  /v1/procesos-electorais/{id}:
+    get:
+      summary: Obter proceso electoral
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          $ref: '#/components/responses/ProcesoElectoral'
+    put:
+      summary: Modificar proceso electoral
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        $ref: '#/components/requestBodies/ProcesoElectoral'
+      responses:
+        '200':
+          $ref: '#/components/responses/ProcesoElectoral'
+    delete:
+      summary: Eliminar proceso electoral
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Deleted
+components:
+  schemas:
+    ProcesoElectoral:
+      type: object
+      properties:
+        id:
+          type: integer
+        typo:
+          type: string
+        data:
+          type: string
+          format: date
+        ambito:
+          type: string
+        publicado:
+          type: boolean
+    ProcesosElectorais:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: integer
+          typo:
+            type: string
+          data:
+            type: string
+            format: date
+          ambito:
+            type: string
+          publicado:
+            type: boolean
+  responses:
+    ProcesoElectoral:
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProcesoElectoral'
+    ProcesosElectorais:
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProcesosElectorais'
+          example:
+            $ref: '#/components/examples/ProcesosElectorais/value'
+  requestBodies:
+    ProcesoElectoral:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              typo:
+                type: integer
+              data:
+                type: string
+                format: date
+              ambito:
+                type: integer
+              publicado:
+                type: boolean
+  examples:
+    ProcesosElectorais:
+      value:
+      - id: 1
+        typo: 'Municipais'
+        data: '2020-10-01'
+        publicado: true
+      - id: 2
+        typo: 'Autonomicas'
+        data: '2022-10-01'
+        ambito: 'Galicia'
+        publicado: false
