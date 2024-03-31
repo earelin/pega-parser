@@ -19,3 +19,7 @@ import "github.com/earelin/pega/pkg/domain"
 type DivisionsAdministrativasAdminController struct {
 	repository domain.DivisionsAdministrativasRepository
 }
+
+func NewDivisionsAdministrativasAdminController(repository domain.DivisionsAdministrativasRepository) DivisionsAdministrativasAdminController {
+	return DivisionsAdministrativasAdminController{repository: repository}
+}
