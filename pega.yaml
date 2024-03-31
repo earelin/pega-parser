@@ -14,7 +14,7 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/DivisionsAdministrativas'
-  /v1/comunidade-autonoma/{id}/provincias:
+  /v1/comunidades-autonomas/{id}/provincias:
     get:
       summary: Lista de provincias dunha comunidade autónoma
       tags:
@@ -36,7 +36,7 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/DivisionsAdministrativas'
-  /v1/provincia/{id}/concellos:
+  /v1/provincias/{id}/concellos:
     get:
       summary: Lista de concellos dunha provincia
       tags:
@@ -55,6 +55,7 @@ paths:
       summary: Importar concellos
       tags:
         - Divisions Administrativas
+        - Administración
       requestBody:
         content:
           text/csv:
@@ -68,6 +69,19 @@ paths:
       summary: Listar procesos electorais
       tags:
         - Procesos Electorais
+      parameters:
+        - name: filter
+          in: query
+          schema:
+            type: string
+        - name: range
+          in: query
+          schema:
+            type: string
+        - name: sort
+          in: query
+          schema:
+            type: string
       responses:
         '200':
           $ref: '#/components/responses/ProcesosElectorais'
@@ -75,12 +89,36 @@ paths:
       summary: Crear proceso electoral
       tags:
         - Procesos Electorais
+        - Administración
       requestBody:
         $ref: '#/components/requestBodies/ProcesoElectoral'
       responses:
         '201':
           $ref: '#/components/responses/ProcesoElectoral'
-  /v1/proceso-electoral/{id}:
+  /v1/procesos-electorais/import:
+    post:
+      summary: Importar proceso electoral
+      tags:
+        - Procesos Electorais
+        - Administración
+      parameters:
+        - name: type
+          in: query
+          required: true
+          schema:
+            type: string
+            enum:
+              - infoelectoral
+            default: infoelectoral
+      requestBody:
+        content:
+          application/zip:
+            schema:
+              type: string
+      responses:
+        '200':
+          description: OK
+  /v1/procesos-electorais/{id}:
     get:
       summary: Obter proceso electoral
       tags:
@@ -98,6 +136,7 @@ paths:
       summary: Modificar proceso electoral
       tags:
         - Procesos Electorais
+        - Administración
       parameters:
         - name: id
           in: path
@@ -113,6 +152,7 @@ paths:
       summary: Eliminar proceso electoral
       tags:
         - Procesos Electorais
+        - Administración
       parameters:
         - name: id
           in: path
@@ -122,11 +162,12 @@ paths:
       responses:
         '200':
           description: Deleted
-  /v1/proceso-electoral/{id}/import:
+  /v1/procesos-electorais/{id}/import:
     post:
       summary: Importar resultados dun proceso electoral
       tags:
         - Procesos Electorais
+        - Administración
       parameters:
         - name: id
           in: path
@@ -140,7 +181,7 @@ paths:
             type: string
             enum:
               - csv
-              - infoelectoral
+            default: csv
       requestBody:
         content:
           application/binary:
@@ -209,8 +250,6 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ProcesosElectorais'
-          example:
-            $ref: '#/components/examples/ProcesosElectorais/value'
   requestBodies:
     ProcesoElectoral:
       content:
