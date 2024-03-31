@@ -12,17 +12,10 @@
  * this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package domain
+package importers
 
-type EntidadeAdministrativa struct {
-	Id   int    `json:"id"`
-	Nome string `json:"nome"`
-}
+import "github.com/earelin/pega/pkg/repository"
 
-type EntidadesAdministrativasRepository interface {
-	FindAllComunidadesAutonomas() []EntidadeAdministrativa
-	FindAllProvincias() []EntidadeAdministrativa
-	FindAllProvinciasByComunidadeAutonoma(caId int) []EntidadeAdministrativa
-	FindAllConcellosByProvincia(pId int) []EntidadeAdministrativa
-	FindAllConcellosByName(name string) []EntidadeAdministrativa
+type ConcellosImporter struct {
+	repository.EntidadesAdministrativasSqlRepository
 }

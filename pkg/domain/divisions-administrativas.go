@@ -12,22 +12,17 @@
  * this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package application
+package domain
 
-import (
-	"github.com/earelin/pega/pkg/domain"
-	"github.com/gin-gonic/gin"
-)
+type DivisionAdministrativa struct {
+	Id   int    `json:"id"`
+	Nome string `json:"nome"`
+}
 
-func ConfigureApplicationLayer(e *gin.Engine,
-	ear domain.DivisionsAdministrativasRepository,
-	per domain.ProcesosElectoraisRepository,
-	rr domain.ResultadosRepository,
-	rrc domain.ResultadosCandidaturasRepository,
-) {
-	MonitoringConfig(e)
-	NewDivisionsAdministrativasController(e, ear)
-	NewProcesosElectoraisController(e, per)
-	NewResultadosController(e, rr)
-	NewResultadosCandidaturasController(e, rrc)
+type DivisionsAdministrativasRepository interface {
+	FindAllComunidadesAutonomas() []DivisionAdministrativa
+	FindAllProvincias() []DivisionAdministrativa
+	FindAllProvinciasByComunidadeAutonoma(caId int) []DivisionAdministrativa
+	FindAllConcellosByProvincia(pId int) []DivisionAdministrativa
+	FindAllConcellosByName(name string) []DivisionAdministrativa
 }

@@ -13,21 +13,3 @@
  */
 
 package application
-
-import (
-	"github.com/earelin/pega/pkg/domain"
-	"github.com/gin-gonic/gin"
-)
-
-func ConfigureApplicationLayer(e *gin.Engine,
-	ear domain.DivisionsAdministrativasRepository,
-	per domain.ProcesosElectoraisRepository,
-	rr domain.ResultadosRepository,
-	rrc domain.ResultadosCandidaturasRepository,
-) {
-	MonitoringConfig(e)
-	NewDivisionsAdministrativasController(e, ear)
-	NewProcesosElectoraisController(e, per)
-	NewResultadosController(e, rr)
-	NewResultadosCandidaturasController(e, rrc)
-}

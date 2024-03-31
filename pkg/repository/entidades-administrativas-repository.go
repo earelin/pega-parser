@@ -28,17 +28,17 @@ func NewEntidadesAdministrativasSqlRepository(pool *sql.DB) *EntidadesAdministra
 	return &EntidadesAdministrativasSqlRepository{pool: pool}
 }
 
-func (r *EntidadesAdministrativasSqlRepository) FindAllComunidadesAutonomas() []domain.EntidadeAdministrativa {
+func (r *EntidadesAdministrativasSqlRepository) FindAllComunidadesAutonomas() []domain.DivisionAdministrativa {
 	return r.findEntidades("SELECT id, nome FROM comunidade_autonoma ORDER BY nome")
 }
 
-func (r *EntidadesAdministrativasSqlRepository) FindAllProvincias() []domain.EntidadeAdministrativa {
+func (r *EntidadesAdministrativasSqlRepository) FindAllProvincias() []domain.DivisionAdministrativa {
 	return r.findEntidades("SELECT id, nome FROM provincia ORDER BY nome")
 }
 
 func (r *EntidadesAdministrativasSqlRepository) FindAllProvinciasByComunidadeAutonoma(
 	caId int,
-) []domain.EntidadeAdministrativa {
+) []domain.DivisionAdministrativa {
 	return r.findEntidades(`
 		SELECT id, nome
 		FROM provincia
@@ -48,7 +48,7 @@ func (r *EntidadesAdministrativasSqlRepository) FindAllProvinciasByComunidadeAut
 
 func (r *EntidadesAdministrativasSqlRepository) FindAllConcellosByProvincia(
 	pId int,
-) []domain.EntidadeAdministrativa {
+) []domain.DivisionAdministrativa {
 	return r.findEntidades(`
 		SELECT id, nome
 		FROM concello
@@ -58,7 +58,7 @@ func (r *EntidadesAdministrativasSqlRepository) FindAllConcellosByProvincia(
 
 func (r *EntidadesAdministrativasSqlRepository) FindAllConcellosByName(
 	name string,
-) []domain.EntidadeAdministrativa {
+) []domain.DivisionAdministrativa {
 	return r.findEntidades(`
 		SELECT id, nome
 		FROM concello
@@ -68,8 +68,8 @@ func (r *EntidadesAdministrativasSqlRepository) FindAllConcellosByName(
 
 func (r *EntidadesAdministrativasSqlRepository) findEntidades(
 	sql string, args ...any,
-) []domain.EntidadeAdministrativa {
-	var entidades []domain.EntidadeAdministrativa
+) []domain.DivisionAdministrativa {
+	var entidades []domain.DivisionAdministrativa
 	rows, err := r.pool.Query(sql, args...)
 	if err != nil {
 		log.Printf("Error querying entidaes: %s", err)
@@ -77,7 +77,7 @@ func (r *EntidadesAdministrativasSqlRepository) findEntidades(
 	defer rows.Close()
 
 	for rows.Next() {
-		var provincia domain.EntidadeAdministrativa
+		var provincia domain.DivisionAdministrativa
 		err = rows.Scan(&provincia.Id, &provincia.Nome)
 		if err != nil {
 			log.Printf("Error scanning entidades: %s", err)

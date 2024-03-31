@@ -78,7 +78,7 @@ func TestGetComunidadesAutonomaProvincias_ComunidadeAutonomaNotFound(t *testing.
 	NewDivisionsAdministrativasController(router, repository)
 
 	repository.On("FindAllProvinciasByComunidadeAutonoma", 1).
-		Return([]domain.EntidadeAdministrativa{})
+		Return([]domain.DivisionAdministrativa{})
 
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("GET", "/comunidades-autonomas/1/provincias", nil)
@@ -109,7 +109,7 @@ func TestGetConcellosProvincia_ProvinciaNotFound(t *testing.T) {
 	NewDivisionsAdministrativasController(router, repository)
 
 	repository.On("FindAllConcellosByProvincia", 1).
-		Return([]domain.EntidadeAdministrativa{})
+		Return([]domain.DivisionAdministrativa{})
 
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("GET", "/provincia/1/concellos", nil)
@@ -134,7 +134,7 @@ func TestGetConcellosByName(t *testing.T) {
 	assert.Equal(t, concellosResponse, w.Body.String())
 }
 
-var comunidadesAutonomas = []domain.EntidadeAdministrativa{
+var comunidadesAutonomas = []domain.DivisionAdministrativa{
 	{
 		Id:   1,
 		Nome: "Galicia",
@@ -149,38 +149,38 @@ type EntidadesAdministrativasRepositoryMock struct {
 	mock.Mock
 }
 
-func (m *EntidadesAdministrativasRepositoryMock) FindAllComunidadesAutonomas() []domain.EntidadeAdministrativa {
+func (m *EntidadesAdministrativasRepositoryMock) FindAllComunidadesAutonomas() []domain.DivisionAdministrativa {
 	args := m.Called()
-	return args.Get(0).([]domain.EntidadeAdministrativa)
+	return args.Get(0).([]domain.DivisionAdministrativa)
 }
 
-func (m *EntidadesAdministrativasRepositoryMock) FindAllProvincias() []domain.EntidadeAdministrativa {
+func (m *EntidadesAdministrativasRepositoryMock) FindAllProvincias() []domain.DivisionAdministrativa {
 	args := m.Called()
-	return args.Get(0).([]domain.EntidadeAdministrativa)
+	return args.Get(0).([]domain.DivisionAdministrativa)
 }
 
 func (m *EntidadesAdministrativasRepositoryMock) FindAllProvinciasByComunidadeAutonoma(
 	comunidadeAutonomaId int,
-) []domain.EntidadeAdministrativa {
+) []domain.DivisionAdministrativa {
 	args := m.Called(comunidadeAutonomaId)
-	return args.Get(0).([]domain.EntidadeAdministrativa)
+	return args.Get(0).([]domain.DivisionAdministrativa)
 }
 
 func (m *EntidadesAdministrativasRepositoryMock) FindAllConcellosByProvincia(
 	provinciaId int,
-) []domain.EntidadeAdministrativa {
+) []domain.DivisionAdministrativa {
 	args := m.Called(provinciaId)
-	return args.Get(0).([]domain.EntidadeAdministrativa)
+	return args.Get(0).([]domain.DivisionAdministrativa)
 }
 
-func (m *EntidadesAdministrativasRepositoryMock) FindAllConcellosByName(name string) []domain.EntidadeAdministrativa {
+func (m *EntidadesAdministrativasRepositoryMock) FindAllConcellosByName(name string) []domain.DivisionAdministrativa {
 	args := m.Called(name)
-	return args.Get(0).([]domain.EntidadeAdministrativa)
+	return args.Get(0).([]domain.DivisionAdministrativa)
 }
 
 var comunidadesAutonomasResponse = `[{"id":1,"nome":"Galicia"},{"id":2,"nome":"Asturias"}]`
 
-var provincias = []domain.EntidadeAdministrativa{
+var provincias = []domain.DivisionAdministrativa{
 	{
 		Id:   1,
 		Nome: "A Coruña",
@@ -193,7 +193,7 @@ var provincias = []domain.EntidadeAdministrativa{
 
 var provinciasResponse = `[{"id":1,"nome":"A Coruña"},{"id":2,"nome":"Lugo"}]`
 
-var concellos = []domain.EntidadeAdministrativa{
+var concellos = []domain.DivisionAdministrativa{
 	{
 		Id:   1,
 		Nome: "A Coruña",

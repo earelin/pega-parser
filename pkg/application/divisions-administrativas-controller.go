@@ -20,12 +20,12 @@ import (
 )
 
 type DivisionsAdministrativasController struct {
-	repository domain.EntidadesAdministrativasRepository
+	repository domain.DivisionsAdministrativasRepository
 }
 
 func NewDivisionsAdministrativasController(
 	e *gin.Engine,
-	repository domain.EntidadesAdministrativasRepository,
+	repository domain.DivisionsAdministrativasRepository,
 ) {
 	c := &DivisionsAdministrativasController{}
 	c.repository = repository
