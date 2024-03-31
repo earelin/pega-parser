@@ -26,7 +26,7 @@ func ConfigureApplicationLayer(e *gin.Engine,
 	rrc domain.ResultadosCandidaturasRepository,
 ) {
 	MonitoringConfig(e)
-	NewEntidadesAdministrativasController(e, ear)
+	NewDivisionsAdministrativasController(e, ear)
 	NewProcesosElectoraisController(e, per)
 	NewResultadosController(e, rr)
 	NewResultadosCandidaturasController(e, rrc)

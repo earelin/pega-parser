@@ -27,7 +27,7 @@ import (
 func TestGetComunidadesAutonomas(t *testing.T) {
 	router := gin.Default()
 	repository := new(EntidadesAdministrativasRepositoryMock)
-	NewEntidadesAdministrativasController(router, repository)
+	NewDivisionsAdministrativasController(router, repository)
 
 	repository.On("FindAllComunidadesAutonomas").
 		Return(comunidadesAutonomas)
@@ -43,7 +43,7 @@ func TestGetComunidadesAutonomas(t *testing.T) {
 func TestGetProvincias(t *testing.T) {
 	router := gin.Default()
 	repository := new(EntidadesAdministrativasRepositoryMock)
-	NewEntidadesAdministrativasController(router, repository)
+	NewDivisionsAdministrativasController(router, repository)
 
 	repository.On("FindAllProvincias").
 		Return(provincias)
@@ -59,13 +59,13 @@ func TestGetProvincias(t *testing.T) {
 func TestGetComunidadesAutonomaProvincias(t *testing.T) {
 	router := gin.Default()
 	repository := new(EntidadesAdministrativasRepositoryMock)
-	NewEntidadesAdministrativasController(router, repository)
+	NewDivisionsAdministrativasController(router, repository)
 
 	repository.On("FindAllProvinciasByComunidadeAutonoma", 1).
 		Return(provincias)
 
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("GET", "/comunidade-autonoma/1/provincias", nil)
+	req, _ := http.NewRequest("GET", "/comunidades-autonomas/1/provincias", nil)
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, 200, w.Code)
@@ -75,13 +75,13 @@ func TestGetComunidadesAutonomaProvincias(t *testing.T) {
 func TestGetComunidadesAutonomaProvincias_ComunidadeAutonomaNotFound(t *testing.T) {
 	router := gin.Default()
 	repository := new(EntidadesAdministrativasRepositoryMock)
-	NewEntidadesAdministrativasController(router, repository)
+	NewDivisionsAdministrativasController(router, repository)
 
 	repository.On("FindAllProvinciasByComunidadeAutonoma", 1).
 		Return([]domain.EntidadeAdministrativa{})
 
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("GET", "/comunidade-autonoma/1/provincias", nil)
+	req, _ := http.NewRequest("GET", "/comunidades-autonomas/1/provincias", nil)
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, 404, w.Code)
@@ -90,13 +90,13 @@ func TestGetComunidadesAutonomaProvincias_ComunidadeAutonomaNotFound(t *testing.
 func TestGetConcellosProvincia(t *testing.T) {
 	router := gin.Default()
 	repository := new(EntidadesAdministrativasRepositoryMock)
-	NewEntidadesAdministrativasController(router, repository)
+	NewDivisionsAdministrativasController(router, repository)
 
 	repository.On("FindAllConcellosByProvincia", 1).
 		Return(concellos)
 
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("GET", "/provincia/1/concellos", nil)
+	req, _ := http.NewRequest("GET", "/provincias/1/concellos", nil)
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, 200, w.Code)
@@ -106,7 +106,7 @@ func TestGetConcellosProvincia(t *testing.T) {
 func TestGetConcellosProvincia_ProvinciaNotFound(t *testing.T) {
 	router := gin.Default()
 	repository := new(EntidadesAdministrativasRepositoryMock)
-	NewEntidadesAdministrativasController(router, repository)
+	NewDivisionsAdministrativasController(router, repository)
 
 	repository.On("FindAllConcellosByProvincia", 1).
 		Return([]domain.EntidadeAdministrativa{})
@@ -121,7 +121,7 @@ func TestGetConcellosProvincia_ProvinciaNotFound(t *testing.T) {
 func TestGetConcellosByName(t *testing.T) {
 	router := gin.Default()
 	repository := new(EntidadesAdministrativasRepositoryMock)
-	NewEntidadesAdministrativasController(router, repository)
+	NewDivisionsAdministrativasController(router, repository)
 
 	repository.On("FindAllConcellosByName", "com").
 		Return(concellos)

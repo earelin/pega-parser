@@ -19,34 +19,34 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type EntidadesAdministrativasController struct {
+type DivisionsAdministrativasController struct {
 	repository domain.EntidadesAdministrativasRepository
 }
 
-func NewEntidadesAdministrativasController(
+func NewDivisionsAdministrativasController(
 	e *gin.Engine,
 	repository domain.EntidadesAdministrativasRepository,
 ) {
-	c := &EntidadesAdministrativasController{}
+	c := &DivisionsAdministrativasController{}
 	c.repository = repository
 	e.GET("/comunidades-autonomas", c.GetComunidadesAutonomas)
-	e.GET("/comunidade-autonoma/:id/provincias", c.GetComunidadesAutonomaProvincias)
+	e.GET("/comunidades-autonomas/:id/provincias", c.GetComunidadesAutonomaProvincias)
 	e.GET("/provincias", c.GetProvincias)
-	e.GET("/provincia/:id/concellos", c.GetConcellosProvincia)
+	e.GET("/provincias/:id/concellos", c.GetConcellosProvincia)
 	e.GET("/concellos/pescuda/:search", c.GetConcellosByName)
 }
 
-func (c *EntidadesAdministrativasController) GetComunidadesAutonomas(gc *gin.Context) {
+func (c *DivisionsAdministrativasController) GetComunidadesAutonomas(gc *gin.Context) {
 	ca := c.repository.FindAllComunidadesAutonomas()
 	gc.JSON(200, ca)
 }
 
-func (c *EntidadesAdministrativasController) GetProvincias(gc *gin.Context) {
+func (c *DivisionsAdministrativasController) GetProvincias(gc *gin.Context) {
 	p := c.repository.FindAllProvincias()
 	gc.JSON(200, p)
 }
 
-func (c *EntidadesAdministrativasController) GetComunidadesAutonomaProvincias(gc *gin.Context) {
+func (c *DivisionsAdministrativasController) GetComunidadesAutonomaProvincias(gc *gin.Context) {
 	var id Id
 	if err := gc.ShouldBindUri(&id); err != nil {
 		gc.JSON(400, gin.H{"msg": err})
@@ -61,7 +61,7 @@ func (c *EntidadesAdministrativasController) GetComunidadesAutonomaProvincias(gc
 	}
 }
 
-func (c *EntidadesAdministrativasController) GetConcellosProvincia(gc *gin.Context) {
+func (c *DivisionsAdministrativasController) GetConcellosProvincia(gc *gin.Context) {
 	var id Id
 	if err := gc.ShouldBindUri(&id); err != nil {
 		gc.JSON(400, gin.H{"msg": err})
@@ -77,7 +77,7 @@ func (c *EntidadesAdministrativasController) GetConcellosProvincia(gc *gin.Conte
 	}
 }
 
-func (c *EntidadesAdministrativasController) GetConcellosByName(gc *gin.Context) {
+func (c *DivisionsAdministrativasController) GetConcellosByName(gc *gin.Context) {
 	var queryParams Search
 	if err := gc.ShouldBindUri(&queryParams); err != nil {
 		gc.JSON(400, gin.H{"msg": err})
