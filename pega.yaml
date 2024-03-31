@@ -50,6 +50,19 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/DivisionsAdministrativas'
+  /v1/concellos/import:
+    post:
+      summary: Importar concellos
+      tags:
+        - Divisions Administrativas
+      requestBody:
+        content:
+          text/csv:
+            schema:
+              type: string
+      responses:
+        '200':
+          description: OK
   /v1/procesos-electorais:
     get:
       summary: Listar procesos electorais
@@ -109,6 +122,33 @@ paths:
       responses:
         '200':
           description: Deleted
+  /v1/proceso-electoral/{id}/import:
+    post:
+      summary: Importar resultados dun proceso electoral
+      tags:
+        - Procesos Electorais
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: type
+          in: query
+          required: true
+          schema:
+            type: string
+            enum:
+              - csv
+              - infoelectoral
+      requestBody:
+        content:
+          application/binary:
+            schema:
+              type: string
+      responses:
+        '200':
+          description: OK
 components:
   schemas:
     DivisionAdministrativa:
