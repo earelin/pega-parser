@@ -16,6 +16,7 @@ package repository
 
 import (
 	"database/sql"
+	"errors"
 	"github.com/earelin/pega/pkg/domain"
 	"log"
 	"time"
@@ -68,7 +69,6 @@ func (r *ProcesosElectoraisSqlRepository) FindAll() []domain.ProcesoElectoral {
 }
 
 func (r *ProcesosElectoraisSqlRepository) FindById(id int) (domain.ProcesoElectoral, bool) {
-	var proceso domain.ProcesoElectoral
 	row := r.pool.QueryRow(`
 		SELECT pe.id AS id, data, pe.tipo_id, tpe.nome AS tipo_nome, pe.ambito_id, ca.nome AS ambito_nome
 		FROM proceso_electoral pe
@@ -76,11 +76,20 @@ func (r *ProcesosElectoraisSqlRepository) FindById(id int) (domain.ProcesoElecto
          	LEFT JOIN comunidade_autonoma ca ON ca.id = pe.ambito_id
 		WHERE pe.id = ?`, id)
 
-	var ambitoRaw sql.NullInt16
-	var err = row.Scan(&proceso.Id, &proceso.Data, &proceso.Tipo.Id, &proceso.Tipo.Nome, &ambitoRaw)
+	var proceso domain.ProcesoElectoral
+	var ambito domain.DivisionAdministrativa
+	var dataRaw string
+
+	var err = row.Scan(&proceso.Id, &dataRaw, &proceso.Tipo.Id, &proceso.Tipo.Nome, &ambito.Id, &ambito.Nome)
 	if err != nil {
 		log.Printf("Error scanning proceso: %s", err)
-		return proceso, false
+		if errors.Is(err, sql.ErrNoRows) {
+			return proceso, false
+		}
+	}
+
+	if ambito.Id != 0 {
+		proceso.Ambito = &ambito
 	}
 
 	return proceso, true
