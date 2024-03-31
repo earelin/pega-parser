@@ -15,8 +15,8 @@
 package domain
 
 type DivisionAdministrativa struct {
-	Id   int    `json:"id"`
-	Nome string `json:"nome"`
+	Id   int    `json:"id,omitempty"`
+	Nome string `json:"nome,omitempty"`
 }
 
 type DivisionsAdministrativasRepository interface {

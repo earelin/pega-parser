@@ -32,9 +32,10 @@ func NewProcesosElectoraisSqlRepository(pool *sql.DB) *ProcesosElectoraisSqlRepo
 func (r *ProcesosElectoraisSqlRepository) FindAll() []domain.ProcesoElectoral {
 	var procesos []domain.ProcesoElectoral
 	rows, err := r.pool.Query(`
-		SELECT pe.id AS id, data, tpe.id AS tipo_id, tpe.nome AS tipo_nome, ambito
+		SELECT pe.id AS id, data, pe.tipo_id, tpe.nome AS tipo_nome, pe.ambito_id, ca.nome AS ambito_nome
 		FROM proceso_electoral pe
-		LEFT JOIN tipo_proceso_electoral tpe ON tpe.id = pe.tipo
+        	LEFT JOIN tipo_proceso_electoral tpe ON tpe.id = pe.tipo_id
+         	LEFT JOIN comunidade_autonoma ca ON ca.id = pe.ambito_id
 		ORDER BY data DESC`)
 	if err != nil {
 		log.Printf("Error querying procesos: %s", err)
@@ -44,16 +45,17 @@ func (r *ProcesosElectoraisSqlRepository) FindAll() []domain.ProcesoElectoral {
 	for rows.Next() {
 		var proceso domain.ProcesoElectoral
 		var dataRaw string
-		var ambitoRaw sql.NullInt16
-		err = rows.Scan(&proceso.Id, &dataRaw, &proceso.Tipo.Id, &proceso.Tipo.Nome, &ambitoRaw)
+
+		err = rows.Scan(&proceso.Id, &dataRaw, &proceso.Tipo.Id, &proceso.Tipo.Nome, &proceso.Ambito.Id, &proceso.Ambito.Nome)
 		if err != nil {
 			log.Printf("Error scanning procesos: %s", err)
 		}
+
 		proceso.Data, err = time.Parse("2006-01-02T15:04:05Z", dataRaw)
 		if err != nil {
 			log.Printf("Error parsing date: %s. %s", dataRaw, err)
 		}
-		proceso.Ambito = int(ambitoRaw.Int16)
+
 		procesos = append(procesos, proceso)
 	}
 
@@ -63,9 +65,10 @@ func (r *ProcesosElectoraisSqlRepository) FindAll() []domain.ProcesoElectoral {
 func (r *ProcesosElectoraisSqlRepository) FindById(id int) (domain.ProcesoElectoral, bool) {
 	var proceso domain.ProcesoElectoral
 	row := r.pool.QueryRow(`
-		SELECT pe.id AS id, data, tpe.id AS tipo_id, tpe.nome AS tipo_nome, ambito
+		SELECT pe.id AS id, data, pe.tipo_id, tpe.nome AS tipo_nome, pe.ambito_id, ca.nome AS ambito_nome
 		FROM proceso_electoral pe
-		LEFT JOIN tipo_proceso_electoral tpe ON tpe.id = pe.tipo
+        	LEFT JOIN tipo_proceso_electoral tpe ON tpe.id = pe.tipo_id
+         	LEFT JOIN comunidade_autonoma ca ON ca.id = pe.ambito_id
 		WHERE pe.id = ?`, id)
 
 	var ambitoRaw sql.NullInt16
@@ -74,7 +77,6 @@ func (r *ProcesosElectoraisSqlRepository) FindById(id int) (domain.ProcesoElecto
 		log.Printf("Error scanning proceso: %s", err)
 		return proceso, false
 	}
-	proceso.Ambito = int(ambitoRaw.Int16)
 
 	return proceso, true
 }

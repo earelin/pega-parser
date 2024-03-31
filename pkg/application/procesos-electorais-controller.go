@@ -31,7 +31,7 @@ func BindProcesosElectoraisController(
 	c.repository = procesosElectoraisRepository
 	e.GET("/procesos-electorais", c.GetProcesosElectorais)
 	e.GET("/procesos-electorais/tipos", c.GetProcesosElectoraisTipos)
-	e.GET("/proceso-electoral/:id", c.GetProcesoElectoral)
+	e.GET("/procesos-electorais/:id", c.GetProcesoElectoral)
 }
 
 func (c ProcesosElectoraisController) GetProcesosElectorais(gc *gin.Context) {

@@ -17,10 +17,10 @@ package domain
 import "time"
 
 type ProcesoElectoral struct {
-	Id     int                  `json:"id"`
-	Data   time.Time            `json:"data"`
-	Tipo   TipoProcesoElectoral `json:"tipo"`
-	Ambito int                  `json:"ambito"`
+	Id     int                     `json:"id"`
+	Data   time.Time               `json:"data"`
+	Tipo   TipoProcesoElectoral    `json:"tipo"`
+	Ambito *DivisionAdministrativa `json:"ambito"`
 }
 
 type ProcesosElectoraisRepository interface {

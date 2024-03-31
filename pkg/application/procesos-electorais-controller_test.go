@@ -50,7 +50,7 @@ func TestGetProcesoElectoral(t *testing.T) {
 		Return(procesosElectorais[1], true)
 
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("GET", "/proceso-electoral/2", nil)
+	req, _ := http.NewRequest("GET", "/procesos-electorais/2", nil)
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, 200, w.Code)
@@ -100,7 +100,10 @@ var procesosElectorais = []domain.ProcesoElectoral{
 			Id:   7,
 			Nome: "Autonómicas",
 		},
-		Ambito: 1,
+		Ambito: &domain.DivisionAdministrativa{
+			Id:   12,
+			Nome: "Galiza",
+		},
 	},
 	{
 		Id:   2,
@@ -109,14 +112,13 @@ var procesosElectorais = []domain.ProcesoElectoral{
 			Id:   6,
 			Nome: "Xerais",
 		},
-		Ambito: 0,
 	},
 }
 
-var procesosElectoraisResult = `[{"id":1,"data":"2019-05-26T00:00:00Z","tipo":{"id":7,"nome":"Autonómicas"},"ambito":1},` +
-	`{"id":2,"data":"2018-02-13T00:00:00Z","tipo":{"id":6,"nome":"Xerais"},"ambito":0}]`
+var procesosElectoraisResult = `[{"id":1,"data":"2019-05-26T00:00:00Z","tipo":{"id":7,"nome":"Autonómicas"},"ambito":{"id":12,"nome":"Galiza"}},` +
+	`{"id":2,"data":"2018-02-13T00:00:00Z","tipo":{"id":6,"nome":"Xerais"},"ambito":null}]`
 
-var procesoElectoralResult = `{"id":2,"data":"2018-02-13T00:00:00Z","tipo":{"id":6,"nome":"Xerais"},"ambito":0}`
+var procesoElectoralResult = `{"id":2,"data":"2018-02-13T00:00:00Z","tipo":{"id":6,"nome":"Xerais"},"ambito":null}`
 
 var procesosElectoraisTipos = []domain.TipoProcesoElectoral{
 	{
