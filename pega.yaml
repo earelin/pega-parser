@@ -118,6 +118,20 @@ paths:
       responses:
         '200':
           description: OK
+  /v1/procesos-electorais/tipos:
+    get:
+      summary: Lista de tipos de procesos electorais
+      tags:
+        - Procesos Electorais
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TipoProcesoElectoral'
   /v1/procesos-electorais/{id}:
     get:
       summary: Obter proceso electoral
@@ -192,6 +206,13 @@ paths:
           description: OK
 components:
   schemas:
+    TipoProcesoElectoral:
+      type: object
+      properties:
+        id:
+          type: integer
+        nome:
+          type: string
     DivisionAdministrativa:
       type: object
       properties:
