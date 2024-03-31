@@ -34,7 +34,7 @@ func TestGetProcesosElectorais(t *testing.T) {
 		Return(procesosElectorais)
 
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("GET", "/procesos-electorais", nil)
+	req, _ := http.NewRequest("GET", "/v1/procesos-electorais", nil)
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, 200, w.Code)
@@ -50,7 +50,7 @@ func TestGetProcesoElectoral(t *testing.T) {
 		Return(procesosElectorais[1], true)
 
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("GET", "/procesos-electorais/2", nil)
+	req, _ := http.NewRequest("GET", "/v1/procesos-electorais/2", nil)
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, 200, w.Code)
@@ -66,7 +66,7 @@ func TestGetProcesosElectoraisTipos(t *testing.T) {
 		Return(procesosElectoraisTipos)
 
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("GET", "/procesos-electorais/tipos", nil)
+	req, _ := http.NewRequest("GET", "/v1/procesos-electorais/tipos", nil)
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, 200, w.Code)

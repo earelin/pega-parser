@@ -44,9 +44,10 @@ func (r *ProcesosElectoraisSqlRepository) FindAll() []domain.ProcesoElectoral {
 
 	for rows.Next() {
 		var proceso domain.ProcesoElectoral
+		var ambito domain.DivisionAdministrativa
 		var dataRaw string
 
-		err = rows.Scan(&proceso.Id, &dataRaw, &proceso.Tipo.Id, &proceso.Tipo.Nome, &proceso.Ambito.Id, &proceso.Ambito.Nome)
+		err = rows.Scan(&proceso.Id, &dataRaw, &proceso.Tipo.Id, &proceso.Tipo.Nome, &ambito.Id, &ambito.Nome)
 		if err != nil {
 			log.Printf("Error scanning procesos: %s", err)
 		}
@@ -54,6 +55,10 @@ func (r *ProcesosElectoraisSqlRepository) FindAll() []domain.ProcesoElectoral {
 		proceso.Data, err = time.Parse("2006-01-02T15:04:05Z", dataRaw)
 		if err != nil {
 			log.Printf("Error parsing date: %s. %s", dataRaw, err)
+		}
+
+		if ambito.Id != 0 {
+			proceso.Ambito = &ambito
 		}
 
 		procesos = append(procesos, proceso)

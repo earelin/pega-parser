@@ -17,6 +17,7 @@ package application
 import (
 	"github.com/earelin/pega/pkg/domain"
 	"github.com/gin-gonic/gin"
+	"strconv"
 )
 
 type ProcesosElectoraisController struct {
@@ -29,13 +30,15 @@ func BindProcesosElectoraisController(
 ) {
 	c := &ProcesosElectoraisController{}
 	c.repository = procesosElectoraisRepository
-	e.GET("/procesos-electorais", c.GetProcesosElectorais)
-	e.GET("/procesos-electorais/tipos", c.GetProcesosElectoraisTipos)
-	e.GET("/procesos-electorais/:id", c.GetProcesoElectoral)
+	e.GET("/v1/procesos-electorais", c.GetProcesosElectorais)
+	e.GET("/v1/procesos-electorais/tipos", c.GetProcesosElectoraisTipos)
+	e.GET("/v1/procesos-electorais/:id", c.GetProcesoElectoral)
 }
 
 func (c ProcesosElectoraisController) GetProcesosElectorais(gc *gin.Context) {
 	procesosElectorais := c.repository.FindAll()
+	gc.Header("Access-Control-Expose-Headers", "Content-Range")
+	gc.Header("Content-Range", "procesos-electorais 0-"+strconv.Itoa(len(procesosElectorais)-1)+"/"+strconv.Itoa(len(procesosElectorais)))
 	gc.JSON(200, procesosElectorais)
 }
 
