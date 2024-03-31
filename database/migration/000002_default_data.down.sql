@@ -15,3 +15,4 @@
 DELETE FROM concello;
 DELETE FROM provincia;
 DELETE FROM comunidade_autonoma;
+DELETE FROM tipo_proceso_electoral;

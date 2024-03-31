@@ -44,6 +44,12 @@ CREATE TABLE organizacion_politica
     FOREIGN KEY (pai_id) REFERENCES organizacion_politica (id)
 );
 
+CREATE TABLE tipo_proceso_electoral
+(
+    id   INTEGER UNSIGNED PRIMARY KEY,
+    nome VARCHAR(32) NOT NULL
+);
+
 CREATE TABLE proceso_electoral
 (
     id     INTEGER UNSIGNED PRIMARY KEY,

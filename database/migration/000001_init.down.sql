@@ -19,6 +19,7 @@ DROP TABLE concello_resultados;
 DROP TABLE candidatura_organizacion_politica;
 DROP TABLE candidatura;
 DROP TABLE proceso_electoral;
+DROP TABLE tipo_proceso_electoral;
 DROP TABLE organizacion_politica;
 DROP TABLE concello;
 DROP TABLE provincia;

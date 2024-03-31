@@ -86,3 +86,9 @@ VALUES (4, 'Almería', 1),
        (26, 'La Rioja', 17),
        (51, 'Ceuta', 18),
        (52, 'Melilla', 19);
+
+INSERT INTO tipo_proceso_electoral(id, nome)
+VALUES (1, 'Municipais'),
+       (2, 'Autonómicas'),
+       (3, 'Xerais'),
+       (4, 'Europeas');
