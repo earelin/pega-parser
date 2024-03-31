@@ -23,7 +23,7 @@ type ProcesosElectoraisController struct {
 	repository domain.ProcesosElectoraisRepository
 }
 
-func NewProcesosElectoraisController(
+func BindProcesosElectoraisController(
 	e *gin.Engine,
 	procesosElectoraisRepository domain.ProcesosElectoraisRepository,
 ) {

@@ -14,12 +14,20 @@
 
 package application
 
-import "github.com/earelin/pega/pkg/domain"
+import (
+	"github.com/earelin/pega/pkg/domain"
+	"github.com/gin-gonic/gin"
+)
 
 type DivisionsAdministrativasAdminController struct {
 	repository domain.DivisionsAdministrativasRepository
 }
 
-func NewDivisionsAdministrativasAdminController(repository domain.DivisionsAdministrativasRepository) DivisionsAdministrativasAdminController {
-	return DivisionsAdministrativasAdminController{repository: repository}
+func BindDivisionsAdministrativasAdminController(e *gin.Engine, repository domain.DivisionsAdministrativasRepository) {
+	c := DivisionsAdministrativasAdminController{repository: repository}
+	e.POST("/v1/concellos/import", c.ImportConcellos)
+}
+
+func (c DivisionsAdministrativasAdminController) ImportConcellos(context *gin.Context) {
+
 }

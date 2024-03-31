@@ -27,7 +27,7 @@ import (
 func TestGetComunidadesAutonomas(t *testing.T) {
 	router := gin.Default()
 	repository := new(EntidadesAdministrativasRepositoryMock)
-	NewDivisionsAdministrativasController(router, repository)
+	BindDivisionsAdministrativasController(router, repository)
 
 	repository.On("FindAllComunidadesAutonomas").
 		Return(comunidadesAutonomas)
@@ -43,7 +43,7 @@ func TestGetComunidadesAutonomas(t *testing.T) {
 func TestGetProvincias(t *testing.T) {
 	router := gin.Default()
 	repository := new(EntidadesAdministrativasRepositoryMock)
-	NewDivisionsAdministrativasController(router, repository)
+	BindDivisionsAdministrativasController(router, repository)
 
 	repository.On("FindAllProvincias").
 		Return(provincias)
@@ -59,7 +59,7 @@ func TestGetProvincias(t *testing.T) {
 func TestGetComunidadesAutonomaProvincias(t *testing.T) {
 	router := gin.Default()
 	repository := new(EntidadesAdministrativasRepositoryMock)
-	NewDivisionsAdministrativasController(router, repository)
+	BindDivisionsAdministrativasController(router, repository)
 
 	repository.On("FindAllProvinciasByComunidadeAutonoma", 1).
 		Return(provincias)
@@ -75,7 +75,7 @@ func TestGetComunidadesAutonomaProvincias(t *testing.T) {
 func TestGetComunidadesAutonomaProvincias_ComunidadeAutonomaNotFound(t *testing.T) {
 	router := gin.Default()
 	repository := new(EntidadesAdministrativasRepositoryMock)
-	NewDivisionsAdministrativasController(router, repository)
+	BindDivisionsAdministrativasController(router, repository)
 
 	repository.On("FindAllProvinciasByComunidadeAutonoma", 1).
 		Return([]domain.DivisionAdministrativa{})
@@ -90,7 +90,7 @@ func TestGetComunidadesAutonomaProvincias_ComunidadeAutonomaNotFound(t *testing.
 func TestGetConcellosProvincia(t *testing.T) {
 	router := gin.Default()
 	repository := new(EntidadesAdministrativasRepositoryMock)
-	NewDivisionsAdministrativasController(router, repository)
+	BindDivisionsAdministrativasController(router, repository)
 
 	repository.On("FindAllConcellosByProvincia", 1).
 		Return(concellos)
@@ -106,7 +106,7 @@ func TestGetConcellosProvincia(t *testing.T) {
 func TestGetConcellosProvincia_ProvinciaNotFound(t *testing.T) {
 	router := gin.Default()
 	repository := new(EntidadesAdministrativasRepositoryMock)
-	NewDivisionsAdministrativasController(router, repository)
+	BindDivisionsAdministrativasController(router, repository)
 
 	repository.On("FindAllConcellosByProvincia", 1).
 		Return([]domain.DivisionAdministrativa{})
@@ -121,7 +121,7 @@ func TestGetConcellosProvincia_ProvinciaNotFound(t *testing.T) {
 func TestGetConcellosByName(t *testing.T) {
 	router := gin.Default()
 	repository := new(EntidadesAdministrativasRepositoryMock)
-	NewDivisionsAdministrativasController(router, repository)
+	BindDivisionsAdministrativasController(router, repository)
 
 	repository.On("FindAllConcellosByName", "com").
 		Return(concellos)

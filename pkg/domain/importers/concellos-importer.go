@@ -17,5 +17,5 @@ package importers
 import "github.com/earelin/pega/pkg/repository"
 
 type ConcellosImporter struct {
-	repository.EntidadesAdministrativasSqlRepository
+	repository.DivisionsAdministrativasSqlRepository
 }

@@ -24,7 +24,7 @@ import (
 
 func TestMonitoringConfig(t *testing.T) {
 	router := gin.Default()
-	MonitoringConfig(router)
+	BindMonitoringController(router)
 
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("GET", "/health", nil)

@@ -23,7 +23,7 @@ type DivisionsAdministrativasController struct {
 	repository domain.DivisionsAdministrativasRepository
 }
 
-func NewDivisionsAdministrativasController(
+func BindDivisionsAdministrativasController(
 	e *gin.Engine,
 	repository domain.DivisionsAdministrativasRepository,
 ) {

@@ -28,7 +28,7 @@ import (
 func TestGetProcesosElectorais(t *testing.T) {
 	router := gin.Default()
 	repository := new(ProcesosElectoraisRepositoryMock)
-	NewProcesosElectoraisController(router, repository)
+	BindProcesosElectoraisController(router, repository)
 
 	repository.On("FindAll").
 		Return(procesosElectorais)
@@ -44,7 +44,7 @@ func TestGetProcesosElectorais(t *testing.T) {
 func TestGetProcesoElectoral(t *testing.T) {
 	router := gin.Default()
 	repository := new(ProcesosElectoraisRepositoryMock)
-	NewProcesosElectoraisController(router, repository)
+	BindProcesosElectoraisController(router, repository)
 
 	repository.On("FindById", 2).
 		Return(procesosElectorais[1], true)
@@ -60,7 +60,7 @@ func TestGetProcesoElectoral(t *testing.T) {
 func TestGetProcesosElectoraisTipos(t *testing.T) {
 	router := gin.Default()
 	repository := new(ProcesosElectoraisRepositoryMock)
-	NewProcesosElectoraisController(router, repository)
+	BindProcesosElectoraisController(router, repository)
 
 	repository.On("FindAllTipos").
 		Return(procesosElectoraisTipos)

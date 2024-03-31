@@ -25,9 +25,7 @@ func ApplicationConfig(e *gin.Engine) {
 		Filename: "./database.sqlite",
 	}
 	var pool = dbConfig.BuildPool()
-	var ear = repository.NewEntidadesAdministrativasSqlRepository(pool)
+	var ear = repository.NewDivisionsAdministrativasSqlRepository(pool)
 	var per = repository.NewProcesosElectoraisSqlRepository(pool)
-	var rr = repository.NewResultadosSqlRepository(pool)
-	var rrc = repository.NewResultadosCandidaturasSqlRepository(pool)
-	application.ConfigureApplicationLayer(e, ear, per, rr, rrc)
+	application.ConfigureApplicationLayer(e, ear, per)
 }

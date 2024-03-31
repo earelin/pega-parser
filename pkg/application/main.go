@@ -22,12 +22,8 @@ import (
 func ConfigureApplicationLayer(e *gin.Engine,
 	ear domain.DivisionsAdministrativasRepository,
 	per domain.ProcesosElectoraisRepository,
-	rr domain.ResultadosRepository,
-	rrc domain.ResultadosCandidaturasRepository,
 ) {
-	MonitoringConfig(e)
-	NewDivisionsAdministrativasController(e, ear)
-	NewProcesosElectoraisController(e, per)
-	NewResultadosController(e, rr)
-	NewResultadosCandidaturasController(e, rrc)
+	BindMonitoringController(e)
+	BindDivisionsAdministrativasController(e, ear)
+	BindProcesosElectoraisController(e, per)
 }

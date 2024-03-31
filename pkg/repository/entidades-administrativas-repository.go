@@ -20,23 +20,23 @@ import (
 	"log"
 )
 
-type EntidadesAdministrativasSqlRepository struct {
+type DivisionsAdministrativasSqlRepository struct {
 	pool *sql.DB
 }
 
-func NewEntidadesAdministrativasSqlRepository(pool *sql.DB) *EntidadesAdministrativasSqlRepository {
-	return &EntidadesAdministrativasSqlRepository{pool: pool}
+func NewDivisionsAdministrativasSqlRepository(pool *sql.DB) *DivisionsAdministrativasSqlRepository {
+	return &DivisionsAdministrativasSqlRepository{pool: pool}
 }
 
-func (r *EntidadesAdministrativasSqlRepository) FindAllComunidadesAutonomas() []domain.DivisionAdministrativa {
+func (r *DivisionsAdministrativasSqlRepository) FindAllComunidadesAutonomas() []domain.DivisionAdministrativa {
 	return r.findEntidades("SELECT id, nome FROM comunidade_autonoma ORDER BY nome")
 }
 
-func (r *EntidadesAdministrativasSqlRepository) FindAllProvincias() []domain.DivisionAdministrativa {
+func (r *DivisionsAdministrativasSqlRepository) FindAllProvincias() []domain.DivisionAdministrativa {
 	return r.findEntidades("SELECT id, nome FROM provincia ORDER BY nome")
 }
 
-func (r *EntidadesAdministrativasSqlRepository) FindAllProvinciasByComunidadeAutonoma(
+func (r *DivisionsAdministrativasSqlRepository) FindAllProvinciasByComunidadeAutonoma(
 	caId int,
 ) []domain.DivisionAdministrativa {
 	return r.findEntidades(`
@@ -46,7 +46,7 @@ func (r *EntidadesAdministrativasSqlRepository) FindAllProvinciasByComunidadeAut
 		caId)
 }
 
-func (r *EntidadesAdministrativasSqlRepository) FindAllConcellosByProvincia(
+func (r *DivisionsAdministrativasSqlRepository) FindAllConcellosByProvincia(
 	pId int,
 ) []domain.DivisionAdministrativa {
 	return r.findEntidades(`
@@ -56,7 +56,7 @@ func (r *EntidadesAdministrativasSqlRepository) FindAllConcellosByProvincia(
 		pId)
 }
 
-func (r *EntidadesAdministrativasSqlRepository) FindAllConcellosByName(
+func (r *DivisionsAdministrativasSqlRepository) FindAllConcellosByName(
 	name string,
 ) []domain.DivisionAdministrativa {
 	return r.findEntidades(`
@@ -66,7 +66,7 @@ func (r *EntidadesAdministrativasSqlRepository) FindAllConcellosByName(
 		"%"+name+"%")
 }
 
-func (r *EntidadesAdministrativasSqlRepository) findEntidades(
+func (r *DivisionsAdministrativasSqlRepository) findEntidades(
 	sql string, args ...any,
 ) []domain.DivisionAdministrativa {
 	var entidades []domain.DivisionAdministrativa
