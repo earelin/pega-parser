@@ -226,12 +226,22 @@ components:
         id:
           type: integer
         typo:
-          type: string
+          type: object
+          properties:
+            id:
+              type: integer
+            nome:
+              type: string
         data:
           type: string
           format: date
         ambito:
-          type: string
+          type: object
+          properties:
+            id:
+              type: integer
+            nome:
+              type: string
         publicado:
           type: boolean
     ProcesosElectorais:
@@ -242,12 +252,22 @@ components:
           id:
             type: integer
           typo:
-            type: string
+            type: object
+            properties:
+              id:
+                type: integer
+              nome:
+                type: string
           data:
             type: string
             format: date
           ambito:
-            type: string
+            type: object
+            properties:
+              id:
+                type: integer
+              nome:
+                type: string
           publicado:
             type: boolean
   responses:
