@@ -52,10 +52,11 @@ CREATE TABLE tipo_proceso_electoral
 
 CREATE TABLE proceso_electoral
 (
-    id     INTEGER UNSIGNED PRIMARY KEY,
-    tipo   TINYINT UNSIGNED NOT NULL,
-    ambito TINYINT UNSIGNED,
-    data   DATETIME         NOT NULL
+    id        INTEGER UNSIGNED PRIMARY KEY,
+    data      DATE             NOT NULL,
+    tipo_id   INTEGER UNSIGNED NOT NULL,
+    ambito_id INTEGER UNSIGNED,
+    FOREIGN KEY (tipo_id) REFERENCES tipo_proceso_electoral (id)
 );
 
 CREATE TABLE candidatura

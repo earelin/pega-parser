@@ -31,6 +31,10 @@ run:
 test:
 	go test -v ./...
 
+.PHONY: test-data
+test-data:
+	sqlite3 database.sqlite < database/test-data.sql
+
 .PHONY: test-coverage
 test-coverage:
 	go test -coverprofile=coverage.out ./...

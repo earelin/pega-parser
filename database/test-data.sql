@@ -47,5 +47,9 @@ VALUES (1, 'PP', 'Partido Popular', 'pp.png', NULL),
        (17, 'Alternativa dos Veciños', 'Alternativa dos Veciños', 'av.png', 8),
        (18, 'Compromiso por Galicia', 'Compromiso por Galicia', 'cpg.png', 9);
 
-INSERT INTO proceso_electoral(id, tipo, ambito, data)
-VALUES (1, 12, 12, '2020-07-12');
+INSERT INTO proceso_electoral(id, data, tipo_id, ambito_id)
+VALUES (1, '2023-07-23', 3, NULL),
+       (2, '2023-05-28', 1, NULL),
+       (3, '2020-07-12', 2, 12),
+       (4, '2019-05-26', 4, NULL);
+
